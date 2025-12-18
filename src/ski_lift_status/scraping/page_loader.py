@@ -27,6 +27,11 @@ def _get_browserbase_config() -> tuple[str, str] | None:
     return None
 
 
+def _get_browserless_token() -> str | None:
+    """Get Browserless API token from environment variables."""
+    return os.environ.get("BROWSERLESS_TOKEN") or os.environ.get("BROWSERLESS_API_KEY")
+
+
 def _determine_resource_type(content_type: str | None, url: str) -> ResourceType:
     """Determine the resource type based on content type and URL."""
     if content_type is None:
@@ -213,6 +218,143 @@ class PageLoader:
 
         return responses, all_urls_seen
 
+    async def _load_with_browserless(
+        self,
+        url: str,
+        resort_id: str,
+        capture: NetworkCapture,
+        on_resource: Callable[[CapturedResource], None] | None,
+    ) -> tuple[dict, list[str]]:
+        """Load page using Browserless Function API (REST-based, no WebSocket).
+
+        This method works in environments where WebSocket connections are blocked,
+        such as Claude Code web sandbox.
+
+        Returns:
+            Tuple of (empty dict, all_urls_seen list)
+        """
+        import httpx
+
+        log = logger.bind(resort_id=resort_id, url=url, phase="browserless_load")
+
+        token = _get_browserless_token()
+        if not token:
+            raise ValueError("Browserless token not configured")
+
+        # JavaScript code to run in Browserless
+        # This captures network responses and page HTML
+        js_code = f'''
+export default async function ({{ page }}) {{
+  const capturedResponses = [];
+
+  page.on("response", async (response) => {{
+    try {{
+      const url = response.url();
+      const status = response.status();
+      const headers = response.headers();
+      const contentType = headers["content-type"] || "";
+
+      // Only capture JSON and text responses
+      if (contentType.includes("json") || contentType.includes("text") || contentType.includes("javascript")) {{
+        const body = await response.text().catch(() => null);
+        if (body) {{
+          capturedResponses.push({{
+            url,
+            status,
+            contentType,
+            headers,
+            body
+          }});
+        }}
+      }}
+    }} catch (e) {{}}
+  }});
+
+  await page.goto("{url}", {{
+    waitUntil: "networkidle0",
+    timeout: {self.timeout_ms}
+  }});
+
+  // Wait for any late XHR requests
+  await new Promise(r => setTimeout(r, {self.wait_after_load_ms}));
+
+  const html = await page.content();
+
+  return {{
+    html,
+    responses: capturedResponses
+  }};
+}}
+'''
+
+        log.info("calling_browserless_function_api")
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"https://production-sfo.browserless.io/function?token={token}",
+                headers={"Content-Type": "application/javascript"},
+                content=js_code,
+                timeout=180.0,
+            )
+
+            if response.status_code != 200:
+                raise ValueError(f"Browserless API error: {response.status_code} - {response.text[:500]}")
+
+            result = response.json()
+
+        # Process the HTML
+        html = result.get("html", "")
+        capture.page_html = html
+        log.debug("captured_page_html", size_bytes=len(html))
+
+        # Process captured responses
+        all_urls_seen = []
+        responses_data = result.get("responses", [])
+        log.info("browserless_responses_captured", count=len(responses_data))
+
+        for resp in responses_data:
+            resp_url = resp.get("url", "")
+            all_urls_seen.append(resp_url)
+
+            content_type = resp.get("contentType", "")
+            body = resp.get("body", "")
+
+            if not _is_relevant_resource(resp_url, content_type):
+                continue
+
+            resource_type = _determine_resource_type(content_type, resp_url)
+
+            resource = CapturedResource(
+                url=resp_url,
+                resource_type=resource_type,
+                content_type=content_type,
+                content=body,
+                size_bytes=len(body.encode("utf-8")) if body else 0,
+                response_status=resp.get("status", 0),
+                headers=resp.get("headers", {}),
+            )
+
+            capture.resources.append(resource)
+
+            log.debug(
+                "captured_resource",
+                url=resp_url[:100],
+                type=resource_type.value,
+                size_bytes=resource.size_bytes,
+            )
+
+            if on_resource:
+                on_resource(resource)
+
+        log.info(
+            "browserless_load_complete",
+            html_size=len(html),
+            response_count=len(responses_data),
+            relevant_resources=len(capture.resources),
+        )
+
+        return {}, all_urls_seen
+
     async def _load_with_local_playwright(
         self,
         url: str,
@@ -357,10 +499,20 @@ class PageLoader:
         all_urls_seen: list[str] = []
 
         try:
-            # Check for Browserbase credentials - use Stagehand if available
+            # Priority order:
+            # 1. Browserless (REST-based, works in sandboxed environments)
+            # 2. Browserbase (WebSocket-based, may be blocked in some environments)
+            # 3. Local Playwright (requires local browser)
+
+            browserless_token = _get_browserless_token()
             browserbase_config = _get_browserbase_config()
 
-            if browserbase_config:
+            if browserless_token:
+                log.info("using_browserless_rest_api")
+                _, all_urls_seen = await self._load_with_browserless(
+                    url, resort_id, capture, on_resource
+                )
+            elif browserbase_config:
                 log.info("using_browserbase_cloud")
                 _, all_urls_seen = await self._load_with_browserbase(
                     url, resort_id, capture, on_resource
