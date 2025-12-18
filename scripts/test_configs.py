@@ -2,9 +2,11 @@
 """
 Test runner for ski resort status configurations.
 
-This script tests the scraping adapters against live resort status pages,
-reporting on lift/run status, coverage against OpenSkiMap data, and
-extraction method details.
+This script tests the scraping adapters against live resort API endpoints
+using simple HTTP requests only - NO browser automation.
+
+The configs store direct API endpoints that can be fetched with httpx.
+This allows testing to run cheaply and quickly on any platform.
 
 Usage:
     # Test all resorts
@@ -21,6 +23,7 @@ import argparse
 import asyncio
 import json
 import sys
+import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -28,9 +31,12 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from ski_lift_status.scraping.page_loader import PageLoader
-from ski_lift_status.scraping.adapters import detect_platform, extract_with_adapter
-from ski_lift_status.scraping.pipeline import load_status_pages, StatusPageEntry
+from ski_lift_status.scraping.resort_config import (
+    ResortConfig,
+    get_all_resort_configs,
+    get_resort_config,
+)
+from ski_lift_status.scraping.adapters import lumiplan, skiplan
 from ski_lift_status.data_fetcher import load_lifts, load_runs
 
 
@@ -40,9 +46,6 @@ class LiftResult:
     name: str
     status: str | None
     lift_type: str | None = None
-    wait_time: str | None = None
-    open_time: str | None = None
-    close_time: str | None = None
 
 
 @dataclass
@@ -59,7 +62,7 @@ class ResortTestResult:
     """Test result for a single resort."""
     resort_id: str
     resort_name: str
-    status_page_url: str
+    status_page_url: str  # First API endpoint for reference
     success: bool
     platform: str | None = None
     extraction_method: str | None = None
@@ -104,15 +107,14 @@ def get_extraction_method_description(platform: str) -> str:
     """Get a human-readable description of the extraction method."""
     descriptions = {
         "lumiplan": (
-            "Lumiplan REST API - Extracts data from JSON endpoints "
-            "(staticPoiData for lift/run metadata, dynamicPoiData for live status). "
-            "Uses JSON path selectors to extract name, type, and operational status."
+            "Lumiplan REST API (HTTP-only) - Fetches JSON from staticPoiData and "
+            "dynamicPoiData endpoints. Extracts name, type, and operational status "
+            "directly from JSON responses using simple field mapping."
         ),
         "skiplan": (
-            "Skiplan Server-Side Rendered HTML - Parses HTML from getOuvertures.php "
-            "XHR response. Uses CSS selectors on .ouvertures-marker elements to extract "
-            "name (from .marker-title), status (from .marker-content classes), and "
-            "type (from icon SVG filenames like prl_tc_black.svg for télécabine)."
+            "Skiplan HTTP API (HTTP-only) - Fetches HTML from getOuvertures.php "
+            "endpoint. Parses .ouvertures-marker elements using BeautifulSoup to extract "
+            "name, status, and type information from HTML structure."
         ),
     }
     return descriptions.get(platform, f"Unknown platform: {platform}")
@@ -126,7 +128,6 @@ def calculate_coverage(
     if not reference_names:
         return 0.0
 
-    # Normalize names for comparison
     def normalize(name: str) -> str:
         return name.lower().strip()
 
@@ -146,54 +147,61 @@ def calculate_coverage(
 
 
 async def test_resort(
-    entry: StatusPageEntry,
+    config: ResortConfig,
     reference_lifts: list,
     reference_runs: list,
 ) -> ResortTestResult:
-    """Test a single resort's status page."""
+    """Test a single resort's status using HTTP-only fetching."""
     result = ResortTestResult(
-        resort_id=entry.resort_id,
-        resort_name=entry.resort_name,
-        status_page_url=entry.status_page_url,
+        resort_id=config.resort_id,
+        resort_name=config.resort_name,
+        status_page_url=config.api_endpoints[0] if config.api_endpoints else "",
         success=False,
+        platform=config.platform,
     )
 
     # Get reference data for this resort
     resort_lift_names = [
         lift.name for lift in reference_lifts
-        if entry.resort_id in (lift.ski_area_ids or "").split(";")
+        if config.resort_id in (lift.ski_area_ids or "").split(";")
     ]
     resort_run_names = [
         run.name for run in reference_runs
-        if entry.resort_id in (run.ski_area_ids or "").split(";")
+        if config.resort_id in (run.ski_area_ids or "").split(";")
     ]
 
     result.openskimap_lift_count = len(resort_lift_names)
     result.openskimap_trail_count = len(resort_run_names)
+    result.extraction_method = get_extraction_method_description(config.platform)
+
+    start_time = time.time()
 
     try:
-        # Load page and capture resources
-        loader = PageLoader(headless=True, timeout_ms=45000, wait_after_load_ms=5000)
-        capture = await loader.load_page(entry.status_page_url, entry.resort_id)
-        result.fetch_time_ms = capture.load_time_ms
+        # Fetch data using platform-specific HTTP-only functions
+        data = None
 
-        if capture.errors:
-            result.error = "; ".join(capture.errors)
+        if config.platform == "lumiplan":
+            map_uuid = config.platform_config.get("map_uuid")
+            if not map_uuid:
+                result.error = "Missing map_uuid in platform_config"
+                return result
+            data = await lumiplan.fetch_live_status(map_uuid)
+
+        elif config.platform == "skiplan":
+            resort_slug = config.platform_config.get("resort_slug")
+            if not resort_slug:
+                result.error = "Missing resort_slug in platform_config"
+                return result
+            data = await skiplan.fetch_live_status(resort_slug)
+
+        else:
+            result.error = f"Unknown platform: {config.platform}"
             return result
 
-        # Detect platform
-        platform = detect_platform(capture.resources)
-        if not platform:
-            result.error = "Could not detect platform from captured resources"
-            return result
+        result.fetch_time_ms = (time.time() - start_time) * 1000
 
-        result.platform = platform
-        result.extraction_method = get_extraction_method_description(platform)
-
-        # Extract data using adapter
-        data = extract_with_adapter(platform, capture.resources)
         if not data:
-            result.error = f"Extraction failed for platform {platform}"
+            result.error = f"Fetch returned no data for platform {config.platform}"
             return result
 
         # Process lifts
@@ -253,6 +261,7 @@ async def test_resort(
         result.success = result.total_lifts > 0 or result.total_trails > 0
 
     except Exception as e:
+        result.fetch_time_ms = (time.time() - start_time) * 1000
         result.error = str(e)
 
     return result
@@ -260,24 +269,24 @@ async def test_resort(
 
 def print_result(result: ResortTestResult) -> None:
     """Print a single resort's test result."""
-    status_icon = "✅" if result.success else "❌"
+    status_icon = "+" if result.success else "x"
     print(f"\n{'='*70}")
-    print(f"{status_icon} {result.resort_name}")
+    print(f"[{status_icon}] {result.resort_name}")
     print(f"{'='*70}")
     print(f"Resort ID: {result.resort_id}")
-    print(f"URL: {result.status_page_url}")
+    print(f"API Endpoint: {result.status_page_url}")
     print(f"Fetch time: {result.fetch_time_ms:.0f}ms")
 
     if result.error:
-        print(f"\n❌ Error: {result.error}")
+        print(f"\n[x] Error: {result.error}")
         return
 
-    print(f"\n📊 Platform: {result.platform}")
-    print("\n📝 Extraction Method:")
+    print(f"\nPlatform: {result.platform}")
+    print("\nExtraction Method:")
     print(f"   {result.extraction_method}")
 
     # Lift summary
-    print(f"\n🚡 Lifts: {result.total_lifts} total")
+    print(f"\nLifts: {result.total_lifts} total")
     print(f"   Open: {result.open_lifts} | Closed: {result.closed_lifts}")
     print(f"   Coverage vs OpenSkiMap: {result.lift_coverage:.1%} ({result.openskimap_lift_count} reference lifts)")
 
@@ -285,10 +294,10 @@ def print_result(result: ResortTestResult) -> None:
         print("\n   Sample lifts:")
         for lift in result.sample_lifts:
             type_str = f" ({lift.lift_type})" if lift.lift_type else ""
-            print(f"   • {lift.name}{type_str}: {lift.status or 'unknown'}")
+            print(f"   - {lift.name}{type_str}: {lift.status or 'unknown'}")
 
     # Trail summary
-    print(f"\n⛷️  Trails: {result.total_trails} total")
+    print(f"\nTrails: {result.total_trails} total")
     print(f"   Open: {result.open_trails} | Closed: {result.closed_trails}")
     print(f"   Coverage vs OpenSkiMap: {result.trail_coverage:.1%} ({result.openskimap_trail_count} reference trails)")
 
@@ -296,21 +305,20 @@ def print_result(result: ResortTestResult) -> None:
         print("\n   Sample trails:")
         for trail in result.sample_trails:
             diff_str = f" [{trail.difficulty}]" if trail.difficulty else ""
-            print(f"   • {trail.name}{diff_str}: {trail.status or 'unknown'}")
+            print(f"   - {trail.name}{diff_str}: {trail.status or 'unknown'}")
 
 
 def print_summary(summary: TestSummary) -> None:
     """Print the test summary."""
     print(f"\n{'='*70}")
-    print("📋 TEST SUMMARY")
+    print("TEST SUMMARY")
     print(f"{'='*70}")
     print(f"Timestamp: {summary.timestamp}")
     print(f"Total resorts tested: {summary.total_resorts}")
-    print(f"✅ Passing: {summary.passing_resorts}")
-    print(f"❌ Failing: {summary.failing_resorts}")
+    print(f"[+] Passing: {summary.passing_resorts}")
+    print(f"[x] Failing: {summary.failing_resorts}")
 
     if summary.passing_resorts > 0:
-        # Calculate averages for passing resorts
         passing = [r for r in summary.results if r.success]
         avg_lifts = sum(r.total_lifts for r in passing) / len(passing)
         avg_trails = sum(r.total_trails for r in passing) / len(passing)
@@ -345,7 +353,7 @@ def generate_badge_json(summary: TestSummary) -> dict:
 
 
 async def main():
-    parser = argparse.ArgumentParser(description="Test ski resort status configurations")
+    parser = argparse.ArgumentParser(description="Test ski resort status configurations (HTTP-only)")
     parser.add_argument(
         "--resort-id",
         help="Test only a specific resort by ID",
@@ -365,18 +373,22 @@ async def main():
     )
     args = parser.parse_args()
 
-    # Load status pages
-    entries = load_status_pages()
-    if not entries:
-        print("❌ No status pages configured in data/status_pages.csv")
-        sys.exit(1)
-
-    # Filter by resort ID if specified
+    # Load resort configs
     if args.resort_id:
-        entries = [e for e in entries if e.resort_id == args.resort_id]
-        if not entries:
-            print(f"❌ Resort ID not found: {args.resort_id}")
+        config = get_resort_config(args.resort_id)
+        if not config:
+            print(f"[x] Resort ID not found in configs: {args.resort_id}")
+            print("\nAvailable resort IDs:")
+            for c in get_all_resort_configs():
+                print(f"  - {c.resort_id} ({c.resort_name})")
             sys.exit(1)
+        configs = [config]
+    else:
+        configs = get_all_resort_configs()
+
+    if not configs:
+        print("[x] No resort configs found")
+        sys.exit(1)
 
     # Load reference data
     print("Loading OpenSkiMap reference data...")
@@ -385,18 +397,18 @@ async def main():
     print(f"  Loaded {len(reference_lifts)} lifts and {len(reference_runs)} runs")
 
     # Test each resort
-    print(f"\nTesting {len(entries)} resort(s)...\n")
+    print(f"\nTesting {len(configs)} resort(s) using HTTP-only fetching...\n")
 
     summary = TestSummary(
         timestamp=datetime.utcnow().isoformat() + "Z",
-        total_resorts=len(entries),
+        total_resorts=len(configs),
     )
 
-    for entry in entries:
+    for config in configs:
         if not args.quiet:
-            print(f"Testing {entry.resort_name}...")
+            print(f"Testing {config.resort_name} ({config.platform})...")
 
-        result = await test_resort(entry, reference_lifts, reference_runs)
+        result = await test_resort(config, reference_lifts, reference_runs)
         summary.results.append(result)
 
         if result.success:
@@ -452,14 +464,14 @@ async def main():
 
         with open(args.output, "w") as f:
             json.dump(output_data, f, indent=2)
-        print(f"\n📁 Results saved to: {args.output}")
+        print(f"\nResults saved to: {args.output}")
 
     # Output badge JSON if requested
     if args.badge_output:
         badge_data = generate_badge_json(summary)
         with open(args.badge_output, "w") as f:
             json.dump(badge_data, f, indent=2)
-        print(f"📛 Badge JSON saved to: {args.badge_output}")
+        print(f"Badge JSON saved to: {args.badge_output}")
 
     # Exit with error code if any failures
     sys.exit(0 if summary.failing_resorts == 0 else 1)
