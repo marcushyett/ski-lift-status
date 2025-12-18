@@ -151,6 +151,24 @@ Many ski resorts use common backend platforms. When you identify a pattern, crea
 - Add docstrings to all public functions
 - Type hints are required for all function signatures
 
+### 3.1. Testing Requirements Before Committing
+
+**CRITICAL**: All tests MUST pass before committing any changes.
+
+```bash
+# Run unit tests before committing
+PYTHONPATH=src python3 -m pytest tests/ -v
+
+# Run config tests to verify resort adapters work
+PYTHONPATH=src python3 scripts/test_configs.py
+```
+
+**Requirements:**
+- All unit tests in `tests/` must pass
+- Config tests should show passing resorts (failures due to external API issues are acceptable)
+- New adapters should have corresponding unit tests where practical
+- Do NOT commit code that breaks existing tests
+
 ### 4. Minimize Data Sent to LLMs
 
 LLM context is expensive and limited. Always:
