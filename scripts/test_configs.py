@@ -37,6 +37,10 @@ from ski_lift_status.scraping.resort_config import (
     get_resort_config,
 )
 from ski_lift_status.scraping.adapters import lumiplan, skiplan
+from ski_lift_status.scraping.status_normalizer import (
+    NormalizedStatus,
+    normalize_status_sync,
+)
 from ski_lift_status.data_fetcher import load_lifts, load_runs
 
 
@@ -44,17 +48,23 @@ from ski_lift_status.data_fetcher import load_lifts, load_runs
 class LiftResult:
     """Result for a single lift."""
     name: str
-    status: str | None
+    raw_status: str | None
+    normalized_status: str | None = None
     lift_type: str | None = None
+    opening_time: str | None = None
+    closing_time: str | None = None
 
 
 @dataclass
 class TrailResult:
     """Result for a single trail/run."""
     name: str
-    status: str | None
+    raw_status: str | None
+    normalized_status: str | None = None
     difficulty: str | None = None
     grooming: str | None = None
+    opening_time: str | None = None
+    closing_time: str | None = None
 
 
 @dataclass
@@ -67,20 +77,28 @@ class ResortTestResult:
     platform: str | None = None
     extraction_method: str | None = None
 
-    # Counts
+    # Counts by normalized status
     total_lifts: int = 0
-    open_lifts: int = 0
-    closed_lifts: int = 0
+    lifts_open: int = 0
+    lifts_closed: int = 0
+    lifts_expected_to_open: int = 0
+    lifts_not_expected_to_open: int = 0
 
     total_trails: int = 0
-    open_trails: int = 0
-    closed_trails: int = 0
+    trails_open: int = 0
+    trails_closed: int = 0
+    trails_expected_to_open: int = 0
+    trails_not_expected_to_open: int = 0
 
     # Coverage against OpenSkiMap
     openskimap_lift_count: int = 0
     openskimap_trail_count: int = 0
     lift_coverage: float = 0.0
     trail_coverage: float = 0.0
+
+    # Unique raw status values found
+    unique_lift_statuses: list[str] = field(default_factory=list)
+    unique_trail_statuses: list[str] = field(default_factory=list)
 
     # Sample data
     sample_lifts: list[LiftResult] = field(default_factory=list)
@@ -207,55 +225,81 @@ async def test_resort(
         # Process lifts
         if hasattr(data, 'lifts'):
             extracted_lift_names = []
+            lift_statuses_seen: set[str] = set()
+
             for lift in data.lifts:
                 extracted_lift_names.append(lift.name)
 
-                # Count by status
-                status = getattr(lift, 'status', None) or getattr(lift, 'opening_status', None)
-                if status:
-                    status_lower = status.lower()
-                    if 'open' in status_lower:
-                        result.open_lifts += 1
-                    elif 'close' in status_lower:
-                        result.closed_lifts += 1
+                # Get raw status
+                raw_status = getattr(lift, 'status', None) or getattr(lift, 'opening_status', None)
+                if raw_status:
+                    lift_statuses_seen.add(raw_status)
+
+                # Normalize status and count
+                normalized = normalize_status_sync(raw_status) if raw_status else NormalizedStatus.CLOSED
+                if normalized == NormalizedStatus.OPEN:
+                    result.lifts_open += 1
+                elif normalized == NormalizedStatus.CLOSED:
+                    result.lifts_closed += 1
+                elif normalized == NormalizedStatus.EXPECTED_TO_OPEN:
+                    result.lifts_expected_to_open += 1
+                elif normalized == NormalizedStatus.NOT_EXPECTED_TO_OPEN:
+                    result.lifts_not_expected_to_open += 1
 
                 # Add to samples (first 3)
                 if len(result.sample_lifts) < 3:
                     result.sample_lifts.append(LiftResult(
                         name=lift.name,
-                        status=status,
+                        raw_status=raw_status,
+                        normalized_status=normalized.value,
                         lift_type=getattr(lift, 'lift_type', None),
+                        opening_time=getattr(lift, 'opening_time', None),
+                        closing_time=getattr(lift, 'closing_time', None),
                     ))
 
             result.total_lifts = len(data.lifts)
             result.lift_coverage = calculate_coverage(extracted_lift_names, resort_lift_names)
+            result.unique_lift_statuses = sorted(lift_statuses_seen)
 
         # Process trails
         if hasattr(data, 'trails'):
             extracted_trail_names = []
+            trail_statuses_seen: set[str] = set()
+
             for trail in data.trails:
                 extracted_trail_names.append(trail.name)
 
-                # Count by status
-                status = getattr(trail, 'status', None) or getattr(trail, 'opening_status', None)
-                if status:
-                    status_lower = status.lower()
-                    if 'open' in status_lower:
-                        result.open_trails += 1
-                    elif 'close' in status_lower:
-                        result.closed_trails += 1
+                # Get raw status
+                raw_status = getattr(trail, 'status', None) or getattr(trail, 'opening_status', None)
+                if raw_status:
+                    trail_statuses_seen.add(raw_status)
+
+                # Normalize status and count
+                normalized = normalize_status_sync(raw_status) if raw_status else NormalizedStatus.CLOSED
+                if normalized == NormalizedStatus.OPEN:
+                    result.trails_open += 1
+                elif normalized == NormalizedStatus.CLOSED:
+                    result.trails_closed += 1
+                elif normalized == NormalizedStatus.EXPECTED_TO_OPEN:
+                    result.trails_expected_to_open += 1
+                elif normalized == NormalizedStatus.NOT_EXPECTED_TO_OPEN:
+                    result.trails_not_expected_to_open += 1
 
                 # Add to samples (first 3)
                 if len(result.sample_trails) < 3:
                     result.sample_trails.append(TrailResult(
                         name=trail.name,
-                        status=status,
+                        raw_status=raw_status,
+                        normalized_status=normalized.value,
                         difficulty=getattr(trail, 'difficulty', None),
                         grooming=getattr(trail, 'grooming_status', None),
+                        opening_time=getattr(trail, 'opening_time', None),
+                        closing_time=getattr(trail, 'closing_time', None),
                     ))
 
             result.total_trails = len(data.trails)
             result.trail_coverage = calculate_coverage(extracted_trail_names, resort_run_names)
+            result.unique_trail_statuses = sorted(trail_statuses_seen)
 
         # Mark as success if we got any data
         result.success = result.total_lifts > 0 or result.total_trails > 0
@@ -285,27 +329,49 @@ def print_result(result: ResortTestResult) -> None:
     print("\nExtraction Method:")
     print(f"   {result.extraction_method}")
 
-    # Lift summary
+    # Lift summary with normalized status breakdown
     print(f"\nLifts: {result.total_lifts} total")
-    print(f"   Open: {result.open_lifts} | Closed: {result.closed_lifts}")
+    print(f"   Normalized Status Breakdown:")
+    print(f"     - open: {result.lifts_open}")
+    print(f"     - closed: {result.lifts_closed}")
+    print(f"     - expected_to_open: {result.lifts_expected_to_open}")
+    print(f"     - not_expected_to_open: {result.lifts_not_expected_to_open}")
     print(f"   Coverage vs OpenSkiMap: {result.lift_coverage:.1%} ({result.openskimap_lift_count} reference lifts)")
+
+    if result.unique_lift_statuses:
+        print(f"\n   Raw status values found: {result.unique_lift_statuses}")
 
     if result.sample_lifts:
         print("\n   Sample lifts:")
         for lift in result.sample_lifts:
             type_str = f" ({lift.lift_type})" if lift.lift_type else ""
-            print(f"   - {lift.name}{type_str}: {lift.status or 'unknown'}")
+            time_str = ""
+            if lift.opening_time or lift.closing_time:
+                time_str = f" [{lift.opening_time or '?'}-{lift.closing_time or '?'}]"
+            print(f"   - {lift.name}{type_str}:")
+            print(f"       raw: {lift.raw_status or 'unknown'} -> normalized: {lift.normalized_status}{time_str}")
 
-    # Trail summary
+    # Trail summary with normalized status breakdown
     print(f"\nTrails: {result.total_trails} total")
-    print(f"   Open: {result.open_trails} | Closed: {result.closed_trails}")
+    print(f"   Normalized Status Breakdown:")
+    print(f"     - open: {result.trails_open}")
+    print(f"     - closed: {result.trails_closed}")
+    print(f"     - expected_to_open: {result.trails_expected_to_open}")
+    print(f"     - not_expected_to_open: {result.trails_not_expected_to_open}")
     print(f"   Coverage vs OpenSkiMap: {result.trail_coverage:.1%} ({result.openskimap_trail_count} reference trails)")
+
+    if result.unique_trail_statuses:
+        print(f"\n   Raw status values found: {result.unique_trail_statuses}")
 
     if result.sample_trails:
         print("\n   Sample trails:")
         for trail in result.sample_trails:
             diff_str = f" [{trail.difficulty}]" if trail.difficulty else ""
-            print(f"   - {trail.name}{diff_str}: {trail.status or 'unknown'}")
+            time_str = ""
+            if trail.opening_time or trail.closing_time:
+                time_str = f" [{trail.opening_time or '?'}-{trail.closing_time or '?'}]"
+            print(f"   - {trail.name}{diff_str}:")
+            print(f"       raw: {trail.raw_status or 'unknown'} -> normalized: {trail.normalized_status}{time_str}")
 
 
 def print_summary(summary: TestSummary) -> None:
@@ -438,21 +504,45 @@ async def main():
                     "platform": r.platform,
                     "extraction_method": r.extraction_method,
                     "total_lifts": r.total_lifts,
-                    "open_lifts": r.open_lifts,
-                    "closed_lifts": r.closed_lifts,
+                    "lifts_by_status": {
+                        "open": r.lifts_open,
+                        "closed": r.lifts_closed,
+                        "expected_to_open": r.lifts_expected_to_open,
+                        "not_expected_to_open": r.lifts_not_expected_to_open,
+                    },
                     "total_trails": r.total_trails,
-                    "open_trails": r.open_trails,
-                    "closed_trails": r.closed_trails,
+                    "trails_by_status": {
+                        "open": r.trails_open,
+                        "closed": r.trails_closed,
+                        "expected_to_open": r.trails_expected_to_open,
+                        "not_expected_to_open": r.trails_not_expected_to_open,
+                    },
                     "lift_coverage": r.lift_coverage,
                     "trail_coverage": r.trail_coverage,
                     "openskimap_lift_count": r.openskimap_lift_count,
                     "openskimap_trail_count": r.openskimap_trail_count,
+                    "unique_lift_statuses": r.unique_lift_statuses,
+                    "unique_trail_statuses": r.unique_trail_statuses,
                     "sample_lifts": [
-                        {"name": lift.name, "status": lift.status, "lift_type": lift.lift_type}
+                        {
+                            "name": lift.name,
+                            "raw_status": lift.raw_status,
+                            "normalized_status": lift.normalized_status,
+                            "lift_type": lift.lift_type,
+                            "opening_time": lift.opening_time,
+                            "closing_time": lift.closing_time,
+                        }
                         for lift in r.sample_lifts
                     ],
                     "sample_trails": [
-                        {"name": t.name, "status": t.status, "difficulty": t.difficulty}
+                        {
+                            "name": t.name,
+                            "raw_status": t.raw_status,
+                            "normalized_status": t.normalized_status,
+                            "difficulty": t.difficulty,
+                            "opening_time": t.opening_time,
+                            "closing_time": t.closing_time,
+                        }
                         for t in r.sample_trails
                     ],
                     "fetch_time_ms": r.fetch_time_ms,
