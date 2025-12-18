@@ -51,6 +51,9 @@ Thumbs.db
 # Logs
 *.log
 
+# Debug output
+debug/
+
 # Deep Agent work directory
 .deep_agent_work/
 
