@@ -45,8 +45,8 @@ async def test_resort(resort_id: str, resort_name: str, status_url: str) -> dict
     all_lifts = load_lifts()
     all_runs = load_runs()
 
-    resort_lifts = [l for l in all_lifts if resort_id in (l.ski_area_ids or "").split(";")]
-    resort_runs = [r for r in all_runs if resort_id in (r.ski_area_ids or "").split(";")]
+    resort_lifts = [lift for lift in all_lifts if resort_id in (lift.ski_area_ids or "").split(";")]
+    resort_runs = [run for run in all_runs if resort_id in (run.ski_area_ids or "").split(";")]
 
     log.info(
         "reference_data_loaded",

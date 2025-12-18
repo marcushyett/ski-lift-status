@@ -10,7 +10,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from ski_lift_status.scraping import (
-    ScrapingPipeline,
     load_status_pages,
     run_pipeline_for_resort,
     run_pipeline_for_all,

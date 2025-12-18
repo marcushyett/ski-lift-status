@@ -1,0 +1,166 @@
+name: Test Resort Configs
+
+on:
+  workflow_dispatch:
+    inputs:
+      resort_id:
+        description: 'Resort ID to test (leave empty for all)'
+        required: false
+        default: ''
+      update_badge:
+        description: 'Update badge in repository'
+        required: false
+        default: 'true'
+        type: boolean
+  schedule:
+    # Run daily at 6 AM UTC
+    - cron: '0 6 * * *'
+
+env:
+  BROWSERLESS_TOKEN: ${{ secrets.BROWSERLESS_TOKEN }}
+
+jobs:
+  test-configs:
+    name: Test Resort Configurations
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Install Playwright browsers
+        run: playwright install chromium
+
+      - name: Run config tests (specific resort)
+        if: ${{ github.event.inputs.resort_id != '' }}
+        run: |
+          python scripts/test_configs.py \
+            --resort-id "${{ github.event.inputs.resort_id }}" \
+            --output test-results.json \
+            --badge-output .github/badges/config-status.json
+        continue-on-error: true
+
+      - name: Run config tests (all resorts)
+        if: ${{ github.event.inputs.resort_id == '' || github.event_name == 'schedule' }}
+        run: |
+          python scripts/test_configs.py \
+            --output test-results.json \
+            --badge-output .github/badges/config-status.json
+        continue-on-error: true
+
+      - name: Generate test summary
+        if: always()
+        run: |
+          if [ -f test-results.json ]; then
+            echo "## 🎿 Resort Config Test Results" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Parse JSON and create summary
+            python3 << 'EOF'
+          import json
+          import os
+
+          with open('test-results.json') as f:
+              data = json.load(f)
+
+          summary = []
+          summary.append(f"**Timestamp:** {data['timestamp']}")
+          summary.append(f"")
+          summary.append(f"| Status | Count |")
+          summary.append(f"|--------|-------|")
+          summary.append(f"| ✅ Passing | {data['passing_resorts']} |")
+          summary.append(f"| ❌ Failing | {data['failing_resorts']} |")
+          summary.append(f"| **Total** | {data['total_resorts']} |")
+          summary.append(f"")
+          summary.append(f"### Resort Details")
+          summary.append(f"")
+
+          for result in data['results']:
+              icon = "✅" if result['success'] else "❌"
+              summary.append(f"<details>")
+              summary.append(f"<summary>{icon} <b>{result['resort_name']}</b></summary>")
+              summary.append(f"")
+              summary.append(f"- **Resort ID:** `{result['resort_id']}`")
+              summary.append(f"- **URL:** {result['status_page_url']}")
+              summary.append(f"- **Platform:** {result['platform'] or 'N/A'}")
+              summary.append(f"- **Fetch Time:** {result['fetch_time_ms']:.0f}ms")
+
+              if result['error']:
+                  summary.append(f"- **Error:** {result['error']}")
+              else:
+                  summary.append(f"")
+                  summary.append(f"**Extraction Method:**")
+                  summary.append(f"> {result['extraction_method']}")
+                  summary.append(f"")
+                  summary.append(f"**Lifts:** {result['total_lifts']} total ({result['open_lifts']} open, {result['closed_lifts']} closed)")
+                  summary.append(f"- Coverage: {result['lift_coverage']:.1%} of {result['openskimap_lift_count']} OpenSkiMap lifts")
+
+                  if result['sample_lifts']:
+                      summary.append(f"")
+                      summary.append(f"| Lift | Type | Status |")
+                      summary.append(f"|------|------|--------|")
+                      for lift in result['sample_lifts']:
+                          summary.append(f"| {lift['name']} | {lift.get('lift_type') or '-'} | {lift['status'] or '-'} |")
+
+                  summary.append(f"")
+                  summary.append(f"**Trails:** {result['total_trails']} total ({result['open_trails']} open, {result['closed_trails']} closed)")
+                  summary.append(f"- Coverage: {result['trail_coverage']:.1%} of {result['openskimap_trail_count']} OpenSkiMap trails")
+
+                  if result['sample_trails']:
+                      summary.append(f"")
+                      summary.append(f"| Trail | Difficulty | Status |")
+                      summary.append(f"|-------|------------|--------|")
+                      for trail in result['sample_trails']:
+                          summary.append(f"| {trail['name']} | {trail.get('difficulty') or '-'} | {trail['status'] or '-'} |")
+
+              summary.append(f"")
+              summary.append(f"</details>")
+              summary.append(f"")
+
+          # Write to GitHub step summary
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              f.write('\n'.join(summary))
+          EOF
+          else
+            echo "❌ No test results file found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            test-results.json
+            .github/badges/config-status.json
+          if-no-files-found: ignore
+
+      - name: Create badges directory
+        if: ${{ (github.event.inputs.update_badge == 'true' || github.event_name == 'schedule') && github.ref == 'refs/heads/main' }}
+        run: mkdir -p .github/badges
+
+      - name: Commit badge update
+        if: ${{ (github.event.inputs.update_badge == 'true' || github.event_name == 'schedule') && github.ref == 'refs/heads/main' }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          if [ -f .github/badges/config-status.json ]; then
+            git add .github/badges/config-status.json
+            git diff --staged --quiet || git commit -m "Update config test badge [skip ci]"
+            git push
+          fi

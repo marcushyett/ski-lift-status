@@ -1,5 +1,8 @@
 # Ski Lift Status
 
+![Resort Configs](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/marcushyett/ski-lift-status/main/.github/badges/config-status.json)
+[![CI](https://github.com/marcushyett/ski-lift-status/actions/workflows/ci.yml/badge.svg)](https://github.com/marcushyett/ski-lift-status/actions/workflows/ci.yml)
+
 A Python library for fetching ski resort data from [OpenSkiMap](https://openskimap.org/) and scraping real-time status information from resort websites.
 
 ## Overview
@@ -155,6 +158,36 @@ The project includes GitHub Actions workflows:
   - Runs tests on push/pull request
   - Linting with Ruff
   - Type checking with mypy
+
+- **Test Resort Configs** (`.github/workflows/test-configs.yml`)
+  - Tests scraping configurations against live resort websites
+  - Can test all resorts or a specific one by ID
+  - Reports lift/run counts, status breakdown, and coverage vs OpenSkiMap
+  - Updates the badge shown at the top of this README
+  - Run manually or daily at 6 AM UTC
+
+### Testing Configurations Locally
+
+```bash
+# Test all configured resorts
+python scripts/test_configs.py
+
+# Test a specific resort by ID
+python scripts/test_configs.py --resort-id 68b126bc3175516c9263aed7635d14e37ff360dc
+
+# Output JSON results
+python scripts/test_configs.py --output results.json
+
+# Quiet mode (summary only)
+python scripts/test_configs.py --quiet
+```
+
+The test output includes:
+- **Platform detection**: Identifies the backend system (Lumiplan, Skiplan, etc.)
+- **Extraction method**: Describes how data is extracted (JSON API, HTML parsing, etc.)
+- **Status counts**: Number of open/closed lifts and trails
+- **Sample data**: First 3 lifts and trails with their details
+- **Coverage**: Percentage of OpenSkiMap reference data found
 
 ## Data Structure
 
