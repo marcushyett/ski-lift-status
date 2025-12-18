@@ -1,0 +1,55 @@
+name: Get Ski Resort Data
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Run weekly on Sundays at midnight
+    - cron: "0 0 * * 0"
+  # Can be called by other workflows
+  workflow_call:
+
+jobs:
+  fetch-data:
+    name: Fetch OpenSkiMap Data
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Fetch ski resort data
+        run: python scripts/fetch_data.py
+
+      - name: Upload data artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ski-resort-data
+          path: data/
+          retention-days: 90
+
+      - name: Commit and push data files (if changed)
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/
+          if ! git diff --staged --quiet; then
+            git commit -m "Update ski resort data from OpenSkiMap [skip ci]"
+            git push
+            echo "✅ Data files updated and pushed"
+          else
+            echo "ℹ️  No changes to commit"
+          fi
+
