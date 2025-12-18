@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
   "label": "resort configs",
-  "message": "2/7 passing",
-  "color": "yellow"
+  "message": "2 passing",
+  "color": "brightgreen"
 }
