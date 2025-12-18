@@ -2,19 +2,17 @@
 Skiplan platform adapter.
 
 Skiplan is a resort management system used by many French ski resorts.
-It provides lift/run status through server-side rendered HTML pages
-embedded via iframes.
+It provides lift/run status through XHR responses (getOuvertures.php).
 
 Known URL patterns:
 - live.skiplan.com/moduleweb/2.0/live.php?resort={resort}&module=ouvertures
-- skiplan.com/api/
+- live.skiplan.com/moduleweb/2.0/php/getOuvertures.php?resort={resort}
 
 Extraction approach:
-The skiplan pages are server-side rendered with structured HTML.
-We use CSS selectors to extract lift/run data from the DOM:
-- Lift/run items are in structured elements with status classes
-- Status is indicated via CSS classes (ouvert, ferme, etc.)
-- Names and types are in child elements
+The actual lift/run data is in the getOuvertures.php response, which contains
+HTML with .ouvertures-marker elements. Each marker has:
+- .marker-title with name and type icon (piste-verte.svg, etc.)
+- .marker-content with status (.close, .open, .warning classes)
 """
 
 import re
@@ -64,29 +62,60 @@ URL_PATTERNS = [
     r"skiplan\.com/live",
 ]
 
-# CSS selectors for different element types
-LIFT_SELECTORS = [
-    ".rm-item",  # Common lift item class
-    ".remontee-item",
-    "[data-type='remontee']",
-    ".lift-item",
-    ".rm",  # Short form
-]
-
-TRAIL_SELECTORS = [
-    ".piste-item",
-    "[data-type='piste']",
-    ".trail-item",
-    ".piste",
-]
-
-# Status class patterns
-STATUS_PATTERNS = {
-    "open": ["ouvert", "open", "status-o", "status-1", "opened"],
-    "closed": ["ferme", "fermé", "closed", "status-f", "status-0"],
-    "forecast": ["prevision", "forecast", "status-p", "planned"],
-    "maintenance": ["maintenance", "entretien"],
+# Mapping of SVG icon names to difficulty levels
+# Use specific patterns to avoid false matches (e.g., "black" would match "prl_tc_black.svg")
+DIFFICULTY_MAP = {
+    "piste-verte": "easy",
+    "piste-bleue": "intermediate",
+    "piste-rouge": "advanced",
+    "piste-noire": "expert",
+    "piste_verte": "easy",
+    "piste_bleue": "intermediate",
+    "piste_rouge": "advanced",
+    "piste_noire": "expert",
+    # Only match standalone color names with piste prefix or explicit trail markers
+    "trail-green": "easy",
+    "trail-blue": "intermediate",
+    "trail-red": "advanced",
+    "trail-black": "expert",
+    "run-green": "easy",
+    "run-blue": "intermediate",
+    "run-red": "advanced",
+    "run-black": "expert",
 }
+
+# Mapping of SVG icon names to lift types
+# Order matters - longer/more specific patterns first to avoid substring false matches
+LIFT_TYPE_MAP = [
+    # Explicit prl_ prefixed patterns (La Plagne and other resorts)
+    ("prl_tsd", "télésiège débrayable"),
+    ("prl_tlc", "télécabine"),
+    ("prl_tph", "téléphérique"),
+    ("prl_tc", "télécabine"),
+    ("prl_ts", "télésiège"),
+    ("prl_tk", "téléski"),
+    ("prl_tapis", "tapis roulant"),
+    # Generic patterns (must check tsd before ts to avoid false match)
+    ("funitel", "funitel"),
+    ("tapis", "tapis roulant"),
+    ("tsd", "télésiège débrayable"),
+    ("tlc", "télécabine"),
+    ("tph", "téléphérique"),
+    ("tc", "télécabine"),
+    ("ts", "télésiège"),
+    ("tk", "téléski"),
+    ("tp", "téléphérique"),
+    ("tf", "funiculaire"),
+    # Alternative naming patterns
+    ("telecabine", "télécabine"),
+    ("telesiege", "télésiège"),
+    ("teleski", "téléski"),
+    ("telepherique", "téléphérique"),
+    ("funicular", "funiculaire"),
+    ("gondola", "télécabine"),
+    ("chairlift", "télésiège"),
+    ("draglift", "téléski"),
+]
 
 
 def detect(resources: list[CapturedResource]) -> bool:
@@ -98,8 +127,16 @@ def detect(resources: list[CapturedResource]) -> bool:
     return False
 
 
-def find_main_page(resources: list[CapturedResource]) -> CapturedResource | None:
-    """Find the main skiplan live.php page."""
+def _find_ouvertures_response(resources: list[CapturedResource]) -> CapturedResource | None:
+    """Find the getOuvertures.php response which contains the actual data."""
+    for resource in resources:
+        if "getOuvertures.php" in resource.url:
+            return resource
+    return None
+
+
+def _find_main_page(resources: list[CapturedResource]) -> CapturedResource | None:
+    """Find the main skiplan live.php page (fallback)."""
     for resource in resources:
         if "live.php" in resource.url and "skiplan.com" in resource.url:
             return resource
@@ -116,236 +153,197 @@ def _get_classes(element: Tag) -> list[str]:
     return [str(classes)]
 
 
-def _get_attr_str(element: Tag, attr: str) -> str | None:
-    """Safely get an attribute as a string."""
-    value = element.get(attr)
-    if value is None:
+def _extract_status_from_marker(marker: Tag) -> str:
+    """Extract status from a marker element.
+
+    Status is determined by:
+    1. Classes on .marker-content children (.close, .open, .warning)
+    2. Text content like "closed", "open", etc.
+    """
+    content = marker.select_one(".marker-content")
+    if not content:
+        return "unknown"
+
+    # Check for status classes on child elements
+    for child in content.find_all(True):
+        if not isinstance(child, Tag):
+            continue
+        classes = _get_classes(child)
+        if "close" in classes or "closed" in classes:
+            return "closed"
+        if "open" in classes or "opened" in classes:
+            return "open"
+        if "warning" in classes:
+            # Check text for more specific status
+            text = child.get_text(strip=True).lower()
+            if "closed" in text or "fermé" in text or "ferme" in text:
+                return "closed"
+            if "waiting" in text or "attente" in text:
+                return "waiting"
+            return "warning"
+        if "waiting" in classes:
+            return "waiting"
+
+    # Check text content
+    text = content.get_text(strip=True).lower()
+    if "closed" in text or "fermé" in text:
+        return "closed"
+    if "open" in text or "ouvert" in text:
+        return "open"
+
+    return "unknown"
+
+
+def _extract_type_from_icon(marker: Tag) -> tuple[str | None, str | None]:
+    """Extract type and difficulty from the icon image in marker-title.
+
+    Returns (item_type, difficulty) where:
+    - item_type is 'lift' or 'trail'
+    - difficulty is the trail difficulty (for trails) or lift type (for lifts)
+    """
+    title = marker.select_one(".marker-title")
+    if not title:
+        return None, None
+
+    # Find the img element
+    img = title.select_one("img")
+    if not img:
+        return None, None
+
+    src = img.get("src", "")
+    if isinstance(src, list):
+        src = src[0] if src else ""
+    src = str(src).lower()
+
+    # Check for lift types FIRST (prl_ prefix is distinctive for lifts)
+    # Order matters - longer/more specific patterns first
+    for pattern, lift_type in LIFT_TYPE_MAP:
+        if pattern in src:
+            return "lift", lift_type
+
+    # Check for trail types (use specific piste- patterns)
+    for pattern, difficulty in DIFFICULTY_MAP.items():
+        if pattern in src:
+            return "trail", difficulty
+
+    # Default heuristics based on filename
+    if "prl_" in src or "rm" in src or "lift" in src or "remontee" in src:
+        # prl_ prefix usually indicates lift markers
+        return "lift", None
+    if "piste" in src or "trail" in src or "run" in src:
+        return "trail", None
+
+    return None, None
+
+
+def _extract_name_from_marker(marker: Tag) -> str | None:
+    """Extract the name from a marker element.
+
+    The name is in .marker-title, after any img tags.
+    """
+    title = marker.select_one(".marker-title")
+    if not title:
         return None
-    if isinstance(value, list):
-        return " ".join(str(v) for v in value)
-    return str(value)
+
+    # Get text content, excluding nested elements with class toggle-marker
+    # The name is typically right after the img tag
+    text_parts = []
+    for child in title.children:
+        if isinstance(child, str):
+            text_parts.append(child.strip())
+        elif isinstance(child, Tag):
+            if child.name == "img":
+                continue  # Skip images
+            if "toggle-marker" in _get_classes(child):
+                continue  # Skip toggle button
+            text_parts.append(child.get_text(strip=True))
+
+    name = " ".join(text_parts).strip()
+
+    # Clean up the name
+    name = re.sub(r'\s+', ' ', name)  # Normalize whitespace
+    name = name.strip()
+
+    return name if name else None
 
 
-def _get_status_from_classes(classes: list[str]) -> str | None:
-    """Determine status from CSS classes."""
-    class_str = " ".join(classes).lower()
+def _parse_ouvertures_html(html: str) -> tuple[list[SkiplanLift], list[SkiplanTrail]]:
+    """Parse the getOuvertures.php HTML response."""
+    soup = BeautifulSoup(html, "lxml")
 
-    for status, patterns in STATUS_PATTERNS.items():
-        for pattern in patterns:
-            if pattern in class_str:
-                return status
+    lifts: list[SkiplanLift] = []
+    trails: list[SkiplanTrail] = []
 
-    return None
+    # Find all markers
+    markers = soup.select(".ouvertures-marker")
 
+    for marker in markers:
+        if not isinstance(marker, Tag):
+            continue
 
-def _get_status_from_element(element: Tag) -> str | None:
-    """Extract status from an element or its children."""
-    # Check element's own classes
-    classes = _get_classes(element)
-    status = _get_status_from_classes(classes)
-    if status:
-        return status
+        name = _extract_name_from_marker(marker)
+        if not name:
+            continue
 
-    # Check for status child element
-    status_elem = element.select_one(".status, .etat, [class*='status']")
-    if status_elem and isinstance(status_elem, Tag):
-        status = _get_status_from_classes(_get_classes(status_elem))
-        if status:
-            return status
+        status = _extract_status_from_marker(marker)
+        item_type, type_info = _extract_type_from_icon(marker)
 
-        # Check text content
-        text = status_elem.get_text(strip=True).lower()
-        for status_name, patterns in STATUS_PATTERNS.items():
-            for pattern in patterns:
-                if pattern in text:
-                    return status_name
-
-    return None
-
-
-def _extract_name(element: Tag) -> str | None:
-    """Extract name from an element."""
-    # Try common name selectors
-    name_selectors = [
-        ".name",
-        ".nom",
-        ".title",
-        ".titre",
-        "h3",
-        "h4",
-        ".label",
-        "[class*='name']",
-        "[class*='nom']",
-    ]
-
-    for selector in name_selectors:
-        name_elem = element.select_one(selector)
-        if name_elem:
-            name = name_elem.get_text(strip=True)
-            if name:
-                return name
-
-    # Try data attributes
-    for attr in ["data-name", "data-nom", "data-title", "title"]:
-        name = _get_attr_str(element, attr)
-        if name:
-            return name
-
-    # Fall back to element text
-    text = element.get_text(strip=True)
-    if text and len(text) < 100:  # Reasonable name length
-        return text
-
-    return None
-
-
-def _extract_lift_type(element: Tag) -> str | None:
-    """Extract lift type from an element."""
-    type_selectors = [".type", ".category", "[class*='type']"]
-
-    for selector in type_selectors:
-        type_elem = element.select_one(selector)
-        if type_elem:
-            return type_elem.get_text(strip=True)
-
-    # Check for type in classes
-    classes = _get_classes(element)
-    lift_types = {
-        "tc": "télécabine",
-        "tsd": "télésiège débrayable",
-        "ts": "télésiège",
-        "tk": "téléski",
-        "tp": "téléphérique",
-        "tf": "funiculaire",
-        "tb": "tapis",
-    }
-
-    for cls in classes:
-        cls_lower = cls.lower()
-        for abbrev, full_name in lift_types.items():
-            if cls_lower.startswith(abbrev) or abbrev in cls_lower:
-                return full_name
-
-    return None
-
-
-def _extract_difficulty(element: Tag) -> str | None:
-    """Extract trail difficulty from an element."""
-    # Check for difficulty classes
-    classes = _get_classes(element)
-    class_str = " ".join(classes).lower()
-
-    difficulties = {
-        "verte": "easy",
-        "green": "easy",
-        "bleue": "intermediate",
-        "blue": "intermediate",
-        "rouge": "advanced",
-        "red": "advanced",
-        "noire": "expert",
-        "black": "expert",
-    }
-
-    for color, difficulty in difficulties.items():
-        if color in class_str:
-            return difficulty
-
-    # Check for difficulty element
-    diff_elem = element.select_one(".difficulty, .difficulte, [class*='diff']")
-    if diff_elem:
-        text = diff_elem.get_text(strip=True).lower()
-        for color, difficulty in difficulties.items():
-            if color in text:
-                return difficulty
-
-    return None
-
-
-def _extract_sector(element: Tag) -> str | None:
-    """Extract sector/zone from an element."""
-    sector_selectors = [".sector", ".secteur", ".zone", "[class*='sector']"]
-
-    for selector in sector_selectors:
-        sector_elem = element.select_one(selector)
-        if sector_elem:
-            return sector_elem.get_text(strip=True)
-
-    return _get_attr_str(element, "data-sector") or _get_attr_str(
-        element, "data-secteur"
-    )
-
-
-def _extract_lifts(soup: BeautifulSoup) -> list[SkiplanLift]:
-    """Extract all lifts from the page."""
-    lifts = []
-
-    for selector in LIFT_SELECTORS:
-        elements = soup.select(selector)
-        for elem in elements:
-            if not isinstance(elem, Tag):
-                continue
-            name = _extract_name(elem)
-            if not name:
-                continue
-
-            lifts.append(
-                SkiplanLift(
+        if item_type == "lift":
+            lifts.append(SkiplanLift(
+                name=name,
+                status=status,
+                lift_type=type_info,
+                sector=None,
+            ))
+        elif item_type == "trail":
+            trails.append(SkiplanTrail(
+                name=name,
+                status=status,
+                difficulty=type_info,
+                sector=None,
+            ))
+        else:
+            # Unknown type - try to guess from name
+            name_lower = name.lower()
+            if any(kw in name_lower for kw in ["télésiège", "télécabine", "téléski", "tapis"]):
+                lifts.append(SkiplanLift(
                     name=name,
-                    status=_get_status_from_element(elem),
-                    lift_type=_extract_lift_type(elem),
-                    sector=_extract_sector(elem),
-                )
-            )
+                    status=status,
+                    lift_type=None,
+                    sector=None,
+                ))
+            else:
+                # Default to trail
+                trails.append(SkiplanTrail(
+                    name=name,
+                    status=status,
+                    difficulty=None,
+                    sector=None,
+                ))
 
     # Deduplicate by name
-    seen_names: set[str] = set()
+    seen_lift_names: set[str] = set()
     unique_lifts = []
     for lift in lifts:
-        if lift.name not in seen_names:
-            seen_names.add(lift.name)
+        if lift.name not in seen_lift_names:
+            seen_lift_names.add(lift.name)
             unique_lifts.append(lift)
 
-    return unique_lifts
-
-
-def _extract_trails(soup: BeautifulSoup) -> list[SkiplanTrail]:
-    """Extract all trails from the page."""
-    trails = []
-
-    for selector in TRAIL_SELECTORS:
-        elements = soup.select(selector)
-        for elem in elements:
-            if not isinstance(elem, Tag):
-                continue
-            name = _extract_name(elem)
-            if not name:
-                continue
-
-            trails.append(
-                SkiplanTrail(
-                    name=name,
-                    status=_get_status_from_element(elem),
-                    difficulty=_extract_difficulty(elem),
-                    sector=_extract_sector(elem),
-                )
-            )
-
-    # Deduplicate by name
-    seen_names: set[str] = set()
+    seen_trail_names: set[str] = set()
     unique_trails = []
     for trail in trails:
-        if trail.name not in seen_names:
-            seen_names.add(trail.name)
+        if trail.name not in seen_trail_names:
+            seen_trail_names.add(trail.name)
             unique_trails.append(trail)
 
-    return unique_trails
+    return unique_lifts, unique_trails
 
 
 def extract(resources: list[CapturedResource]) -> SkiplanData | None:
-    """Extract lift/run data from Skiplan platform using CSS selectors.
+    """Extract lift/run data from Skiplan platform.
 
-    Skiplan pages are server-side rendered, so we can parse the HTML
-    directly using BeautifulSoup and CSS selectors.
+    The actual data is in the getOuvertures.php XHR response,
+    which contains HTML with .ouvertures-marker elements.
 
     Args:
         resources: List of captured network resources
@@ -355,33 +353,52 @@ def extract(resources: list[CapturedResource]) -> SkiplanData | None:
     """
     log = logger.bind(adapter="skiplan")
 
-    main_page = find_main_page(resources)
+    # First try to find the getOuvertures.php response
+    ouvertures = _find_ouvertures_response(resources)
+    if ouvertures and ouvertures.content:
+        log.info("found_ouvertures_response", url=ouvertures.url[:80])
+        lifts, trails = _parse_ouvertures_html(ouvertures.content)
+
+        # Extract resort ID from URL
+        resort_id = None
+        match = re.search(r"resort=([^&]+)", ouvertures.url)
+        if match:
+            resort_id = match.group(1)
+
+        log.info(
+            "extraction_complete",
+            lift_count=len(lifts),
+            trail_count=len(trails),
+        )
+
+        return SkiplanData(lifts=lifts, trails=trails, resort_id=resort_id)
+
+    # Fallback to main page (though this likely won't have the data)
+    main_page = _find_main_page(resources)
     if not main_page:
-        log.warning("no_main_page", msg="Skiplan live.php page not found")
+        log.warning("no_skiplan_data", msg="Neither getOuvertures.php nor live.php found")
         return None
+
+    log.warning("no_ouvertures_response", msg="getOuvertures.php not found, using live.php")
 
     html = main_page.content or ""
     if not html:
         log.warning("empty_content", msg="Skiplan page has no content")
         return None
 
-    soup = BeautifulSoup(html, "lxml")
+    lifts, trails = _parse_ouvertures_html(html)
 
-    # Extract lifts and trails
-    lifts = _extract_lifts(soup)
-    trails = _extract_trails(soup)
+    # Extract resort ID from URL
+    resort_id = None
+    match = re.search(r"resort=([^&]+)", main_page.url)
+    if match:
+        resort_id = match.group(1)
 
     log.info(
         "extraction_complete",
         lift_count=len(lifts),
         trail_count=len(trails),
     )
-
-    # Extract resort ID from URL if possible
-    resort_id = None
-    match = re.search(r"resort=([^&]+)", main_page.url)
-    if match:
-        resort_id = match.group(1)
 
     return SkiplanData(lifts=lifts, trails=trails, resort_id=resort_id)
 
