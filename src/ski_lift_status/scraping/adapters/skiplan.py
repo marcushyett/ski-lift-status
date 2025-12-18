@@ -56,7 +56,7 @@ class SkiplanData:
 
 
 # URL patterns that indicate Skiplan platform
-URL_PATTERNS = [
+URL_PATTERNS: list[str] = [
     r"live\.skiplan\.com/moduleweb",
     r"skiplan\.com/api",
     r"skiplan\.com/live",
@@ -64,7 +64,7 @@ URL_PATTERNS = [
 
 # Mapping of SVG icon names to difficulty levels
 # Use specific patterns to avoid false matches (e.g., "black" would match "prl_tc_black.svg")
-DIFFICULTY_MAP = {
+DIFFICULTY_MAP: dict[str, str] = {
     "piste-verte": "easy",
     "piste-bleue": "intermediate",
     "piste-rouge": "advanced",
@@ -86,7 +86,7 @@ DIFFICULTY_MAP = {
 
 # Mapping of SVG icon names to lift types
 # Order matters - longer/more specific patterns first to avoid substring false matches
-LIFT_TYPE_MAP = [
+LIFT_TYPE_MAP: list[tuple[str, str]] = [
     # Explicit prl_ prefixed patterns (La Plagne and other resorts)
     ("prl_tsd", "télésiège débrayable"),
     ("prl_tlc", "télécabine"),
