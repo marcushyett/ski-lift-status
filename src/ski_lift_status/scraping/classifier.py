@@ -1,16 +1,19 @@
 """Resource classifier for identifying static vs dynamic data."""
 
 import re
-from pathlib import Path
 
 from ..models import Lift, Run
 from ..data_fetcher import load_lifts, load_runs
+from .logging_config import get_logger, save_debug_artifact
 from .models import (
     CapturedResource,
     ClassifiedResource,
     DataCategory,
     NetworkCapture,
+    ResourceType,
 )
+
+logger = get_logger(__name__)
 
 
 # Keywords that indicate dynamic/status data
@@ -35,6 +38,13 @@ STATUS_KEYWORDS = [
     "hold",
     "suspended",
     "maintenance",
+    "ouvert",  # French
+    "fermé",   # French
+    "ferme",   # French without accent
+    "offen",   # German
+    "geschlossen",  # German
+    "aperto",  # Italian
+    "chiuso",  # Italian
 ]
 
 # Keywords that indicate static/metadata
@@ -50,6 +60,9 @@ METADATA_KEYWORDS = [
     "coordinates",
     "location",
     "description",
+    "nom",      # French
+    "typ",      # German
+    "nome",     # Italian
 ]
 
 
@@ -79,7 +92,6 @@ def _calculate_coverage(
     if not reference_names:
         return 0.0, []
 
-    content_lower = content.lower()
     content_normalized = _normalize_name(content)
     matched = []
 
@@ -186,6 +198,7 @@ class ResourceClassifier:
             runs: Optional list of runs. If None, loads from data files.
         """
         self.resort_id = resort_id
+        self.log = logger.bind(resort_id=resort_id, phase="classify")
 
         # Load reference data
         if lifts is None:
@@ -207,6 +220,14 @@ class ResourceClassifier:
         # Extract names for matching
         self.lift_names = [l.name for l in self.lifts if l.name]
         self.run_names = [r.name for r in self.runs if r.name]
+
+        self.log.info(
+            "classifier_initialized",
+            lift_count=len(self.lifts),
+            run_count=len(self.runs),
+            lift_names_sample=self.lift_names[:5],
+            run_names_sample=self.run_names[:5],
+        )
 
     def classify_resource(self, resource: CapturedResource) -> ClassifiedResource:
         """Classify a single captured resource.
@@ -235,6 +256,20 @@ class ResourceClassifier:
         # Calculate confidence
         confidence = _calculate_confidence(lift_coverage, run_coverage, category)
 
+        self.log.debug(
+            "resource_classified",
+            url=resource.url[:80],
+            resource_type=resource.resource_type if isinstance(resource.resource_type, str) else resource.resource_type.value,
+            category=category.value,
+            lift_coverage=f"{lift_coverage:.1%}",
+            run_coverage=f"{run_coverage:.1%}",
+            matched_lifts_count=len(matched_lifts),
+            matched_runs_count=len(matched_runs),
+            has_status_keywords=has_status,
+            has_metadata_keywords=has_metadata,
+            confidence=f"{confidence:.2f}",
+        )
+
         return ClassifiedResource(
             resource=resource,
             category=category,
@@ -249,7 +284,7 @@ class ResourceClassifier:
     def classify_capture(
         self,
         capture: NetworkCapture,
-        min_confidence: float = 0.1,
+        min_confidence: float = 0.0,  # Changed default to 0 to see all results
     ) -> list[ClassifiedResource]:
         """Classify all resources in a network capture.
 
@@ -260,6 +295,12 @@ class ResourceClassifier:
         Returns:
             List of ClassifiedResource objects, sorted by confidence.
         """
+        self.log.info(
+            "starting_classification",
+            resource_count=len(capture.resources),
+            has_page_html=capture.page_html is not None,
+        )
+
         classified = []
 
         for resource in capture.resources:
@@ -271,7 +312,7 @@ class ResourceClassifier:
         if capture.page_html:
             html_resource = CapturedResource(
                 url=capture.status_page_url,
-                resource_type="html",
+                resource_type=ResourceType.HTML,
                 content_type="text/html",
                 content=capture.page_html,
                 size_bytes=len(capture.page_html.encode("utf-8")),
@@ -283,6 +324,45 @@ class ResourceClassifier:
 
         # Sort by confidence, highest first
         classified.sort(key=lambda x: x.confidence_score, reverse=True)
+
+        # Log summary
+        categories_summary = {}
+        for c in classified:
+            cat = c.category.value
+            categories_summary[cat] = categories_summary.get(cat, 0) + 1
+
+        self.log.info(
+            "classification_complete",
+            total_classified=len(classified),
+            by_category=categories_summary,
+            top_confidence=classified[0].confidence_score if classified else 0,
+            top_url=classified[0].resource.url[:80] if classified else None,
+        )
+
+        # Save debug artifact
+        save_debug_artifact(
+            "classification_results",
+            {
+                "total_resources": len(capture.resources) + (1 if capture.page_html else 0),
+                "classified_count": len(classified),
+                "reference_lifts": self.lift_names,
+                "reference_runs": self.run_names,
+                "results": [
+                    {
+                        "url": r.resource.url,
+                        "category": r.category.value,
+                        "lift_coverage": r.lift_coverage,
+                        "run_coverage": r.run_coverage,
+                        "confidence": r.confidence_score,
+                        "matched_lifts": r.matched_lift_names[:10],
+                        "matched_runs": r.matched_run_names[:10],
+                    }
+                    for r in classified[:20]  # Top 20
+                ],
+            },
+            resort_id=self.resort_id,
+            phase="phase2_classify",
+        )
 
         return classified
 

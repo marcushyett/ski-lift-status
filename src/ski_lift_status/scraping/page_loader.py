@@ -4,9 +4,12 @@ import asyncio
 import time
 from typing import Callable
 
-from playwright.async_api import Page, Request, Response, async_playwright
+from playwright.async_api import Response, async_playwright
 
+from .logging_config import get_logger, save_debug_artifact
 from .models import CapturedResource, NetworkCapture, ResourceType
+
+logger = get_logger(__name__)
 
 
 def _determine_resource_type(content_type: str | None, url: str) -> ResourceType:
@@ -54,7 +57,7 @@ def _is_relevant_resource(url: str, content_type: str | None) -> bool:
         return True
 
     # Include API endpoints
-    api_patterns = ["/api/", "/data/", "/status/", "/lifts/", "/runs/"]
+    api_patterns = ["/api/", "/data/", "/status/", "/lifts/", "/runs/", "/pistes/", "/remontees/"]
     if any(pattern in url.lower() for pattern in api_patterns):
         return True
 
@@ -68,7 +71,7 @@ class PageLoader:
         self,
         headless: bool = True,
         timeout_ms: int = 30000,
-        wait_after_load_ms: int = 3000,
+        wait_after_load_ms: int = 5000,
     ):
         """Initialize the page loader.
 
@@ -97,6 +100,9 @@ class PageLoader:
         Returns:
             NetworkCapture containing all captured resources.
         """
+        log = logger.bind(resort_id=resort_id, url=url, phase="page_load")
+        log.info("starting_page_load")
+
         capture = NetworkCapture(
             resort_id=resort_id,
             status_page_url=url,
@@ -104,49 +110,59 @@ class PageLoader:
 
         start_time = time.time()
         responses: dict[str, Response] = {}
+        all_urls_seen: list[str] = []
 
         async with async_playwright() as p:
+            log.debug("launching_browser", headless=self.headless)
             browser = await p.chromium.launch(headless=self.headless)
             context = await browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
             )
             page = await context.new_page()
 
-            # Track responses
+            # Track all responses
             async def handle_response(response: Response) -> None:
+                all_urls_seen.append(response.url)
                 responses[response.url] = response
 
             page.on("response", handle_response)
 
             try:
-                # Navigate to page
+                log.debug("navigating_to_page", timeout_ms=self.timeout_ms)
                 await page.goto(url, wait_until="networkidle", timeout=self.timeout_ms)
 
-                # Wait additional time for XHR requests to complete
+                log.debug("waiting_for_xhr", wait_ms=self.wait_after_load_ms)
                 await asyncio.sleep(self.wait_after_load_ms / 1000)
 
                 # Capture page HTML
                 capture.page_html = await page.content()
+                html_size = len(capture.page_html.encode("utf-8"))
+                log.debug("captured_page_html", size_bytes=html_size)
 
                 # Process captured responses
+                relevant_count = 0
+                skipped_count = 0
+
                 for resp_url, response in responses.items():
                     try:
                         content_type = response.headers.get("content-type", "")
 
                         if not _is_relevant_resource(resp_url, content_type):
+                            skipped_count += 1
                             continue
 
                         # Get response body
                         try:
                             body = await response.text()
-                        except Exception:
-                            continue  # Skip if can't get body
+                        except Exception as e:
+                            log.debug("failed_to_get_body", url=resp_url, error=str(e))
+                            continue
+
+                        resource_type = _determine_resource_type(content_type, resp_url)
 
                         resource = CapturedResource(
                             url=resp_url,
-                            resource_type=_determine_resource_type(
-                                content_type, resp_url
-                            ),
+                            resource_type=resource_type,
                             content_type=content_type,
                             content=body,
                             size_bytes=len(body.encode("utf-8")),
@@ -155,26 +171,75 @@ class PageLoader:
                         )
 
                         capture.resources.append(resource)
+                        relevant_count += 1
+
+                        log.debug(
+                            "captured_resource",
+                            url=resp_url[:100],
+                            type=resource_type.value,
+                            size_bytes=resource.size_bytes,
+                            status=response.status,
+                        )
 
                         if on_resource:
                             on_resource(resource)
 
                     except Exception as e:
-                        capture.errors.append(f"Error processing {resp_url}: {str(e)}")
+                        error_msg = f"Error processing {resp_url}: {str(e)}"
+                        capture.errors.append(error_msg)
+                        log.warning("resource_processing_error", url=resp_url, error=str(e))
+
+                log.info(
+                    "page_load_complete",
+                    total_responses=len(responses),
+                    relevant_resources=relevant_count,
+                    skipped_resources=skipped_count,
+                )
 
             except Exception as e:
-                capture.errors.append(f"Error loading page: {str(e)}")
+                error_msg = f"Error loading page: {str(e)}"
+                capture.errors.append(error_msg)
+                log.error("page_load_failed", error=str(e))
 
             finally:
                 await browser.close()
 
         capture.load_time_ms = (time.time() - start_time) * 1000
 
+        log.info(
+            "capture_complete",
+            load_time_ms=capture.load_time_ms,
+            resource_count=len(capture.resources),
+            error_count=len(capture.errors),
+        )
+
+        # Save debug artifacts
+        save_debug_artifact(
+            "network_capture",
+            {
+                "url": url,
+                "resource_count": len(capture.resources),
+                "resources": [
+                    {
+                        "url": r.url,
+                        "type": r.resource_type.value,
+                        "size": r.size_bytes,
+                        "content_type": r.content_type,
+                    }
+                    for r in capture.resources
+                ],
+                "all_urls_seen": all_urls_seen[:100],  # First 100 for debugging
+                "errors": capture.errors,
+            },
+            resort_id=resort_id,
+            phase="phase1_capture",
+        )
+
         return capture
 
     async def load_multiple_pages(
         self,
-        pages: list[tuple[str, str]],  # List of (url, resort_id) tuples
+        pages: list[tuple[str, str]],
         max_concurrent: int = 3,
     ) -> list[NetworkCapture]:
         """Load multiple pages concurrently.
