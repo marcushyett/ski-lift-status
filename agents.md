@@ -4,6 +4,25 @@ This document captures important rules and guidelines for developing the ski lif
 
 ## Core Principles
 
+### 0. Claude Code's Role: Build, Evaluate, Improve - NOT Execute
+
+**CRITICAL**: Claude Code (the AI assistant) is here to BUILD and IMPROVE the pipeline, NOT to manually execute data extraction.
+
+**Claude Code SHOULD:**
+- Write and improve pipeline code that does the scraping, matching, and extraction
+- Create automated tests that validate the pipeline
+- Analyze pipeline outputs to identify improvements
+- Debug pipeline issues and fix the underlying code
+- Evaluate results and suggest algorithmic improvements
+
+**Claude Code should NOT:**
+- Manually fetch URLs and parse data outside the pipeline
+- Manually match lift/run names by writing one-off scripts
+- Perform extraction logic that should be in the pipeline
+- Do anything that the pipeline should be doing automatically
+
+The goal is a **fully automated pipeline** that can run on any resort without human intervention. If Claude Code finds itself doing manual work, that work should be encoded into the pipeline instead.
+
 ### 1. No Resort-Specific Optimizations
 
 **CRITICAL**: When improving the scraping pipeline, NEVER add resort-specific logic or rules.
