@@ -74,6 +74,19 @@ RESORT_CONFIGS: dict[str, ResortConfig] = {
             "resort_slug": "paradiski_hiver",
         },
     ),
+
+    # Zermatt-Cervinia - Nuxt.js platform
+    "438e8330317f2f5a597b60acb0c0a11901b9329f": ResortConfig(
+        resort_id="438e8330317f2f5a597b60acb0c0a11901b9329f",
+        resort_name="Zermatt-Cervinia",
+        platform="nuxtjs",
+        api_endpoints=[
+            "https://www.cervinia.it/en/impianti",
+        ],
+        platform_config={
+            "page_url": "https://www.cervinia.it/en/impianti",
+        },
+    ),
 }
 
 

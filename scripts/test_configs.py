@@ -36,7 +36,7 @@ from ski_lift_status.scraping.resort_config import (
     get_all_resort_configs,
     get_resort_config,
 )
-from ski_lift_status.scraping.adapters import lumiplan, skiplan
+from ski_lift_status.scraping.adapters import lumiplan, skiplan, nuxtjs
 from ski_lift_status.scraping.status_normalizer import (
     NormalizedStatus,
     normalize_status_sync,
@@ -134,6 +134,11 @@ def get_extraction_method_description(platform: str) -> str:
             "endpoint. Parses .ouvertures-marker elements using BeautifulSoup to extract "
             "name, status, and type information from HTML structure."
         ),
+        "nuxtjs": (
+            "Nuxt.js HTML (HTTP-only) - Fetches server-rendered HTML page and "
+            "extracts lift/trail data from embedded __NUXT__ hydration payload. "
+            "Resolves compressed IIFE variable names to actual values."
+        ),
     }
     return descriptions.get(platform, f"Unknown platform: {platform}")
 
@@ -211,6 +216,9 @@ async def test_resort(
                 result.error = "Missing resort_slug in platform_config"
                 return result
             data = await skiplan.fetch_live_status(resort_slug)
+
+        elif config.platform == "nuxtjs":
+            data = await nuxtjs.fetch_cervinia()
 
         else:
             result.error = f"Unknown platform: {config.platform}"
