@@ -284,7 +284,7 @@ def _extract_list_data(html_content: str) -> list[dict[str, Any]]:
     for pattern in patterns:
         container = pattern["container"]
         class_pattern = pattern.get("class_")
-        elements = soup.find_all(container, class_=class_pattern)  # type: ignore[arg-type]
+        elements = soup.find_all(container, class_=class_pattern)  # type: ignore[call-overload]
         for elem in elements:
             item = {}
 
