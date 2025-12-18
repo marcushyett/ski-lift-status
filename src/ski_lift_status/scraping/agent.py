@@ -453,7 +453,7 @@ class ScrapingAgent:
         }
 
         # Run the graph
-        final_state = self.app.invoke(initial_state)
+        final_state = self.app.invoke(initial_state)  # type: ignore[arg-type]
 
         # Build result
         success = final_state["action"] == AgentAction.COMPLETE

@@ -282,7 +282,9 @@ def _extract_list_data(html_content: str) -> list[dict[str, Any]]:
     ]
 
     for pattern in patterns:
-        elements = soup.find_all(pattern["container"], class_=pattern.get("class_"))
+        container = pattern["container"]
+        class_pattern = pattern.get("class_")
+        elements = soup.find_all(container, class_=class_pattern)  # type: ignore[arg-type]
         for elem in elements:
             item = {}
 

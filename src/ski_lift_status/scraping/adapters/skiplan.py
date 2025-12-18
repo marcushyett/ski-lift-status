@@ -20,7 +20,7 @@ We use CSS selectors to extract lift/run data from the DOM:
 import re
 from dataclasses import dataclass
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from ..logging_config import get_logger
 from ..models import CapturedResource
@@ -106,6 +106,26 @@ def find_main_page(resources: list[CapturedResource]) -> CapturedResource | None
     return None
 
 
+def _get_classes(element: Tag) -> list[str]:
+    """Safely get classes from an element as a list of strings."""
+    classes = element.get("class")
+    if classes is None:
+        return []
+    if isinstance(classes, list):
+        return [str(c) for c in classes]
+    return [str(classes)]
+
+
+def _get_attr_str(element: Tag, attr: str) -> str | None:
+    """Safely get an attribute as a string."""
+    value = element.get(attr)
+    if value is None:
+        return None
+    if isinstance(value, list):
+        return " ".join(str(v) for v in value)
+    return str(value)
+
+
 def _get_status_from_classes(classes: list[str]) -> str | None:
     """Determine status from CSS classes."""
     class_str = " ".join(classes).lower()
@@ -118,18 +138,18 @@ def _get_status_from_classes(classes: list[str]) -> str | None:
     return None
 
 
-def _get_status_from_element(element: BeautifulSoup) -> str | None:
+def _get_status_from_element(element: Tag) -> str | None:
     """Extract status from an element or its children."""
     # Check element's own classes
-    classes = element.get("class", [])
+    classes = _get_classes(element)
     status = _get_status_from_classes(classes)
     if status:
         return status
 
     # Check for status child element
     status_elem = element.select_one(".status, .etat, [class*='status']")
-    if status_elem:
-        status = _get_status_from_classes(status_elem.get("class", []))
+    if status_elem and isinstance(status_elem, Tag):
+        status = _get_status_from_classes(_get_classes(status_elem))
         if status:
             return status
 
@@ -143,7 +163,7 @@ def _get_status_from_element(element: BeautifulSoup) -> str | None:
     return None
 
 
-def _extract_name(element: BeautifulSoup) -> str | None:
+def _extract_name(element: Tag) -> str | None:
     """Extract name from an element."""
     # Try common name selectors
     name_selectors = [
@@ -167,7 +187,7 @@ def _extract_name(element: BeautifulSoup) -> str | None:
 
     # Try data attributes
     for attr in ["data-name", "data-nom", "data-title", "title"]:
-        name = element.get(attr)
+        name = _get_attr_str(element, attr)
         if name:
             return name
 
@@ -179,7 +199,7 @@ def _extract_name(element: BeautifulSoup) -> str | None:
     return None
 
 
-def _extract_lift_type(element: BeautifulSoup) -> str | None:
+def _extract_lift_type(element: Tag) -> str | None:
     """Extract lift type from an element."""
     type_selectors = [".type", ".category", "[class*='type']"]
 
@@ -189,7 +209,7 @@ def _extract_lift_type(element: BeautifulSoup) -> str | None:
             return type_elem.get_text(strip=True)
 
     # Check for type in classes
-    classes = element.get("class", [])
+    classes = _get_classes(element)
     lift_types = {
         "tc": "télécabine",
         "tsd": "télésiège débrayable",
@@ -209,10 +229,10 @@ def _extract_lift_type(element: BeautifulSoup) -> str | None:
     return None
 
 
-def _extract_difficulty(element: BeautifulSoup) -> str | None:
+def _extract_difficulty(element: Tag) -> str | None:
     """Extract trail difficulty from an element."""
     # Check for difficulty classes
-    classes = element.get("class", [])
+    classes = _get_classes(element)
     class_str = " ".join(classes).lower()
 
     difficulties = {
@@ -241,7 +261,7 @@ def _extract_difficulty(element: BeautifulSoup) -> str | None:
     return None
 
 
-def _extract_sector(element: BeautifulSoup) -> str | None:
+def _extract_sector(element: Tag) -> str | None:
     """Extract sector/zone from an element."""
     sector_selectors = [".sector", ".secteur", ".zone", "[class*='sector']"]
 
@@ -250,7 +270,9 @@ def _extract_sector(element: BeautifulSoup) -> str | None:
         if sector_elem:
             return sector_elem.get_text(strip=True)
 
-    return element.get("data-sector") or element.get("data-secteur")
+    return _get_attr_str(element, "data-sector") or _get_attr_str(
+        element, "data-secteur"
+    )
 
 
 def _extract_lifts(soup: BeautifulSoup) -> list[SkiplanLift]:
@@ -260,6 +282,8 @@ def _extract_lifts(soup: BeautifulSoup) -> list[SkiplanLift]:
     for selector in LIFT_SELECTORS:
         elements = soup.select(selector)
         for elem in elements:
+            if not isinstance(elem, Tag):
+                continue
             name = _extract_name(elem)
             if not name:
                 continue
@@ -291,6 +315,8 @@ def _extract_trails(soup: BeautifulSoup) -> list[SkiplanTrail]:
     for selector in TRAIL_SELECTORS:
         elements = soup.select(selector)
         for elem in elements:
+            if not isinstance(elem, Tag):
+                continue
             name = _extract_name(elem)
             if not name:
                 continue
