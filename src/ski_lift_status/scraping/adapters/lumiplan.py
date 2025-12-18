@@ -55,7 +55,7 @@ class LumiplanData:
 
 
 # URL patterns that indicate Lumiplan platform
-URL_PATTERNS = [
+URL_PATTERNS: list[str] = [
     r"lumiplay\.link/interactive-map",
     r"lumiplan\.com/api",
     r"lumiplan\.pro/api",
