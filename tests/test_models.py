@@ -1,6 +1,5 @@
 """Tests for scraping pipeline models."""
 
-import pytest
 
 from ski_lift_status.scraping.models import (
     CapturedResource,
@@ -8,7 +7,6 @@ from ski_lift_status.scraping.models import (
     DataCategory,
     ExtractionConfig,
     ExtractionType,
-    FieldMapping,
     NetworkCapture,
     PipelineConfig,
     PipelineResult,

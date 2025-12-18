@@ -204,7 +204,7 @@ class ResourceClassifier:
         if lifts is None:
             all_lifts = load_lifts()
             self.lifts = [
-                l for l in all_lifts if resort_id in (l.ski_area_ids or "").split(";")
+                lift for lift in all_lifts if resort_id in (lift.ski_area_ids or "").split(";")
             ]
         else:
             self.lifts = lifts
@@ -218,8 +218,8 @@ class ResourceClassifier:
             self.runs = runs
 
         # Extract names for matching
-        self.lift_names = [l.name for l in self.lifts if l.name]
-        self.run_names = [r.name for r in self.runs if r.name]
+        self.lift_names = [lift.name for lift in self.lifts if lift.name]
+        self.run_names = [run.name for run in self.runs if run.name]
 
         self.log.info(
             "classifier_initialized",
@@ -326,7 +326,7 @@ class ResourceClassifier:
         classified.sort(key=lambda x: x.confidence_score, reverse=True)
 
         # Log summary
-        categories_summary = {}
+        categories_summary: dict[str, int] = {}
         for c in classified:
             cat = c.category.value
             categories_summary[cat] = categories_summary.get(cat, 0) + 1

@@ -4,7 +4,6 @@ import json
 import tempfile
 from pathlib import Path
 
-import pytest
 
 from ski_lift_status.scraping.models import (
     DataCategory,

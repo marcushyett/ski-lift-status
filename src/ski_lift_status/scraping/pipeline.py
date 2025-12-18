@@ -4,26 +4,24 @@ import csv
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 from ..data_fetcher import load_lifts, load_resorts, load_runs
-from ..models import Lift, Resort, Run
+from ..models import Lift, Run
 from ..utils import get_data_dir
-from .agent import ScrapingAgent, run_scraping_agent
-from .classifier import ResourceClassifier, classify_network_capture
-from .config_generator import ConfigGenerator, MockConfigGenerator, get_config_generator
+from .agent import run_scraping_agent
+from .classifier import ResourceClassifier
+from .config_generator import get_config_generator
 from .models import (
     ClassifiedResource,
-    DataCategory,
     NetworkCapture,
     PipelineConfig,
     PipelineResult,
     SchemaOverview,
     SourceMapping,
 )
-from .page_loader import PageLoader, capture_page_resources
-from .schema_analyzer import SchemaAnalyzer, analyze_classified_resources
-from .source_mapper import SourceMapper, find_source_mappings
+from .page_loader import PageLoader
+from .schema_analyzer import SchemaAnalyzer
+from .source_mapper import SourceMapper
 
 
 @dataclass
@@ -140,8 +138,8 @@ class ScrapingPipeline:
     def _get_resort_lifts(self, resort_id: str) -> list[Lift]:
         """Get lifts for a specific resort."""
         return [
-            l for l in self.lifts
-            if resort_id in (l.ski_area_ids or "").split(";")
+            lift for lift in self.lifts
+            if resort_id in (lift.ski_area_ids or "").split(";")
         ]
 
     def _get_resort_runs(self, resort_id: str) -> list[Run]:
@@ -165,7 +163,7 @@ class ScrapingPipeline:
         Returns:
             NetworkCapture with all captured resources.
         """
-        print(f"Phase 1: Loading page and capturing network traffic...")
+        print("Phase 1: Loading page and capturing network traffic...")
         capture = await self.page_loader.load_page(url, resort_id)
         print(f"  Captured {len(capture.resources)} resources in {capture.load_time_ms:.0f}ms")
         return capture
@@ -184,7 +182,7 @@ class ScrapingPipeline:
         Returns:
             List of classified resources.
         """
-        print(f"Phase 2: Classifying resources...")
+        print("Phase 2: Classifying resources...")
         resort_lifts = self._get_resort_lifts(resort_id)
         resort_runs = self._get_resort_runs(resort_id)
 
@@ -192,7 +190,7 @@ class ScrapingPipeline:
         classified = classifier.classify_capture(capture)
 
         # Log classification results
-        categories = {}
+        categories: dict[str, int] = {}
         for c in classified:
             cat = c.category.value
             categories[cat] = categories.get(cat, 0) + 1
@@ -215,7 +213,7 @@ class ScrapingPipeline:
         Returns:
             Dict of URL -> SchemaOverview list.
         """
-        print(f"Phase 3: Analyzing schemas...")
+        print("Phase 3: Analyzing schemas...")
         schemas = self.schema_analyzer.analyze_all(classified)
 
         total_schemas = sum(len(s) for s in schemas.values())
@@ -237,7 +235,7 @@ class ScrapingPipeline:
         Returns:
             List of source mappings.
         """
-        print(f"Phase 4: Mapping source relationships...")
+        print("Phase 4: Mapping source relationships...")
         resort_lifts = self._get_resort_lifts(resort_id)
         resort_runs = self._get_resort_runs(resort_id)
 
@@ -270,7 +268,7 @@ class ScrapingPipeline:
         Returns:
             Generated PipelineConfig.
         """
-        print(f"Phase 5: Generating extraction configuration...")
+        print("Phase 5: Generating extraction configuration...")
 
         # Get best schemas
         best_schemas = self.schema_analyzer.get_best_schemas(schemas)[:5]

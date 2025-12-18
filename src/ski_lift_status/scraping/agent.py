@@ -2,7 +2,7 @@
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Any, TypedDict
 
@@ -11,8 +11,6 @@ from langgraph.graph import END, StateGraph
 
 from ..models import Lift, Run
 from .models import (
-    DataCategory,
-    ExtractionConfig,
     ExtractionType,
     PipelineConfig,
     PipelineResult,
@@ -223,10 +221,10 @@ def extract_data(state: AgentState) -> AgentState:
 
 def validate_coverage(state: AgentState) -> AgentState:
     """Validate extraction coverage against reference data."""
-    extracted_lift_names = [l.get("name", "") for l in state["extracted_lifts"]]
-    extracted_run_names = [r.get("name", "") for r in state["extracted_runs"]]
+    extracted_lift_names = [lift.get("name", "") for lift in state["extracted_lifts"]]
+    extracted_run_names = [run.get("name", "") for run in state["extracted_runs"]]
 
-    reference_lift_names = [l.get("name", "") for l in state["reference_lifts"]]
+    reference_lift_names = [lift.get("name", "") for lift in state["reference_lifts"]]
     reference_run_names = [r.get("name", "") for r in state["reference_runs"]]
 
     lift_coverage, _ = _calculate_coverage(extracted_lift_names, reference_lift_names)
@@ -432,8 +430,8 @@ class ScrapingAgent:
             PipelineResult with extracted data and metrics.
         """
         # Convert Pydantic models to dicts for state
-        ref_lifts = [{"name": l.name, "id": l.id} for l in reference_lifts]
-        ref_runs = [{"name": r.name, "id": r.id} for r in reference_runs]
+        ref_lifts = [{"name": lift.name, "id": lift.id} for lift in reference_lifts]
+        ref_runs = [{"name": run.name, "id": run.id} for run in reference_runs]
 
         initial_state: AgentState = {
             "config": config,

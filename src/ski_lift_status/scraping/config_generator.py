@@ -7,7 +7,6 @@ from typing import Any
 from openai import OpenAI
 
 from .models import (
-    DataCategory,
     ExtractionConfig,
     ExtractionType,
     FieldMapping,

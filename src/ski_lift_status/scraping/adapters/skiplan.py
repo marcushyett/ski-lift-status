@@ -2,30 +2,28 @@
 Skiplan platform adapter.
 
 Skiplan is a resort management system used by many French ski resorts.
-It provides lift/run status through an embedded iframe that renders
-data using JavaScript/SVG/Canvas.
+It provides lift/run status through server-side rendered HTML pages
+embedded via iframes.
 
 Known URL patterns:
 - live.skiplan.com/moduleweb/2.0/live.php?resort={resort}&module=ouvertures
 - skiplan.com/api/
 
-The data is NOT available as JSON - it's rendered client-side from
-JavaScript variables and function calls like gotoPictoPrl().
-
 Extraction approach:
-1. Parse JavaScript for gotoPictoPrl() calls which contain lift names
-2. Parse embedded HTML for status classes
-3. Extract data from SVG/Canvas elements
-
-TODO: This adapter requires additional work to fully implement.
+The skiplan pages are server-side rendered with structured HTML.
+We use CSS selectors to extract lift/run data from the DOM:
+- Lift/run items are in structured elements with status classes
+- Status is indicated via CSS classes (ouvert, ferme, etc.)
+- Names and types are in child elements
 """
 
 import re
 from dataclasses import dataclass
-from typing import Any
 
-from ..models import CapturedResource
+from bs4 import BeautifulSoup
+
 from ..logging_config import get_logger
+from ..models import CapturedResource
 
 logger = get_logger(__name__)
 
@@ -37,6 +35,7 @@ class SkiplanLift:
     name: str
     status: str | None
     lift_type: str | None
+    sector: str | None = None
 
 
 @dataclass
@@ -46,6 +45,7 @@ class SkiplanTrail:
     name: str
     status: str | None
     difficulty: str | None
+    sector: str | None = None
 
 
 @dataclass
@@ -63,6 +63,30 @@ URL_PATTERNS = [
     r"skiplan\.com/api",
     r"skiplan\.com/live",
 ]
+
+# CSS selectors for different element types
+LIFT_SELECTORS = [
+    ".rm-item",  # Common lift item class
+    ".remontee-item",
+    "[data-type='remontee']",
+    ".lift-item",
+    ".rm",  # Short form
+]
+
+TRAIL_SELECTORS = [
+    ".piste-item",
+    "[data-type='piste']",
+    ".trail-item",
+    ".piste",
+]
+
+# Status class patterns
+STATUS_PATTERNS = {
+    "open": ["ouvert", "open", "status-o", "status-1", "opened"],
+    "closed": ["ferme", "fermé", "closed", "status-f", "status-0"],
+    "forecast": ["prevision", "forecast", "status-p", "planned"],
+    "maintenance": ["maintenance", "entretien"],
+}
 
 
 def detect(resources: list[CapturedResource]) -> bool:
@@ -82,44 +106,220 @@ def find_main_page(resources: list[CapturedResource]) -> CapturedResource | None
     return None
 
 
-def extract_lift_names_from_js(js_content: str) -> list[str]:
-    """Extract lift names from gotoPictoPrl() JavaScript calls.
+def _get_status_from_classes(classes: list[str]) -> str | None:
+    """Determine status from CSS classes."""
+    class_str = " ".join(classes).lower()
 
-    The skiplan JavaScript contains calls like:
-    gotoPictoPrl("picto_TC DES VERDONS", false, 0.5, true, 3640, 1035);
+    for status, patterns in STATUS_PATTERNS.items():
+        for pattern in patterns:
+            if pattern in class_str:
+                return status
 
-    We extract the lift names from these calls.
-    """
-    pattern = r'gotoPictoPrl\("picto_([^"]+)"'
-    matches = re.findall(pattern, js_content)
-    return matches
+    return None
 
 
-def parse_status_from_html(html: str) -> dict[str, str]:
-    """Parse status indicators from HTML.
+def _get_status_from_element(element: BeautifulSoup) -> str | None:
+    """Extract status from an element or its children."""
+    # Check element's own classes
+    classes = element.get("class", [])
+    status = _get_status_from_classes(classes)
+    if status:
+        return status
 
-    Skiplan uses CSS classes like:
-    - 'ouvert' / 'open' for open
-    - 'ferme' / 'closed' for closed
-    - 'prevision' for forecast
+    # Check for status child element
+    status_elem = element.select_one(".status, .etat, [class*='status']")
+    if status_elem:
+        status = _get_status_from_classes(status_elem.get("class", []))
+        if status:
+            return status
 
-    Returns mapping of lift/run names to status.
-    """
-    # This is a stub - full implementation requires parsing
-    # the complex SVG/canvas structure
-    return {}
+        # Check text content
+        text = status_elem.get_text(strip=True).lower()
+        for status_name, patterns in STATUS_PATTERNS.items():
+            for pattern in patterns:
+                if pattern in text:
+                    return status_name
+
+    return None
+
+
+def _extract_name(element: BeautifulSoup) -> str | None:
+    """Extract name from an element."""
+    # Try common name selectors
+    name_selectors = [
+        ".name",
+        ".nom",
+        ".title",
+        ".titre",
+        "h3",
+        "h4",
+        ".label",
+        "[class*='name']",
+        "[class*='nom']",
+    ]
+
+    for selector in name_selectors:
+        name_elem = element.select_one(selector)
+        if name_elem:
+            name = name_elem.get_text(strip=True)
+            if name:
+                return name
+
+    # Try data attributes
+    for attr in ["data-name", "data-nom", "data-title", "title"]:
+        name = element.get(attr)
+        if name:
+            return name
+
+    # Fall back to element text
+    text = element.get_text(strip=True)
+    if text and len(text) < 100:  # Reasonable name length
+        return text
+
+    return None
+
+
+def _extract_lift_type(element: BeautifulSoup) -> str | None:
+    """Extract lift type from an element."""
+    type_selectors = [".type", ".category", "[class*='type']"]
+
+    for selector in type_selectors:
+        type_elem = element.select_one(selector)
+        if type_elem:
+            return type_elem.get_text(strip=True)
+
+    # Check for type in classes
+    classes = element.get("class", [])
+    lift_types = {
+        "tc": "télécabine",
+        "tsd": "télésiège débrayable",
+        "ts": "télésiège",
+        "tk": "téléski",
+        "tp": "téléphérique",
+        "tf": "funiculaire",
+        "tb": "tapis",
+    }
+
+    for cls in classes:
+        cls_lower = cls.lower()
+        for abbrev, full_name in lift_types.items():
+            if cls_lower.startswith(abbrev) or abbrev in cls_lower:
+                return full_name
+
+    return None
+
+
+def _extract_difficulty(element: BeautifulSoup) -> str | None:
+    """Extract trail difficulty from an element."""
+    # Check for difficulty classes
+    classes = element.get("class", [])
+    class_str = " ".join(classes).lower()
+
+    difficulties = {
+        "verte": "easy",
+        "green": "easy",
+        "bleue": "intermediate",
+        "blue": "intermediate",
+        "rouge": "advanced",
+        "red": "advanced",
+        "noire": "expert",
+        "black": "expert",
+    }
+
+    for color, difficulty in difficulties.items():
+        if color in class_str:
+            return difficulty
+
+    # Check for difficulty element
+    diff_elem = element.select_one(".difficulty, .difficulte, [class*='diff']")
+    if diff_elem:
+        text = diff_elem.get_text(strip=True).lower()
+        for color, difficulty in difficulties.items():
+            if color in text:
+                return difficulty
+
+    return None
+
+
+def _extract_sector(element: BeautifulSoup) -> str | None:
+    """Extract sector/zone from an element."""
+    sector_selectors = [".sector", ".secteur", ".zone", "[class*='sector']"]
+
+    for selector in sector_selectors:
+        sector_elem = element.select_one(selector)
+        if sector_elem:
+            return sector_elem.get_text(strip=True)
+
+    return element.get("data-sector") or element.get("data-secteur")
+
+
+def _extract_lifts(soup: BeautifulSoup) -> list[SkiplanLift]:
+    """Extract all lifts from the page."""
+    lifts = []
+
+    for selector in LIFT_SELECTORS:
+        elements = soup.select(selector)
+        for elem in elements:
+            name = _extract_name(elem)
+            if not name:
+                continue
+
+            lifts.append(
+                SkiplanLift(
+                    name=name,
+                    status=_get_status_from_element(elem),
+                    lift_type=_extract_lift_type(elem),
+                    sector=_extract_sector(elem),
+                )
+            )
+
+    # Deduplicate by name
+    seen_names: set[str] = set()
+    unique_lifts = []
+    for lift in lifts:
+        if lift.name not in seen_names:
+            seen_names.add(lift.name)
+            unique_lifts.append(lift)
+
+    return unique_lifts
+
+
+def _extract_trails(soup: BeautifulSoup) -> list[SkiplanTrail]:
+    """Extract all trails from the page."""
+    trails = []
+
+    for selector in TRAIL_SELECTORS:
+        elements = soup.select(selector)
+        for elem in elements:
+            name = _extract_name(elem)
+            if not name:
+                continue
+
+            trails.append(
+                SkiplanTrail(
+                    name=name,
+                    status=_get_status_from_element(elem),
+                    difficulty=_extract_difficulty(elem),
+                    sector=_extract_sector(elem),
+                )
+            )
+
+    # Deduplicate by name
+    seen_names: set[str] = set()
+    unique_trails = []
+    for trail in trails:
+        if trail.name not in seen_names:
+            seen_names.add(trail.name)
+            unique_trails.append(trail)
+
+    return unique_trails
 
 
 def extract(resources: list[CapturedResource]) -> SkiplanData | None:
-    """Extract lift/run data from Skiplan platform.
+    """Extract lift/run data from Skiplan platform using CSS selectors.
 
-    Note: Skiplan data extraction is complex because:
-    1. Data is rendered client-side via JavaScript
-    2. Status is shown via SVG/Canvas graphics
-    3. No clean JSON API is available
-
-    This adapter provides basic extraction from JavaScript and HTML.
-    For full extraction, the page must be rendered with a browser.
+    Skiplan pages are server-side rendered, so we can parse the HTML
+    directly using BeautifulSoup and CSS selectors.
 
     Args:
         resources: List of captured network resources
@@ -135,32 +335,29 @@ def extract(resources: list[CapturedResource]) -> SkiplanData | None:
         return None
 
     html = main_page.content or ""
+    if not html:
+        log.warning("empty_content", msg="Skiplan page has no content")
+        return None
 
-    # Extract lift names from JavaScript
-    lift_names = extract_lift_names_from_js(html)
-    log.info("js_lift_names_found", count=len(lift_names))
+    soup = BeautifulSoup(html, "lxml")
 
-    # Try to parse status from HTML
-    status_map = parse_status_from_html(html)
-
-    lifts = []
-    for name in lift_names:
-        lifts.append(
-            SkiplanLift(
-                name=name,
-                status=status_map.get(name),
-                lift_type=None,  # Would need to parse from HTML
-            )
-        )
+    # Extract lifts and trails
+    lifts = _extract_lifts(soup)
+    trails = _extract_trails(soup)
 
     log.info(
         "extraction_complete",
         lift_count=len(lifts),
-        trail_count=0,
-        note="Skiplan extraction is limited without full JS rendering",
+        trail_count=len(trails),
     )
 
-    return SkiplanData(lifts=lifts, trails=[], resort_id=None)
+    # Extract resort ID from URL if possible
+    resort_id = None
+    match = re.search(r"resort=([^&]+)", main_page.url)
+    if match:
+        resort_id = match.group(1)
+
+    return SkiplanData(lifts=lifts, trails=trails, resort_id=resort_id)
 
 
 def get_status_summary(data: SkiplanData) -> dict[str, dict[str, int]]:

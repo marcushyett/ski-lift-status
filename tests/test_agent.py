@@ -2,7 +2,7 @@
 
 import pytest
 
-from ski_lift_status.models import Lift, Run
+from ski_lift_status.models import Lift
 from ski_lift_status.scraping.agent import (
     AgentAction,
     AgentState,
@@ -19,7 +19,6 @@ from ski_lift_status.scraping.models import (
     ExtractionConfig,
     ExtractionType,
     PipelineConfig,
-    SchemaOverview,
 )
 
 

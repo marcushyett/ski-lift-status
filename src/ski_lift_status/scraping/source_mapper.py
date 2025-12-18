@@ -110,7 +110,7 @@ def _find_matching_field(
                 continue
 
             # Calculate match score between sample values
-            matches = 0
+            matches = 0.0
             total = 0
 
             for sv in source_values[:10]:
@@ -176,8 +176,8 @@ class SourceMapper:
         self.reference_runs = reference_runs or []
 
         # Extract reference names for validation
-        self.lift_names = [l.name for l in self.reference_lifts if l.name]
-        self.run_names = [r.name for r in self.reference_runs if r.name]
+        self.lift_names = [lift.name for lift in self.reference_lifts if lift.name]
+        self.run_names = [run.name for run in self.reference_runs if run.name]
 
     def find_mapping(
         self,
