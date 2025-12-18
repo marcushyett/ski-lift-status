@@ -130,8 +130,20 @@ RESORT_CONFIGS: dict[str, ResortConfig] = {
         },
     ),
 
-    # TODO: Add configs for remaining resorts after finding their APIs:
-    # - Cortina d'Ampezzo (9a8be208c4f1832db8bf13c7102e2dcc3eef0a84)
+    # Cortina d'Ampezzo - Dolomiti Superski platform
+    # Server-rendered HTML tables at dolomitisuperski.com
+    "9a8be208c4f1832db8bf13c7102e2dcc3eef0a84": ResortConfig(
+        resort_id="9a8be208c4f1832db8bf13c7102e2dcc3eef0a84",
+        resort_name="Cortina d'Ampezzo",
+        platform="dolomitisuperski",
+        api_endpoints=[
+            "https://www.dolomitisuperski.com/en/live-info/lifts/cortina-d-ampezzo",
+        ],
+        platform_config={
+            "resort_slug": "cortina-d-ampezzo",
+            "lang": "en",
+        },
+    ),
 }
 
 

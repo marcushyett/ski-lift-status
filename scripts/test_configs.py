@@ -36,7 +36,7 @@ from ski_lift_status.scraping.resort_config import (
     get_all_resort_configs,
     get_resort_config,
 )
-from ski_lift_status.scraping.adapters import lumiplan, skiplan, nuxtjs, vail, intermaps
+from ski_lift_status.scraping.adapters import lumiplan, skiplan, nuxtjs, vail, intermaps, dolomitisuperski
 from ski_lift_status.scraping.status_normalizer import (
     NormalizedStatus,
     normalize_status_sync,
@@ -149,6 +149,11 @@ def get_extraction_method_description(platform: str) -> str:
             "endpoint. Extracts lift and trail objects with names, statuses, types, "
             "and metadata like altitude and capacity."
         ),
+        "dolomitisuperski": (
+            "Dolomiti Superski HTML (HTTP-only) - Fetches server-rendered HTML "
+            "from dolomitisuperski.com. Parses lift data from table.itemsTableList "
+            "elements. Row classes indicate status: tr-open-item, tr-close-item."
+        ),
     }
     return descriptions.get(platform, f"Unknown platform: {platform}")
 
@@ -243,6 +248,14 @@ async def test_resort(
                 result.error = "Missing resort_slug in platform_config"
                 return result
             data = await intermaps.fetch_intermaps_status(resort_slug)
+
+        elif config.platform == "dolomitisuperski":
+            resort_slug = config.platform_config.get("resort_slug")
+            if not resort_slug:
+                result.error = "Missing resort_slug in platform_config"
+                return result
+            lang = config.platform_config.get("lang", "en")
+            data = await dolomitisuperski.fetch_dolomitisuperski_status(resort_slug, lang=lang)
 
         else:
             result.error = f"Unknown platform: {config.platform}"
