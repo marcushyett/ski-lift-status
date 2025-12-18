@@ -4,7 +4,52 @@ This document captures important rules and guidelines for developing the ski lif
 
 ## Core Principles
 
-### 0. Claude Code's Role: Build, Evaluate, Improve - NOT Execute
+### 0. Config Execution MUST Be HTTP-Only (No Browser Automation)
+
+**CRITICAL**: There are TWO distinct phases in this system:
+
+1. **Discovery Phase** (browser OK): Finding API endpoints and figuring out extraction patterns
+   - May use Playwright/Browserless to load pages and capture network traffic
+   - This is expensive and slow - only done once per resort to create a config
+
+2. **Execution Phase** (HTTP ONLY): Running configs to fetch live data
+   - **MUST use simple HTTP requests only (httpx)**
+   - **NO Playwright, Browserless, or any browser automation**
+   - **NO JavaScript rendering**
+   - Configs must store direct API endpoint URLs, not status page URLs
+   - Must be cheap and fast to run on any platform
+
+**Why this matters:**
+- Browser automation is expensive ($$$) and slow
+- Configs should run thousands of times per day at minimal cost
+- Any server can make HTTP requests; not all can run browsers
+- If a resort requires JavaScript rendering, we need to find their underlying API
+
+**Config structure must include:**
+```python
+@dataclass
+class ResortConfig:
+    resort_id: str
+    platform: str  # "lumiplan", "skiplan", etc.
+
+    # Direct API endpoints - NOT status page URLs
+    api_endpoints: list[str]  # e.g., ["https://api.lumiplan.com/map/{uuid}/dynamicPoiData"]
+
+    # Extraction method
+    extraction_type: str  # "json_path", "css_selector", "xpath"
+    # ... selectors
+```
+
+**Adapters must support:**
+```python
+def fetch_and_extract(config: ResortConfig) -> ExtractedData:
+    """Fetch data using simple HTTP and extract using config."""
+    async with httpx.AsyncClient() as client:
+        response = await client.get(config.api_endpoints[0])
+        return parse_response(response.text, config)
+```
+
+### 1. Claude Code's Role: Build, Evaluate, Improve - NOT Execute
 
 **CRITICAL**: Claude Code (the AI assistant) is here to BUILD and IMPROVE the pipeline, NOT to manually execute data extraction.
 

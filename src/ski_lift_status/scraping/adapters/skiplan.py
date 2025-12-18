@@ -417,3 +417,57 @@ def get_status_summary(data: SkiplanData) -> dict[str, dict[str, int]]:
         trail_status[status] = trail_status.get(status, 0) + 1
 
     return {"lifts": lift_status, "trails": trail_status}
+
+
+# =============================================================================
+# HTTP-Only Fetching (for config execution - no browser needed)
+# =============================================================================
+
+async def fetch_live_status(resort_slug: str) -> SkiplanData | None:
+    """Fetch live status data directly via HTTP.
+
+    This is the HTTP-only execution path - NO browser automation.
+    Use this when you already know the resort_slug from a saved config.
+
+    Args:
+        resort_slug: The Skiplan resort identifier (e.g., "chamonix", "laplagne")
+
+    Returns:
+        SkiplanData with extracted lifts and trails, or None if fetch fails
+    """
+    import httpx
+
+    log = logger.bind(adapter="skiplan", resort_slug=resort_slug)
+
+    url = f"https://live.skiplan.com/moduleweb/2.0/php/getOuvertures.php?resort={resort_slug}"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            log.debug("fetching_ouvertures", url=url)
+            response = await client.get(url, headers=headers)
+            response.raise_for_status()
+
+            html_content = response.text
+
+    except httpx.HTTPError as e:
+        log.error("http_error", error=str(e))
+        return None
+
+    if not html_content:
+        log.warning("empty_response", msg="Empty response from Skiplan")
+        return None
+
+    lifts, trails = _parse_ouvertures_html(html_content)
+
+    log.info(
+        "fetch_complete",
+        lift_count=len(lifts),
+        trail_count=len(trails),
+    )
+
+    return SkiplanData(lifts=lifts, trails=trails, resort_id=resort_slug)

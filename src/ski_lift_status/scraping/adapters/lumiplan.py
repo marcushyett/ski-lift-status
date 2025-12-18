@@ -203,3 +203,93 @@ def get_status_summary(data: LumiplanData) -> dict[str, dict[str, int]]:
         trail_status[status] = trail_status.get(status, 0) + 1
 
     return {"lifts": lift_status, "trails": trail_status}
+
+
+# =============================================================================
+# HTTP-Only Fetching (for config execution - no browser needed)
+# =============================================================================
+
+async def fetch_live_status(map_uuid: str) -> LumiplanData | None:
+    """Fetch live status data directly via HTTP.
+
+    This is the HTTP-only execution path - NO browser automation.
+    Use this when you already know the map_uuid from a saved config.
+
+    Args:
+        map_uuid: The Lumiplan map UUID (e.g., "bd632c91-6957-494d-95a8-6a72eb87e341")
+
+    Returns:
+        LumiplanData with extracted lifts and trails, or None if fetch fails
+    """
+    import json
+    import httpx
+
+    log = logger.bind(adapter="lumiplan", map_uuid=map_uuid)
+
+    base_url = f"https://lumiplay.link/interactive-map-services/public/map/{map_uuid}"
+    static_url = f"{base_url}/staticPoiData?lang=fr"
+    dynamic_url = f"{base_url}/dynamicPoiData?lang=fr"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Accept": "application/json",
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            # Fetch both endpoints
+            log.debug("fetching_static_data", url=static_url)
+            static_resp = await client.get(static_url, headers=headers)
+            static_resp.raise_for_status()
+
+            log.debug("fetching_dynamic_data", url=dynamic_url)
+            dynamic_resp = await client.get(dynamic_url, headers=headers)
+            dynamic_resp.raise_for_status()
+
+            static_data = parse_static_data(static_resp.json())
+            dynamic_data = parse_dynamic_data(dynamic_resp.json())
+
+    except httpx.HTTPError as e:
+        log.error("http_error", error=str(e))
+        return None
+    except json.JSONDecodeError as e:
+        log.error("json_parse_error", error=str(e))
+        return None
+
+    lifts = []
+    trails = []
+
+    for data_id, static_item in static_data.items():
+        item_type = static_item.get("type")
+        dynamic_item = dynamic_data.get(data_id, {})
+
+        if item_type == "LIFT":
+            lifts.append(
+                LumiplanLift(
+                    id=data_id,
+                    name=static_item.get("name", ""),
+                    lift_type=static_item.get("liftType"),
+                    station=static_item.get("station") or static_item.get("stationName"),
+                    opening_status=dynamic_item.get("openingStatus", "unknown"),
+                    operating=dynamic_item.get("operating"),
+                )
+            )
+        elif item_type == "TRAIL":
+            trails.append(
+                LumiplanTrail(
+                    id=data_id,
+                    name=static_item.get("name", ""),
+                    difficulty=static_item.get("difficulty"),
+                    station=static_item.get("station") or static_item.get("stationName"),
+                    opening_status=dynamic_item.get("openingStatus", "unknown"),
+                    grooming_status=dynamic_item.get("groomingStatus"),
+                )
+            )
+
+    log.info(
+        "fetch_complete",
+        lift_count=len(lifts),
+        trail_count=len(trails),
+    )
+
+    return LumiplanData(lifts=lifts, trails=trails, map_uuid=map_uuid)
