@@ -9,8 +9,19 @@ This document captures important rules and guidelines for developing the ski lif
 **CRITICAL**: There are TWO distinct phases in this system:
 
 1. **Discovery Phase** (browser OK): Finding API endpoints and figuring out extraction patterns
-   - May use Playwright/Browserless to load pages and capture network traffic
+   - Use Playwright/Browserless to load the provided status_page_url
+   - Capture network traffic to find underlying API endpoints
+   - Navigate into iframes (e.g., Skiplan embeds status in iframe pointing to live.skiplan.com)
+   - Extract configuration parameters (e.g., resort_slug for Skiplan)
    - This is expensive and slow - only done once per resort to create a config
+
+   **Discovery pipeline must:**
+   - Accept the status_page_url from status_pages.csv
+   - Automatically detect the platform (Skiplan, Lumiplan, etc.)
+   - Find and navigate into any iframes
+   - Capture XHR/fetch requests to identify API endpoints
+   - Extract platform-specific configuration (resort slugs, map UUIDs, etc.)
+   - Output a ResortConfig that can be executed with HTTP-only
 
 2. **Execution Phase** (HTTP ONLY): Running configs to fetch live data
    - **MUST use simple HTTP requests only (httpx)**
@@ -18,6 +29,19 @@ This document captures important rules and guidelines for developing the ski lif
    - **NO JavaScript rendering**
    - Configs must store direct API endpoint URLs, not status page URLs
    - Must be cheap and fast to run on any platform
+
+### 0.1. Configs MUST Use Provided URLs from status_pages.csv
+
+**CRITICAL**: When generating configs for resorts:
+
+- Configs MUST be generated using the exact `status_page_url` provided in `data/status_pages.csv`
+- Do NOT jump to different URLs or find "better" data sources on other domains
+- If the provided URL doesn't work with HTTP-only fetching, mark the config as requiring browser automation
+- The provided URL is the source of truth - we need to be able to reproduce configs from that URL
+
+**Example:**
+- If status_pages.csv says: `https://www.seechamonix.com/lifts/status`
+- Config MUST use that URL, NOT `https://en.chamonix.com/informations-remontees-mecaniques-en-temps-reel`
 
 **Why this matters:**
 - Browser automation is expensive ($$$) and slow
@@ -84,23 +108,33 @@ The goal is a **fully automated pipeline** that can run on any resort without hu
 - Improve the classification/analysis algorithms to handle more patterns
 - Add better heuristics that apply broadly
 
-### 2. Reusable Platform Adapters
+### 2. Reusable Platform Adapters (NOT Resort-Specific)
 
 Many ski resorts use common backend platforms. When you identify a pattern, create a reusable adapter:
 
-**Known Platforms:**
-- `lumiplan` / `lumiplay` - Common European resort platform
-- `skiplan` - Resort management system
-- `infosnow` - Swiss resort data platform
-- `intrawest` - North American resort management
-- `powdr` - Resort management company platform
-- `dolomiti_superski` - Dolomites region platform
-- `skidata` - Ticketing/access platform with status data
+**CRITICAL**: Adapters should ONLY be created for **platforms and technologies**, NOT for specific ski resorts.
+
+**Good adapter examples (platform/technology-based):**
+- `lumiplan` - Common European resort platform API
+- `skiplan` - Resort management system with getOuvertures.php API
+- `nuxtjs` - Nuxt.js __NUXT__ payload extraction pattern
+- `nextjs` - Next.js __NEXT_DATA__ payload extraction pattern
+
+**Bad adapter examples (resort-specific - AVOID):**
+- `chamonix` - Don't create adapter for a single resort
+- `breckenridge` - Don't create adapter for a single resort
+- `three_valleys` - Don't create adapter for a single resort
 
 **When to create an adapter:**
-1. You identify 2+ resorts using the same platform
+1. You identify 2+ resorts using the same platform/technology
 2. The platform has a consistent API/data structure
 3. The adapter logic would be complex to rediscover each time
+4. The adapter is reusable across multiple resorts
+
+**When NOT to create an adapter:**
+1. It's only used by a single resort
+2. The extraction logic is simple enough to inline
+3. It requires resort-specific selectors or URL patterns
 
 **Adapter location:** `src/ski_lift_status/scraping/adapters/`
 

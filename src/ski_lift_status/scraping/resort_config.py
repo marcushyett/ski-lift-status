@@ -87,6 +87,25 @@ RESORT_CONFIGS: dict[str, ResortConfig] = {
             "page_url": "https://www.cervinia.it/en/impianti",
         },
     ),
+
+    # NOTE: The following resorts require browser automation (JavaScript rendering)
+    # and cannot be fetched with HTTP-only requests. They are not included in configs.
+    #
+    # - Chamonix (8432e3c536835ef8a690f63b62060a7993bfd964)
+    #   URL: https://www.seechamonix.com/lifts/status
+    #   Reason: Page requires JavaScript to load lift data, Skiplan API not accessible
+    #
+    # - Breckenridge (c329b1fe669c197d615896dfd4e38d4bb039e30c)
+    #   URL: https://www.breckenridge.com/terrain-and-lift-status
+    #   Reason: Vail Resorts uses FR.TerrainStatusFeed JavaScript, no public API
+    #
+    # - Les Gets-Morzine (cafb6b6d5f25860a682a8b6d67efe689218618a5)
+    #   URL: https://www.lesgets.com/en/discover-the-resort/ski-winter-sports/live-info-slopes/
+    #   Reason: Uses Intermaps external map service requiring browser
+    #
+    # - Cortina d'Ampezzo (9a8be208c4f1832db8bf13c7102e2dcc3eef0a84)
+    #   URL: https://www.dolomitisuperski.com/en/live-info/lifts/cortina-d-ampezzo
+    #   Reason: Returns 403 Forbidden, requires special access/headers
 }
 
 
