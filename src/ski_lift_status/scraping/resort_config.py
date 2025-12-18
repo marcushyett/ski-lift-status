@@ -88,24 +88,50 @@ RESORT_CONFIGS: dict[str, ResortConfig] = {
         },
     ),
 
-    # NOTE: The following resorts require browser automation (JavaScript rendering)
-    # and cannot be fetched with HTTP-only requests. They are not included in configs.
-    #
-    # - Chamonix (8432e3c536835ef8a690f63b62060a7993bfd964)
-    #   URL: https://www.seechamonix.com/lifts/status
-    #   Reason: Page requires JavaScript to load lift data, Skiplan API not accessible
-    #
-    # - Breckenridge (c329b1fe669c197d615896dfd4e38d4bb039e30c)
-    #   URL: https://www.breckenridge.com/terrain-and-lift-status
-    #   Reason: Vail Resorts uses FR.TerrainStatusFeed JavaScript, no public API
-    #
-    # - Les Gets-Morzine (cafb6b6d5f25860a682a8b6d67efe689218618a5)
-    #   URL: https://www.lesgets.com/en/discover-the-resort/ski-winter-sports/live-info-slopes/
-    #   Reason: Uses Intermaps external map service requiring browser
-    #
+    # Chamonix (Brévent/Flégère) - Skiplan platform
+    # Discovered from: https://www.seechamonix.com/lifts/status -> iframe to live.skiplan.com
+    "8432e3c536835ef8a690f63b62060a7993bfd964": ResortConfig(
+        resort_id="8432e3c536835ef8a690f63b62060a7993bfd964",
+        resort_name="Chamonix (Brévent/Flégère)",
+        platform="skiplan",
+        api_endpoints=[
+            "https://live.skiplan.com/moduleweb/2.0/php/getOuvertures.php?resort=chamonix_hiver_general",
+        ],
+        platform_config={
+            "resort_slug": "chamonix_hiver_general",
+        },
+    ),
+
+    # Breckenridge - Vail Resorts platform
+    # TerrainStatusFeed JavaScript object embedded in HTML
+    "c329b1fe669c197d615896dfd4e38d4bb039e30c": ResortConfig(
+        resort_id="c329b1fe669c197d615896dfd4e38d4bb039e30c",
+        resort_name="Breckenridge",
+        platform="vail",
+        api_endpoints=[
+            "https://www.breckenridge.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+        ],
+        platform_config={
+            "page_url": "https://www.breckenridge.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+        },
+    ),
+
+    # Les Gets-Morzine - Intermaps platform (Portes du Soleil)
+    # Discovered from: https://www.lesgets.com/en/.../live-info-slopes/ -> intermaps.com
+    "cafb6b6d5f25860a682a8b6d67efe689218618a5": ResortConfig(
+        resort_id="cafb6b6d5f25860a682a8b6d67efe689218618a5",
+        resort_name="Les Gets-Morzine (Portes du Soleil)",
+        platform="intermaps",
+        api_endpoints=[
+            "https://winter.intermaps.com/portes_du_soleil/data?lang=en",
+        ],
+        platform_config={
+            "resort_slug": "portes_du_soleil",
+        },
+    ),
+
+    # TODO: Add configs for remaining resorts after finding their APIs:
     # - Cortina d'Ampezzo (9a8be208c4f1832db8bf13c7102e2dcc3eef0a84)
-    #   URL: https://www.dolomitisuperski.com/en/live-info/lifts/cortina-d-ampezzo
-    #   Reason: Returns 403 Forbidden, requires special access/headers
 }
 
 

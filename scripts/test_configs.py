@@ -36,7 +36,7 @@ from ski_lift_status.scraping.resort_config import (
     get_all_resort_configs,
     get_resort_config,
 )
-from ski_lift_status.scraping.adapters import lumiplan, skiplan, nuxtjs
+from ski_lift_status.scraping.adapters import lumiplan, skiplan, nuxtjs, vail, intermaps
 from ski_lift_status.scraping.status_normalizer import (
     NormalizedStatus,
     normalize_status_sync,
@@ -139,6 +139,16 @@ def get_extraction_method_description(platform: str) -> str:
             "extracts lift/trail data from embedded __NUXT__ hydration payload. "
             "Resolves compressed IIFE variable names to actual values."
         ),
+        "vail": (
+            "Vail Resorts HTML (HTTP-only) - Fetches terrain-and-lift-status.aspx "
+            "page and extracts TerrainStatusFeed JavaScript object. Status codes: "
+            "0=closed, 1=open, 2=hold, 3=scheduled."
+        ),
+        "intermaps": (
+            "Intermaps JSON API (HTTP-only) - Fetches JSON from Intermaps data "
+            "endpoint. Extracts lift and trail objects with names, statuses, types, "
+            "and metadata like altitude and capacity."
+        ),
     }
     return descriptions.get(platform, f"Unknown platform: {platform}")
 
@@ -219,6 +229,20 @@ async def test_resort(
 
         elif config.platform == "nuxtjs":
             data = await nuxtjs.fetch_cervinia()
+
+        elif config.platform == "vail":
+            page_url = config.platform_config.get("page_url")
+            if not page_url:
+                result.error = "Missing page_url in platform_config"
+                return result
+            data = await vail.fetch_vail_status(page_url)
+
+        elif config.platform == "intermaps":
+            resort_slug = config.platform_config.get("resort_slug")
+            if not resort_slug:
+                result.error = "Missing resort_slug in platform_config"
+                return result
+            data = await intermaps.fetch_intermaps_status(resort_slug)
 
         else:
             result.error = f"Unknown platform: {config.platform}"

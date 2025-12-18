@@ -8,20 +8,24 @@ This document captures important rules and guidelines for developing the ski lif
 
 **CRITICAL**: There are TWO distinct phases in this system:
 
-1. **Discovery Phase** (browser OK): Finding API endpoints and figuring out extraction patterns
-   - Use Playwright/Browserless to load the provided status_page_url
-   - Capture network traffic to find underlying API endpoints
+1. **Discovery Phase** (browser OK for analysis): Finding API endpoints and figuring out extraction patterns
+   - Use browser DevTools or Playwright to analyze network traffic
    - Navigate into iframes (e.g., Skiplan embeds status in iframe pointing to live.skiplan.com)
    - Extract configuration parameters (e.g., resort_slug for Skiplan)
-   - This is expensive and slow - only done once per resort to create a config
+   - This is analysis work - done once per resort to create a config
 
-   **Discovery pipeline must:**
+   **Discovery process must:**
    - Accept the status_page_url from status_pages.csv
-   - Automatically detect the platform (Skiplan, Lumiplan, etc.)
-   - Find and navigate into any iframes
-   - Capture XHR/fetch requests to identify API endpoints
+   - Analyze HTTP requests to find underlying API endpoints
+   - For JavaScript-powered pages: find the XHR/fetch calls that load the data
+   - For server-rendered pages: use CSS/XPath selectors to extract from HTML
    - Extract platform-specific configuration (resort slugs, map UUIDs, etc.)
    - Output a ResortConfig that can be executed with HTTP-only
+
+   **IMPORTANT**: Every resort CAN be scraped with HTTP-only. There is no such thing as
+   "browser required" - you just need to find the right API endpoint or use HTML selectors.
+   If JavaScript loads data dynamically, find the API it calls. If data is server-rendered,
+   parse the HTML with BeautifulSoup.
 
 2. **Execution Phase** (HTTP ONLY): Running configs to fetch live data
    - **MUST use simple HTTP requests only (httpx)**

@@ -18,7 +18,7 @@ Usage:
 from typing import Any
 
 from ..models import CapturedResource
-from . import lumiplan, skiplan, nuxtjs
+from . import lumiplan, skiplan, nuxtjs, vail, intermaps
 
 # Registry of available adapters
 # NOTE: Adapters should be platform/technology-based, NOT resort-specific
@@ -26,6 +26,8 @@ ADAPTERS = {
     "lumiplan": lumiplan,  # Common European resort platform
     "skiplan": skiplan,     # Resort management system
     "nuxtjs": nuxtjs,       # Nuxt.js __NUXT__ payload extraction
+    "vail": vail,           # Vail Resorts TerrainStatusFeed extraction
+    "intermaps": intermaps, # Intermaps interactive ski map data
 }
 
 
@@ -87,4 +89,6 @@ __all__ = [
     "lumiplan",
     "skiplan",
     "nuxtjs",
+    "vail",
+    "intermaps",
 ]
