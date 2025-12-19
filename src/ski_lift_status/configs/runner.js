@@ -623,31 +623,50 @@ async function extractSkistar(config) {
 
   const lifts = [];
 
-  // Try to find any embedded data
-  const scripts = doc.querySelectorAll('script');
-  for (const script of scripts) {
-    const text = script.textContent || '';
-    if (text.includes('lifts') || text.includes('facilities')) {
-      // Try to extract JSON data
-      const jsonMatch = text.match(/\{[^{}]*"lifts"[^{}]*\}/);
-      if (jsonMatch) {
-        try {
-          const data = JSON.parse(jsonMatch[0]);
-          if (data.lifts) {
-            data.lifts.forEach(lift => {
-              lifts.push({
-                name: lift.name || lift.title,
-                status: normalizeStatus(lift.status || lift.state)
-              });
-            });
-          }
-        } catch (e) {}
-      }
+  // Find SimpleView URLs for lift data
+  const simpleViewUrls = [];
+  const elements = doc.querySelectorAll('[data-url*="SimpleView"]');
+  elements.forEach(el => {
+    const url = el.getAttribute('data-url');
+    if (url && url.includes('SimpleView')) {
+      simpleViewUrls.push(url);
+    }
+  });
+
+  // Fetch and parse each SimpleView
+  const baseUrl = new URL(config.url).origin;
+  for (const viewUrl of simpleViewUrls) {
+    try {
+      const viewHtml = await fetch(baseUrl + viewUrl);
+      const viewDom = new JSDOM(viewHtml);
+      const viewDoc = viewDom.window.document;
+
+      // Parse lift items: .lpv-list__item with .lpv-list__item-name
+      const items = viewDoc.querySelectorAll('.lpv-list__item');
+      items.forEach(item => {
+        const nameEl = item.querySelector('.lpv-list__item-name');
+        const statusEl = item.querySelector('.lpv-list__item-status');
+
+        const name = nameEl?.textContent?.trim();
+        if (!name) return;
+
+        // Check status class or text
+        let status = 'closed';
+        if (statusEl?.classList?.contains('lpv-list__item-status--is-open')) {
+          status = 'open';
+        } else if (statusEl?.textContent?.toLowerCase().includes('open')) {
+          status = 'open';
+        }
+
+        lifts.push({ name, status });
+      });
+    } catch (e) {
+      // Continue with other views
     }
   }
 
   if (lifts.length === 0) {
-    return { lifts: [], runs: [], note: 'SkiStar uses React SPA - browser rendering required' };
+    return { lifts: [], runs: [], note: 'No lift data found in SimpleView' };
   }
 
   return { lifts, runs: [] };
@@ -957,7 +976,7 @@ async function extractDeervalley(config) {
 
 /**
  * Extract using See* network pattern (seelift)
- * Note: See* sites use React SPA - needs browser rendering
+ * See* sites (see2alpes, seeavoriaz, etc.) embed Lumiplan data directly in HTML
  */
 async function extractSeelift(config) {
   const html = await fetch(config.url);
@@ -966,31 +985,28 @@ async function extractSeelift(config) {
 
   const lifts = [];
 
-  // Try to find any embedded JSON data
-  const scripts = doc.querySelectorAll('script');
-  for (const script of scripts) {
-    const text = script.textContent || '';
-    if (text.includes('__NEXT_DATA__') || text.includes('lifts')) {
-      const jsonMatch = text.match(/\{[\s\S]*"lifts?"[\s\S]*\}/);
-      if (jsonMatch) {
-        try {
-          const data = JSON.parse(jsonMatch[0]);
-          if (data.lifts) {
-            data.lifts.forEach(lift => {
-              lifts.push({
-                name: lift.name,
-                status: normalizeStatus(lift.status)
-              });
-            });
-          }
-        } catch (e) {}
-      }
-    }
-  }
+  // See* sites use .lift-status-datum elements with Lumiplan images
+  const items = doc.querySelectorAll('.lift-status-datum, [class*="lift-status"]');
 
-  if (lifts.length === 0) {
-    return { lifts: [], runs: [], note: 'See* network uses React SPA - browser rendering required' };
-  }
+  items.forEach(item => {
+    const nameEl = item.querySelector('.lift-status-datum__name, [class*="name"]');
+    const valueEl = item.querySelector('.lift-status-datum__value img, [class*="value"] img');
+
+    const name = nameEl?.textContent?.trim();
+    const statusImg = valueEl?.getAttribute('src') || '';
+
+    // Status from Lumiplan image URL: etats/O=open, etats/P=scheduled, etats/F=closed
+    let status = 'closed';
+    if (statusImg.includes('etats/O') || statusImg.includes('_open')) {
+      status = 'open';
+    } else if (statusImg.includes('etats/P') || statusImg.includes('_scheduled')) {
+      status = 'scheduled';
+    }
+
+    if (name) {
+      lifts.push({ name, status });
+    }
+  });
 
   return { lifts, runs: [] };
 }

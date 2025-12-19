@@ -173,9 +173,10 @@
       "id": "avoriaz",
       "name": "Avoriaz",
       "openskimap_id": "7cac2b19d023f887e458c354be9caf833b6aed6d",
-      "platform": "seelift",
-      "url": "https://www.seeavoriaz.com/lifts/status",
-      "website": "https://www.avoriaz.com/en/discover/discover/ski-area-and-maps/"
+      "platform": "lumiplan",
+      "url": "https://www.avoriaz.com",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=avoriaz&region=alpes&pays=france&lang=en",
+      "notes": "Uses Lumiplan bulletin"
     },
     {
       "id": "axamer-lizum-muttereralm",
@@ -757,9 +758,10 @@
       "id": "espace-liberté",
       "name": "Espace Liberté",
       "openskimap_id": "baca23b1d6c08055f995fe20b50e3f6910b2ea2b",
-      "platform": "seelift",
-      "url": "https://www.seechamonix.com/lifts/status",
-      "website": "https://en.chatel.com/chatel-and-portes-du-soleil-ski-areas.html"
+      "platform": "lumiplan",
+      "url": "https://www.chamonix.com",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=chamonix&region=alpes&pays=france&lang=en",
+      "notes": "Uses Lumiplan bulletin (Chamonix area)"
     },
     {
       "id": "espace-lumière",
@@ -2370,9 +2372,10 @@
       "id": "seefeld-rosshütte",
       "name": "Seefeld - Rosshütte",
       "openskimap_id": "b4602a014c2e38badc16189c4cebcf8fb20054ef",
-      "platform": "seelift",
+      "platform": "custom",
       "url": "https://www.seefeld.com/winter/ski/en/lift-status",
-      "website": "https://www.seefeld.com/winter/ski"
+      "website": "https://www.seefeld.com/winter/ski",
+      "notes": "Uses Next.js SPA"
     },
     {
       "id": "seiser-alm-mont-de-sëuc-alpe-di-siusi-seiser-alm-a",
