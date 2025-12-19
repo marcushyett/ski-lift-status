@@ -39,6 +39,11 @@ async def main():
     if result.config:
         print(f"\nConfig generated:")
         print(f"  Sources: {len(result.config.sources)}")
+        for i, source in enumerate(result.config.sources):
+            print(f"    [{i}] URL: {source.url[:80]}...")
+            print(f"        Method: {source.extraction_method.value}")
+            print(f"        Types: {source.data_types}")
+            print(f"        List selector: {source.list_selector[:50]}..." if source.list_selector else "        List selector: (none)")
         print(f"  Lift mappings: {len(result.config.lift_mappings)}")
         print(f"  Run mappings: {len(result.config.run_mappings)}")
 

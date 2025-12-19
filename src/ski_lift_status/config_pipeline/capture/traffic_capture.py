@@ -218,7 +218,7 @@ def get_browserql_endpoint() -> str | None:
 def _build_capture_query(url: str, wait_until: str = "networkIdle") -> str:
     """Build the BrowserQL mutation for capturing traffic."""
     # Use GraphQL mutation to navigate and get page content
-    # For now we focus on page HTML - API URLs will be discovered from content
+    # Skip XHR body capture as it often fails; we'll discover APIs from HTML instead
     return f"""
 mutation CaptureTraffic {{
   goto(url: "{url}", waitUntil: {wait_until}, timeout: 60000) {{
