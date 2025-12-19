@@ -11,6 +11,7 @@ lxml>=5.0.0
 
 # Schema analysis and data extraction
 jsonpath-ng>=1.6.0
+rapidfuzz>=3.0.0
 
 # LLM integration
 openai>=1.0.0
