@@ -1,11 +1,11 @@
-"""Network traffic capture using Browserless BrowserQL API.
+"""Network traffic capture using XHR Fetcher API.
 
 This module captures all network traffic from a ski resort status page
-using the BrowserQL GraphQL API, which provides better stealth capabilities
-and simpler network request capture than CDP connections.
+using a custom XHR Fetcher service that provides full XHR response bodies,
+which is critical for discovering API endpoints.
 
 Categorizes requests into types useful for config building:
-- XHR/Fetch requests (likely API calls)
+- XHR/Fetch requests (likely API calls) with full response bodies
 - JavaScript files (may contain embedded data)
 - HTML content (server-side rendered data)
 - Other resources for completeness
@@ -85,6 +85,8 @@ class CapturedTraffic:
     resources: list[CapturedResource] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
     load_time_ms: float | None = None
+    cookies: list[dict] = field(default_factory=list)
+    console_messages: list[str] = field(default_factory=list)
 
     @property
     def xhr_resources(self) -> list[CapturedResource]:
@@ -119,16 +121,18 @@ class CapturedTraffic:
             "resources": [r.to_dict() for r in self.resources],
             "errors": self.errors,
             "load_time_ms": self.load_time_ms,
+            "cookies": self.cookies,
+            "console_messages": self.console_messages,
         }
 
 
 def _classify_resource_type(
-    bql_type: str | None, content_type: str, url: str
+    resource_type: str | None, content_type: str, url: str
 ) -> ResourceType:
-    """Classify resource type from BrowserQL data and content type."""
+    """Classify resource type from API data and content type."""
     content_type_lower = content_type.lower() if content_type else ""
     url_lower = url.lower()
-    bql_type_lower = bql_type.lower() if bql_type else ""
+    resource_type_lower = resource_type.lower() if resource_type else ""
 
     # Check content type first
     if "application/json" in content_type_lower:
@@ -154,18 +158,18 @@ def _classify_resource_type(
     if url_lower.endswith((".html", ".htm", ".php", ".asp", ".aspx")):
         return ResourceType.HTML
 
-    # Check BrowserQL resource type
-    if bql_type_lower in ("xhr", "fetch"):
+    # Check resource type from API
+    if resource_type_lower in ("xhr", "fetch"):
         return ResourceType.XHR
-    if bql_type_lower == "script":
+    if resource_type_lower == "script":
         return ResourceType.JAVASCRIPT
-    if bql_type_lower == "document":
+    if resource_type_lower == "document":
         return ResourceType.HTML
-    if bql_type_lower == "stylesheet":
+    if resource_type_lower == "stylesheet":
         return ResourceType.CSS
-    if bql_type_lower == "image":
+    if resource_type_lower == "image":
         return ResourceType.IMAGE
-    if bql_type_lower == "font":
+    if resource_type_lower == "font":
         return ResourceType.FONT
 
     return ResourceType.OTHER
@@ -193,68 +197,32 @@ def _is_tracking_url(url: str) -> bool:
         "hubspot.com",
         "marketo.com",
         "pardot.com",
+        "plausible.io",
+        "axept.io",
+        "omappapi.com",
         "pixel",
         "/analytics",
         "/tracking",
+        "/collect?",
+        "/g/collect",
     ]
     url_lower = url.lower()
     return any(pattern in url_lower for pattern in tracking_patterns)
 
 
-def get_browserql_endpoint() -> str | None:
-    """Get BrowserQL API endpoint from environment."""
-    api_key = os.environ.get("BROWSERLESS_API_KEY")
-    if api_key:
-        # Use stealth endpoint for better bot detection bypass
-        return f"https://production-sfo.browserless.io/chromium/bql?token={api_key}"
+def get_xhr_fetcher_config() -> tuple[str | None, str | None]:
+    """Get XHR Fetcher API configuration from environment.
 
-    endpoint = os.environ.get("BROWSERLESS_ENDPOINT")
-    if endpoint:
-        return endpoint
-
-    return None
-
-
-def _build_capture_query(url: str, wait_until: str = "networkIdle", wait_selector: str | None = None) -> str:
-    """Build the BrowserQL mutation for capturing traffic.
-
-    This captures:
-    1. The final rendered page HTML
-    2. All XHR/fetch responses (API calls) with their bodies
-
-    We capture requests too since response body capture can fail.
-    For SPAs, we can optionally wait for a specific selector to appear.
+    Returns:
+        Tuple of (base_url, api_key) or (None, None) if not configured.
     """
-    wait_for_selector = ""
-    if wait_selector:
-        wait_for_selector = f"""
-  waitForContent: waitForSelector(selector: "{wait_selector}", timeout: 30000) {{
-    selector
-  }}"""
+    api_key = os.environ.get("XHR_FETCH_KEY")
+    # Default to the Fly.io deployment
+    base_url = os.environ.get("XHR_FETCH_URL", "https://xhr-fetcher.fly.dev")
 
-    return f"""
-mutation CaptureTraffic {{
-  goto(url: "{url}", waitUntil: {wait_until}, timeout: 60000) {{
-    status
-    url
-    time
-  }}{wait_for_selector}
-  xhrRequests: request(type: [xhr, fetch]) {{
-    url
-    method
-  }}
-  pageHtml: html {{
-    html
-  }}
-}}
-"""
-
-
-def _parse_headers(headers_list: list[dict] | None) -> dict[str, str]:
-    """Parse BrowserQL headers format to dict."""
-    if not headers_list:
-        return {}
-    return {h.get("name", ""): h.get("value", "") for h in headers_list if h.get("name")}
+    if api_key:
+        return base_url, api_key
+    return None, None
 
 
 def _extract_embedded_json(html: str) -> list[tuple[str, str]]:
@@ -282,154 +250,179 @@ def _extract_embedded_json(html: str) -> list[tuple[str, str]]:
     return results
 
 
+def _extract_iframes(html: str) -> list[str]:
+    """Extract iframe URLs from HTML that might contain data."""
+    iframes = []
+
+    # Find all iframe src attributes
+    pattern = r'<iframe[^>]*src\s*=\s*["\']([^"\']+)["\']'
+    for match in re.finditer(pattern, html, re.IGNORECASE):
+        url = match.group(1)
+        # Skip Google/analytics iframes
+        if not _is_tracking_url(url) and 'googletagmanager' not in url.lower():
+            # Unescape HTML entities
+            url = url.replace('&amp;', '&')
+            iframes.append(url)
+
+    return iframes
+
+
 async def capture_page_traffic(
     url: str,
-    wait_time_ms: int = 8000,
-    use_browserless: bool = True,
+    wait_time_ms: int = 10000,
     capture_tracking: bool = False,
     max_body_size: int = 10_000_000,  # 10MB
     wait_selector: str | None = None,
+    additional_wait_ms: int = 0,
 ) -> CapturedTraffic:
-    """Capture all network traffic when loading a page using BrowserQL.
+    """Capture all network traffic when loading a page using XHR Fetcher API.
+
+    This uses a custom service that captures full XHR response bodies,
+    which is critical for discovering API endpoints that return lift status data.
 
     Args:
         url: The URL to load.
-        wait_time_ms: Not used with BrowserQL (kept for API compatibility).
-        use_browserless: Whether to use Browserless.io (if available).
+        wait_time_ms: Time to wait for network idle (default 10s).
         capture_tracking: Whether to capture tracking/analytics requests.
         max_body_size: Maximum body size to capture (bytes).
         wait_selector: Optional CSS selector to wait for before capturing.
-            Useful for SPAs that load content dynamically.
+        additional_wait_ms: Extra wait time after page load.
 
     Returns:
-        CapturedTraffic with all captured resources.
+        CapturedTraffic with all captured resources including XHR response bodies.
     """
     import time
 
     traffic = CapturedTraffic(page_url=url)
     start_time = time.time()
 
-    endpoint = get_browserql_endpoint()
-    if not endpoint:
-        traffic.errors.append("No BROWSERLESS_API_KEY environment variable set")
+    base_url, api_key = get_xhr_fetcher_config()
+    if not base_url or not api_key:
+        traffic.errors.append("No XHR_FETCH_KEY environment variable set")
         return traffic
 
-    # Build the GraphQL query
-    query = _build_capture_query(url, wait_selector=wait_selector)
-
     try:
-        async with httpx.AsyncClient(timeout=90.0) as client:
+        async with httpx.AsyncClient(timeout=180.0, verify=False) as client:
+            # Build request payload
+            payload = {
+                "url": url,
+                "waitUntil": "networkidle",
+                "timeout": 60000,
+                "networkIdleTimeout": wait_time_ms,
+            }
+            if wait_selector:
+                payload["waitForSelector"] = wait_selector
+            if additional_wait_ms > 0:
+                payload["additionalWaitMs"] = additional_wait_ms
+
             response = await client.post(
-                endpoint,
-                json={
-                    "query": query,
-                    "variables": {},
-                    "operationName": "CaptureTraffic",
+                f"{base_url}/fetch",
+                json=payload,
+                headers={
+                    "Content-Type": "application/json",
+                    "x-api-key": api_key,
                 },
-                headers={"Content-Type": "application/json"},
             )
 
             if response.status_code != 200:
                 traffic.errors.append(
-                    f"BrowserQL API error: {response.status_code} - {response.text[:500]}"
+                    f"XHR Fetcher API error: {response.status_code} - {response.text[:500]}"
                 )
                 return traffic
 
             result = response.json()
 
-            # Check for GraphQL errors
-            if "errors" in result:
-                for error in result["errors"]:
-                    traffic.errors.append(f"GraphQL error: {error.get('message', str(error))}")
+            if not result.get("success"):
+                error_msg = result.get("error", "Unknown error")
+                details = result.get("details", "")
+                traffic.errors.append(f"XHR Fetcher failed: {error_msg} - {details[:200]}")
                 return traffic
 
-            data = result.get("data", {})
-
-            # Parse navigation result
-            goto_result = data.get("goto", {})
-            traffic.final_url = goto_result.get("url", url)
-            traffic.load_time_ms = goto_result.get("time")
-
-            # Parse page HTML
-            html_result = data.get("pageHtml", {})
-            traffic.page_html = html_result.get("html")
+            # Parse response
+            traffic.final_url = result.get("finalUrl", url)
+            traffic.load_time_ms = result.get("loadTimeMs")
+            traffic.page_html = result.get("html")
+            traffic.cookies = result.get("cookies", [])
+            traffic.console_messages = [msg.get("text", "") for msg in result.get("console", [])]
 
             resources: list[CapturedResource] = []
 
-            # Parse XHR/fetch requests captured by BrowserQL
-            # We capture requests (not responses) because response body capture often fails
-            # The config builder can use these URLs to fetch the API data via plain HTTP
-            xhr_requests = data.get("xhrRequests", []) or []
-            for req in xhr_requests:
-                req_url = req.get("url", "")
+            # Parse XHR requests with full response bodies
+            xhr_requests = result.get("xhrRequests", [])
+            for xhr in xhr_requests:
+                req_data = xhr.get("request", {})
+                resp_data = xhr.get("response", {})
 
-                # Skip tracking URLs
+                req_url = req_data.get("url", "")
+                if not req_url:
+                    continue
+
+                # Skip tracking URLs unless explicitly requested
                 if not capture_tracking and _is_tracking_url(req_url):
                     continue
 
-                # Skip non-data URLs
-                if any(ext in req_url.lower() for ext in ['.css', '.js', '.png', '.jpg', '.gif', '.svg', '.woff']):
-                    continue
+                # Get response body - this is what we couldn't get before!
+                body = resp_data.get("body")
+                content_type = resp_data.get("contentType", "")
+                status_code = resp_data.get("status")
 
-                # Determine resource type from URL
-                resource_type = ResourceType.XHR
-                if '.json' in req_url.lower() or '/api/' in req_url.lower():
+                # Classify resource type
+                resource_type = _classify_resource_type(
+                    req_data.get("resourceType", "xhr"),
+                    content_type,
+                    req_url
+                )
+
+                # For JSON content, mark as JSON type
+                if body and (body.strip().startswith("{") or body.strip().startswith("[")):
                     resource_type = ResourceType.JSON
-
-                # Fetch the URL content via plain HTTP for analysis
-                try:
-                    fetch_response = await client.get(
-                        req_url,
-                        headers={
-                            "Accept": "application/json, text/html, */*",
-                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-                        },
-                        timeout=15.0,
-                        follow_redirects=True,
-                    )
-                    body = fetch_response.text
-                    content_type = fetch_response.headers.get("content-type", "")
-                    status_code = fetch_response.status_code
-
-                    # Update resource type based on actual content type
-                    if "json" in content_type:
-                        resource_type = ResourceType.JSON
-                    elif "xml" in content_type:
-                        resource_type = ResourceType.XML
-
-                except Exception:
-                    body = None
-                    content_type = ""
-                    status_code = None
 
                 resource = CapturedResource(
                     url=req_url,
-                    method=req.get("method", "GET"),
+                    method=req_data.get("method", "GET"),
                     resource_type=resource_type,
                     content_type=content_type,
                     status_code=status_code,
-                    request_headers={},
-                    response_headers={},
+                    request_headers=req_data.get("headers", {}),
+                    response_headers=resp_data.get("headers", {}),
                     body=body[:max_body_size] if body and len(body) > max_body_size else body,
                     body_size=len(body) if body else 0,
                 )
                 resources.append(resource)
 
-            # Also extract embedded JSON from HTML (doesn't need network)
-            embedded_data = _extract_embedded_json(traffic.page_html or "")
-            for source_name, json_content in embedded_data:
-                resource = CapturedResource(
-                    url=f"embedded://{source_name}",
-                    method="EMBEDDED",
-                    resource_type=ResourceType.JSON,
-                    content_type="application/json",
-                    status_code=200,
-                    request_headers={},
-                    response_headers={},
-                    body=json_content[:max_body_size] if len(json_content) > max_body_size else json_content,
-                    body_size=len(json_content),
-                )
-                resources.append(resource)
+            # Extract embedded JSON from HTML
+            if traffic.page_html:
+                embedded_data = _extract_embedded_json(traffic.page_html)
+                for source_name, json_content in embedded_data:
+                    resource = CapturedResource(
+                        url=f"embedded://{source_name}",
+                        method="EMBEDDED",
+                        resource_type=ResourceType.JSON,
+                        content_type="application/json",
+                        status_code=200,
+                        request_headers={},
+                        response_headers={},
+                        body=json_content[:max_body_size] if len(json_content) > max_body_size else json_content,
+                        body_size=len(json_content),
+                    )
+                    resources.append(resource)
+
+                # Extract iframe URLs for potential follow-up capture
+                iframe_urls = _extract_iframes(traffic.page_html)
+                for iframe_url in iframe_urls:
+                    # Add iframe as a resource so the config builder knows to explore it
+                    resource = CapturedResource(
+                        url=iframe_url,
+                        method="IFRAME",
+                        resource_type=ResourceType.HTML,
+                        content_type="text/html",
+                        status_code=None,  # Not fetched yet
+                        request_headers={},
+                        response_headers={},
+                        body=None,
+                        body_size=0,
+                    )
+                    resources.append(resource)
 
             traffic.resources = resources
             traffic.load_time_ms = (time.time() - start_time) * 1000
@@ -442,3 +435,33 @@ async def capture_page_traffic(
         traffic.errors.append(f"Unexpected error: {str(e)}")
 
     return traffic
+
+
+async def capture_iframe_traffic(
+    iframe_url: str,
+    parent_url: str,
+    capture_tracking: bool = False,
+    max_body_size: int = 10_000_000,
+) -> CapturedTraffic:
+    """Capture traffic from an iframe URL.
+
+    This is useful for following up on iframes discovered in the main page
+    that might contain lift status data (e.g., Lumiplan, Skiplan widgets).
+
+    Args:
+        iframe_url: The iframe URL to capture.
+        parent_url: The parent page URL (for context).
+        capture_tracking: Whether to capture tracking requests.
+        max_body_size: Maximum body size to capture.
+
+    Returns:
+        CapturedTraffic from the iframe.
+    """
+    return await capture_page_traffic(
+        url=iframe_url,
+        capture_tracking=capture_tracking,
+        max_body_size=max_body_size,
+        # Iframes often need more time to load their content
+        wait_time_ms=15000,
+        additional_wait_ms=2000,
+    )

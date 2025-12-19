@@ -1,7 +1,7 @@
 """Network traffic capture module.
 
 Captures XHR requests, JavaScript files, HTML content, and other resources
-from ski resort status pages using Playwright with Browserless.
+from ski resort status pages using the XHR Fetcher API.
 """
 
 from .traffic_capture import (
@@ -9,6 +9,7 @@ from .traffic_capture import (
     ResourceType,
     CapturedTraffic,
     capture_page_traffic,
+    capture_iframe_traffic,
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "ResourceType",
     "CapturedTraffic",
     "capture_page_traffic",
+    "capture_iframe_traffic",
 ]
