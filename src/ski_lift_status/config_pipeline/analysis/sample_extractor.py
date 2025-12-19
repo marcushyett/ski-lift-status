@@ -105,6 +105,68 @@ def _object_to_text(obj: Any) -> str:
     return str(obj)
 
 
+# Status field names that indicate this object has actual status data
+# These must be EXACT matches (case-insensitive) to avoid false positives
+# Note: "state" is excluded as it matches Nuxt.js state objects, not status indicators
+STATUS_FIELD_NAMES = {
+    "etat", "status", "stato", "ouvert", "open", "closed",
+    "is_open", "isopen", "aperto", "chiuso", "ferme", "fermé",
+    "operating", "condition", "available", "offen", "geschlossen"
+}
+
+# Name field names that indicate this object has a name
+# These must be EXACT matches (case-insensitive)
+NAME_FIELD_NAMES = {
+    "nom", "name", "nome", "title", "label", "bezeichnung", "naam"
+}
+
+
+def _has_status_field(obj: dict) -> tuple[bool, str | None]:
+    """Check if object has a field that looks like a status indicator.
+
+    Uses EXACT field name matching to avoid false positives.
+    Returns (has_status, field_name)
+    """
+    if not isinstance(obj, dict):
+        return False, None
+
+    # Check direct keys (exact match only)
+    for key in obj.keys():
+        if key.lower() in STATUS_FIELD_NAMES:
+            return True, key
+
+    # Check @attributes (exact match only)
+    if "@attributes" in obj and isinstance(obj["@attributes"], dict):
+        for key in obj["@attributes"].keys():
+            if key.lower() in STATUS_FIELD_NAMES:
+                return True, f"@attributes.{key}"
+
+    return False, None
+
+
+def _has_name_field(obj: dict) -> tuple[bool, str | None]:
+    """Check if object has a field that looks like a name.
+
+    Uses EXACT field name matching.
+    Returns (has_name, field_name)
+    """
+    if not isinstance(obj, dict):
+        return False, None
+
+    # Check direct keys (exact match only)
+    for key in obj.keys():
+        if key.lower() in NAME_FIELD_NAMES:
+            return True, key
+
+    # Check @attributes (exact match only)
+    if "@attributes" in obj and isinstance(obj["@attributes"], dict):
+        for key in obj["@attributes"].keys():
+            if key.lower() in NAME_FIELD_NAMES:
+                return True, f"@attributes.{key}"
+
+    return False, None
+
+
 def extract_samples_from_json(
     content: str,
     lift_names: list[str] | None = None,
@@ -131,8 +193,12 @@ def extract_samples_from_json(
     except json.JSONDecodeError:
         return samples
 
+    # Collect more samples during traversal to ensure we find high-confidence ones
+    # We'll sort by confidence and return only max_samples at the end
+    collection_limit = max(max_samples * 10, 100)
+
     def traverse(obj: Any, path: str) -> None:
-        if len(samples) >= max_samples:
+        if len(samples) >= collection_limit:
             return
 
         text = _object_to_text(obj)
@@ -174,6 +240,18 @@ def extract_samples_from_json(
             matched_terms.extend(found[:3])
             match_types.append("status")
 
+        # CRITICAL: Also match objects that have the right STRUCTURE
+        # (both name and status fields) even if names don't match reference data
+        # This handles cases where website names differ from OpenSkiMap names
+        if isinstance(obj, dict):
+            has_status_field, status_field = _has_status_field(obj)
+            has_name_field, name_field = _has_name_field(obj)
+            if has_status_field and has_name_field:
+                if "structural_match" not in match_types:
+                    match_types.append("structural_match")
+                    matched_terms.append(f"has_{status_field}")
+                    matched_terms.append(f"has_{name_field}")
+
         # If we found matches, add as sample
         if matched_terms and isinstance(obj, dict):
             match_type = "mixed" if len(match_types) > 1 else match_types[0]
@@ -181,6 +259,21 @@ def extract_samples_from_json(
             # Calculate specificity score (prefer smaller, more specific objects)
             # Higher score = more specific = better sample
             specificity = 0.0
+
+            # CRITICAL: Heavily prefer objects with BOTH name AND status fields
+            # These are the actual status objects we want, not schedules/metadata
+            has_status, status_field = _has_status_field(obj)
+            has_name, name_field = _has_name_field(obj)
+
+            if has_status and has_name:
+                # This is exactly what we want - an object with name + status
+                specificity += 10.0
+            elif has_status:
+                # Has status but no name - still good
+                specificity += 5.0
+            elif has_name:
+                # Has name but no status - less useful
+                specificity += 1.0
 
             # Prefer objects with @attributes (XML-to-JSON structure)
             if "@attributes" in obj:
