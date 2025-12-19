@@ -30,6 +30,13 @@ from .pipeline import (
     run_pipeline_for_resort,
     run_pipeline_for_all,
 )
+from .discovery import (
+    DiscoveryAgent,
+    DiscoveryResult,
+    SerperClient,
+    run_discovery_for_resort,
+    run_discovery_for_resorts,
+)
 
 __all__ = [
     # Models
@@ -73,4 +80,10 @@ __all__ = [
     "load_pipeline_config",
     "run_pipeline_for_resort",
     "run_pipeline_for_all",
+    # Discovery
+    "DiscoveryAgent",
+    "DiscoveryResult",
+    "SerperClient",
+    "run_discovery_for_resort",
+    "run_discovery_for_resorts",
 ]

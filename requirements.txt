@@ -22,6 +22,9 @@ langgraph>=0.2.0
 structlog>=24.0.0
 langsmith>=0.1.0
 
+# Status page discovery
+# (serper.dev API - uses httpx already included)
+
 # Testing
 pytest>=8.0.0
 pytest-asyncio>=0.23.0

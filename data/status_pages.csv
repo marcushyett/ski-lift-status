@@ -1,8 +1,34 @@
 resort_id,resort_name,website_url,status_page_url
-68b126bc3175516c9263aed7635d14e37ff360dc,Les Trois Vallées,https://www.les3vallees.com/,https://www.les3vallees.com/fr/live/ouverture-des-pistes-et-remontees
-f47f7e05cc676b25b6a00f77f0b86a897f03018c,La Plagne,https://paradiski.com/,https://www.seelaplagne.com/lifts/status
-438e8330317f2f5a597b60acb0c0a11901b9329f,"Zermatt - Breuil-Cervinia, Breuil-Cervinia Ski Paradise",https://www.matterhornparadise.ch,https://www.cervinia.it/en/impianti
+0ed72c1a44d748a815d1efcd54caacf169610f05,4 Vallées – Verbier/La Tzoumaz/Nendaz/Veysonnaz/Thyon,http://www.4vallees.ch/,https://verbier4vallees.ch/en/useful-information/live-information-winter
+721dd142d0af653027c7569e1bd0799586bdefa1,Alpe d'Huez Grand Domaine,https://www.alpedhuez.com/,https://www.seealpedhuez.com/lifts/status
+41ca531357e0d2a532b8ab94e3e9fe74ddbe88c4,Alta Badia,https://www.altabadia.org/,https://www.altabadia.org/en/open-lifts-snow-report-dolomites
+4ae9b0cba5454d6f0921bf413c33a267f1d63cca,Arosa Lenzerheide,http://arosalenzerheide.ch,https://arosalenzerheide.swiss/en/Ski-Area/Lift-Company/Operating-hours-winter
 c329b1fe669c197d615896dfd4e38d4bb039e30c,Breckenridge,https://www.breckenridge.com/,https://www.breckenridge.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx
 8432e3c536835ef8a690f63b62060a7993bfd964,Brévent/Flégère (Chamonix),https://en.chamonix.com/activities/winter/skiing-in-chamonix-mont-blanc-valley/list-of-ski-areas/domaine-skiable-brevent-flegere,https://www.seechamonix.com/lifts/status
-cafb6b6d5f25860a682a8b6d67efe689218618a5,Les Gets-Morzine,https://pass.lesgets.com/,https://www.lesgets.com/en/discover-the-resort/ski-winter-sports/live-info-slopes/
 9a8be208c4f1832db8bf13c7102e2dcc3eef0a84,Cortina d'Ampezzo (Faloria - Cristallo - Mietres - Tofana),https://cortina.dolomiti.org/,https://www.dolomitisuperski.com/en/live-info/lifts/cortina-d-ampezzo
+0345d73f7a4bf0f49815ccb16306a3ec6371544b,Espace Diamant,https://www.espacediamant.com/,https://peakvisor.com/ski/france/france/espace-diamant/live
+baca23b1d6c08055f995fe20b50e3f6910b2ea2b,Espace Liberté,https://en.chatel.com/chatel-and-portes-du-soleil-ski-areas.html,https://www.seechamonix.com/lifts/status
+de4f884c40976fe9d18c23d0bab174c1d6b79218,GrandValira,https://www.grandvalira.com/,https://www.snow-online.com/snow-report/ski-resort/grandvalira.html
+0e7f017d9c830408aebfc40144372d483b040462,KitzSki,https://www.kitzbuehel.com/ https://www.kitzski.at/,https://www.kitzski.at/en/current-info/kitz-lift-status.html
+9cb83fdd2a49011eec76e3d1bbc2af8f582888a9,La Clusaz,https://www.laclusaz.com/,https://www.laclusaz.com/en/ski/alpine-skiing/
+f47f7e05cc676b25b6a00f77f0b86a897f03018c,La Plagne,https://paradiski.com/,https://www.seelaplagne.com/lifts/status
+f5fcc0e543cfb0e4d50280c286081c27d975697f,Le Grand Domaine,https://www.legranddomaine.fr/,https://www.snowplaza.co.uk/france/le-grand-domaine/snow-report/
+efaa82d7ae8e42868f19ed2abb8001f518a404d0,Le Grand Massif,https://www.grand-massif.com/,https://www.grand-massif.com/en/information-on-trail-openings/
+dec537b602584db89d89ab114a619f1ae356398e,Les Arcs,https://paradiski.com/,https://www.seelesarcs.com/lifts/status
+cafb6b6d5f25860a682a8b6d67efe689218618a5,Les Gets-Morzine,https://pass.lesgets.com/,https://www.lesgets.com/en/discover-the-resort/ski-winter-sports/live-info-slopes/
+775634f8f5f5b0724ecd27d82909b2008d58f7d5,Les Sybelles,https://www.sybelles.ski/,https://www.sybelles.ski/en/skiing-in-les-sybelles/slopes-and-lifts-open/
+68b126bc3175516c9263aed7635d14e37ff360dc,Les Trois Vallées,https://www.les3vallees.com/,https://www.les3vallees.com/fr/live/ouverture-des-pistes-et-remontees
+f967615083aaed557fa47068b9d894e66d763f0a,Mayrhofen Hippach,https://www.mayrhofner-bergbahnen.com/,https://www.mayrhofen.at/en/stories/open-cable-cars-mayrhofner-bergbahnen-winter
+97a14cedc5b0e781e9bd9857df1426b9376c7462,Megève,https://www.megeve.com/,https://forfait.megeve.com/hiver/en/ski-area-opening-information/
+e587928ea763f20b3232a5069c5d2438d09b6908,Serfaus Fiss Ladis,https://www.serfaus-fiss-ladis.at/de/winter,https://www.serfaus-fiss-ladis.at/en/winter-holiday/ski-area-status
+39136d396c46f03d9e84227cd2bccbdf60c55efd,Serre Chevalier,https://www.serre-chevalier.com,https://www.serre-chevalier.com/en/schedules-mechanical-lifts
+94cb050e1e20e04e822c14216840885aea2eafcc,Serre-Chevalier,https://www.serre-chevalier.com/,https://www.serre-chevalier.com/en/schedules-mechanical-lifts
+37ee9c6ba5b44864ba844f804938a8b815f8b717,SkiWelt Wilder Kaiser - Brixental,https://www.skiwelt.at/,https://www.skiwelt.at/en/lift-status-winter.html
+5b78e5652d097c7679cef7128ee1b57ff09fb86e,Skicircus Saalbach-Hinterglemm Leogang Fieberbrunn,https://www.saalbach.com/,https://www.saalbach.com/en/live-info/lifts-and-pistes
+583dbc4651db7ebcc7875a11180b634ec108ba8a,Skiresort Černá Hora-Pec,https://skiresort.cz/,https://www.skiresort.cz/en/skiarealy/cerna-hora/ch-lanovky-a-vleky/
+6ed5f25f0eb3e366ee2e0e667d998c0bf551225f,Tignes - Val d'Isère,https://www.espacekilly.com/,https://www.seetignes.com/lifts/status
+fc172b6fc8f8c454471e679be1c8b2ecc884621e,"Val Gardena, Gröden, Gherdëina",https://www.dolomitisuperski.com/ https://www.valgardena.it/,https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm
+3ab7375c4734163405f0f77a7c5a6afdfd600b73,Val Thorens - Orelle,https://www.les3vallees.com/,https://www.seevalthorens.com/lifts/status
+d7f0152ded3f23d4e4cf3ad4571f131ec267ab40,Wendelstein,https://www.wendelsteinbahn.de/,https://www.wendelsteinbahn.de/en/weather
+438e8330317f2f5a597b60acb0c0a11901b9329f,"Zermatt - Breuil-Cervinia, Breuil-Cervinia Ski Paradise",https://www.matterhornparadise.ch,https://www.cervinia.it/en/impianti
+4a041686ec032469cd3d58aaaf73ed9864e4a173,Zillertal Arena,https://www.zillertalarena.com/,https://www.zillertalarena.com/en/information-services/live-cams-weather/snow-report/
