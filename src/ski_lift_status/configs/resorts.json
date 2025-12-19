@@ -4,21 +4,21 @@
       "id": "la-plagne",
       "name": "La Plagne",
       "openskimap_id": "f47f7e05cc676b25b6a00f77f0b86a897f03018c",
-      "platform": "skiplan",
+      "platform": "lumiplan",
       "url": "https://www.la-plagne.com/en/practical-info/mountain-info/live.html",
-      "dataUrl": "https://ws-booking.la-plagne.com/ajax/get_piste_etat",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=la-plagne&region=alpes&pays=france&lang=en",
       "liftieId": "laplagne",
-      "notes": "Uses Skiplan API"
+      "notes": "Uses Lumiplan bulletin (Paradiski)"
     },
     {
       "id": "les-arcs",
       "name": "Les Arcs",
       "openskimap_id": "dec537b602584db89d89ab114a619f1ae356398e",
-      "platform": "skiplan",
+      "platform": "lumiplan",
       "url": "https://www.lesarcs.com/en/practical-info/mountain-info/live.html",
-      "dataUrl": "https://ws-booking.lesarcs.com/ajax/get_piste_etat",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=les-arcs&region=alpes&pays=france&lang=en",
       "liftieId": "lesarcs",
-      "notes": "Uses Skiplan API (same as La Plagne - Paradiski)"
+      "notes": "Uses Lumiplan bulletin (Paradiski)"
     },
     {
       "id": "courchevel",
@@ -358,8 +358,7 @@
   "stats": {
     "total": 33,
     "byPlatform": {
-      "lumiplan": 15,
-      "skiplan": 2,
+      "lumiplan": 17,
       "dolomiti": 3,
       "vail": 1,
       "nuxt": 1,

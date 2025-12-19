@@ -10,6 +10,15 @@ const https = require('https');
 const http = require('http');
 const { JSDOM } = require('jsdom');
 const vm = require('vm');
+const { URL } = require('url');
+
+// Try to load proxy agent if available
+let HttpsProxyAgent;
+try {
+  HttpsProxyAgent = require('https-proxy-agent').HttpsProxyAgent;
+} catch (e) {
+  // Proxy agent not available
+}
 
 // Load configs
 const resorts = require('./resorts.json').resorts;
@@ -27,17 +36,53 @@ function normalizeStatus(raw) {
 }
 
 /**
+ * Get proxy agent if environment proxy is configured
+ */
+function getProxyAgent(targetUrl) {
+  const proxyUrl = process.env.https_proxy || process.env.HTTPS_PROXY ||
+                   process.env.http_proxy || process.env.HTTP_PROXY;
+
+  if (!proxyUrl || !HttpsProxyAgent) return null;
+
+  // Check no_proxy
+  const noProxy = process.env.no_proxy || process.env.NO_PROXY || '';
+  const targetHost = new URL(targetUrl).hostname;
+  const noProxyList = noProxy.split(',').map(s => s.trim());
+
+  for (const pattern of noProxyList) {
+    if (!pattern) continue;
+    if (pattern === targetHost) return null;
+    if (pattern.startsWith('*') && targetHost.endsWith(pattern.slice(1))) return null;
+  }
+
+  return new HttpsProxyAgent(proxyUrl);
+}
+
+/**
  * Fetch URL content
  */
 async function fetch(url) {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith('https') ? https : http;
-    protocol.get(url, {
+    const agent = getProxyAgent(url);
+
+    const options = {
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; SkiLiftStatus/1.0)',
         'Accept': 'text/html,application/json'
       }
-    }, (res) => {
+    };
+
+    if (agent) {
+      options.agent = agent;
+    }
+
+    protocol.get(url, options, (res) => {
+      // Handle redirects
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        return fetch(res.headers.location).then(resolve).catch(reject);
+      }
+
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => resolve(data));
@@ -111,34 +156,60 @@ async function extractLumiplan(config) {
   const lifts = [];
   const runs = [];
 
-  // Find lift groups
-  const groups = doc.querySelectorAll('.prl_group');
-  groups.forEach(group => {
-    const nameEl = group.querySelector('.prl_nm');
-    const statusEl = group.querySelector('img[src*=".svg"]');
+  // New Lumiplan format uses POI_info elements
+  const items = doc.querySelectorAll('.POI_info');
+  items.forEach(item => {
+    const nameEl = item.querySelector('span.nom');
+    const statusImg = item.querySelector('img.img_status[src*="etats"]');
+    const typeImg = item.querySelector('img.img_type');
 
-    if (nameEl && statusEl) {
-      const name = nameEl.textContent.trim();
-      const src = statusEl.getAttribute('src') || '';
-      const statusMatch = src.match(/([OFP])\.svg$/);
-      const status = statusMatch ? {
-        'O': 'open',
-        'P': 'scheduled',
-        'F': 'closed'
-      }[statusMatch[1]] || 'closed' : 'closed';
+    if (nameEl) {
+      const name = nameEl.textContent.trim().replace(/\.$/, ''); // Remove trailing dot
+      const src = statusImg?.getAttribute('src') || '';
+      const typeSrc = typeImg?.getAttribute('src') || '';
 
-      // Determine if lift or run based on parent context
-      const parent = group.closest('.prl_affichage');
-      const header = parent?.previousElementSibling;
-      const isLift = header?.textContent?.toLowerCase().includes('lift');
+      // Parse status from image filename (e.g., lp_runway_trail_open.svg, lp_runway_trail_scheduled.svg)
+      let status = 'closed';
+      if (src.includes('_open')) status = 'open';
+      else if (src.includes('_scheduled')) status = 'scheduled';
+      else if (src.includes('_closed')) status = 'closed';
 
-      if (isLift) {
-        lifts.push({ name, status });
-      } else {
-        runs.push({ name, status });
+      // Determine if lift or run based on type image
+      const isLift = typeSrc.includes('CHAIRLIFT') || typeSrc.includes('GONDOLA') ||
+                     typeSrc.includes('CABLE') || typeSrc.includes('DRAG') ||
+                     typeSrc.includes('FUNICULAR') || typeSrc.includes('LIFT');
+
+      if (name) {
+        if (isLift) {
+          lifts.push({ name, status });
+        } else {
+          runs.push({ name, status });
+        }
       }
     }
   });
+
+  // Fallback: try old prl_group format
+  if (lifts.length === 0 && runs.length === 0) {
+    const groups = doc.querySelectorAll('.prl_group');
+    groups.forEach(group => {
+      const nameEl = group.querySelector('.prl_nm');
+      const statusEl = group.querySelector('img[src*=".svg"]');
+
+      if (nameEl && statusEl) {
+        const name = nameEl.textContent.trim();
+        const src = statusEl.getAttribute('src') || '';
+        const statusMatch = src.match(/([OFP])\.svg$/);
+        const status = statusMatch ? {
+          'O': 'open',
+          'P': 'scheduled',
+          'F': 'closed'
+        }[statusMatch[1]] || 'closed' : 'closed';
+
+        lifts.push({ name, status });
+      }
+    });
+  }
 
   return { lifts, runs };
 }
