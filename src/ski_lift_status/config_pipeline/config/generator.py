@@ -1,7 +1,8 @@
 """Config generator using GPT-5.1-Codex-Max.
 
-This module uses OpenAI's GPT-5.1-Codex-Max model to generate extraction
-configs based on the analysis output from the static tools.
+This module uses OpenAI's GPT-5.1-Codex-Max model with the Responses API
+and structured outputs to generate extraction configs based on the
+analysis output from the static tools.
 
 It generates JavaScript extraction code when needed and creates
 complete, tested configs.
@@ -9,11 +10,11 @@ complete, tested configs.
 
 import json
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Literal
 from datetime import datetime
 
 import os
-import httpx
+from pydantic import BaseModel
 
 from .schema import (
     ConfigSchema,
@@ -22,6 +23,39 @@ from .schema import (
     NameMapping,
     validate_config,
 )
+
+
+# Pydantic models for structured output
+# Note: OpenAI structured outputs require all fields in properties to be required
+# So we avoid default values and optional fields
+
+class DataSourceModel(BaseModel):
+    """Pydantic model for data source configuration."""
+
+    url: str
+    method: str
+    content_type: str
+    data_types: list[str]
+    extraction_method: str
+    list_selector: str
+    name_selector: str
+    status_selector: str
+    status_mapping: dict[str, str]
+
+    class Config:
+        extra = "ignore"  # Ignore extra fields
+
+
+class ConfigSchemaModel(BaseModel):
+    """Pydantic model for the complete extraction config."""
+
+    resort_id: str
+    resort_name: str
+    version: str
+    sources: list[DataSourceModel]
+
+    class Config:
+        extra = "ignore"  # Ignore extra fields
 
 
 @dataclass
@@ -58,6 +92,9 @@ class AnalysisContext:
     # Coverage from name matching
     lift_coverage: float = 0.0
     run_coverage: float = 0.0
+
+    # Raw HTML snippets for CSS selector generation
+    html_snippets: list[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for LLM context."""
@@ -183,55 +220,77 @@ When fixing JavaScript extraction code:
 Return the complete fixed config as valid JSON."""
 
 
-async def _call_codex(
+def _call_codex_sync(
     system_prompt: str,
     user_prompt: str,
-    temperature: float = 0.2,
 ) -> str | None:
-    """Call LLM for config generation using OpenAI API via httpx."""
+    """Call GPT-5.1-Codex-Max using the Responses API.
+
+    Uses synchronous OpenAI client to get JSON config output.
+    Returns raw JSON string since structured outputs have issues with nested dicts.
+    """
+    from openai import OpenAI
+
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
         print("OPENAI_API_KEY environment variable not set")
         return None
 
-    # Use gpt-4o as primary model (best for complex code generation)
-    # Falls back to gpt-4o-mini if needed
-    models_to_try = ["gpt-4o", "gpt-4o-mini"]
+    client = OpenAI(api_key=api_key)
 
-    for model in models_to_try:
+    # Retry up to 3 times with exponential backoff for transient errors
+    import time
+    for retry in range(3):
         try:
-            async with httpx.AsyncClient(timeout=120.0, verify=False) as client:
-                response = await client.post(
-                    "https://api.openai.com/v1/chat/completions",
-                    headers={
-                        "Authorization": f"Bearer {api_key}",
-                        "Content-Type": "application/json",
-                    },
-                    json={
-                        "model": model,
-                        "messages": [
-                            {"role": "system", "content": system_prompt},
-                            {"role": "user", "content": user_prompt},
-                        ],
-                        "temperature": temperature,
-                        "max_tokens": 8000,
-                        "response_format": {"type": "json_object"},
-                    },
-                )
+            if retry > 0:
+                time.sleep(2 ** retry)  # 2s, 4s backoff
 
-                if response.status_code == 200:
-                    result = response.json()
-                    return result["choices"][0]["message"]["content"]
-                else:
-                    print(f"Model {model} returned status {response.status_code}: {response.text[:200]}")
-                    continue
+            response = client.responses.create(
+                model="gpt-5.1-codex-max",
+                input=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
+            )
+
+            # Extract the response text
+            if response.output:
+                for item in response.output:
+                    if item.type == "message" and hasattr(item, "content"):
+                        for content in item.content:
+                            if content.type == "output_text":
+                                return content.text
+            return None
 
         except Exception as e:
-            # Log error and try next model
-            print(f"Model {model} failed: {e}")
+            print(f"Codex attempt {retry+1} failed: {e}")
             continue
 
     return None
+
+
+async def _call_codex(
+    system_prompt: str,
+    user_prompt: str,
+    temperature: float = 0.2,
+) -> str | None:
+    """Call GPT-5.1-Codex-Max using the Responses API.
+
+    This is an async wrapper around the synchronous OpenAI client.
+    Returns JSON string.
+    """
+    import asyncio
+
+    # Run the synchronous call in a thread pool
+    loop = asyncio.get_event_loop()
+    result = await loop.run_in_executor(
+        None,
+        _call_codex_sync,
+        system_prompt,
+        user_prompt,
+    )
+
+    return result
 
 
 def _parse_config_response(response: str, context: AnalysisContext) -> ConfigSchema | None:
@@ -279,13 +338,60 @@ class ConfigGenerator:
         """
         result = GenerationResult(success=False)
 
-        # Build user prompt with analysis context
+        # Build a compact context for the LLM (reduce token usage)
+        compact_context = {
+            "resort_id": context.resort_id,
+            "resort_name": context.resort_name,
+            "lift_url": context.lift_dynamic_url or context.lift_static_url,
+            "run_url": context.run_dynamic_url or context.run_static_url,
+            "lift_coverage": context.lift_coverage,
+            "run_coverage": context.run_coverage,
+            # Only include schema structure, not full data
+            "lift_schema_keys": list(context.lift_dynamic_schema.get("root", {}).get("keys", [])[:15]) if context.lift_dynamic_schema else [],
+            "run_schema_keys": list(context.run_dynamic_schema.get("root", {}).get("keys", [])[:15]) if context.run_dynamic_schema else [],
+            # Limit samples to 3 and truncate each
+            "lift_samples": [
+                {k: str(v)[:100] for k, v in s.items()}
+                for s in context.lift_samples[:3]
+            ],
+            "run_samples": [
+                {k: str(v)[:100] for k, v in s.items()}
+                for s in context.run_samples[:3]
+            ],
+            "lift_foreign_key": context.lift_foreign_key,
+        }
+
+        # Build user prompt with compact context
+        html_snippets_text = ""
+        if context.html_snippets:
+            html_snippets_text = "\n\nHTML snippets from the page (use these to determine CSS selectors):\n"
+            for i, snippet in enumerate(context.html_snippets[:3]):
+                html_snippets_text += f"\n--- Snippet {i+1} (name: {snippet.get('name', 'unknown')}, status: {snippet.get('status', 'unknown')}) ---\n"
+                html_snippets_text += f"Container selector: {snippet.get('container_selector', 'unknown')}\n"
+                html_snippets_text += snippet.get('html', '')[:800]
+                html_snippets_text += "\n"
+
         user_prompt = f"""Generate an extraction config for this ski resort:
 
 Resort: {context.resort_name} (ID: {context.resort_id})
 
-Analysis Results:
-{json.dumps(context.to_dict(), indent=2)}
+Best lift data URL: {compact_context['lift_url']}
+Best run data URL: {compact_context['run_url']}
+Lift coverage: {compact_context['lift_coverage']:.1f}%
+Run coverage: {compact_context['run_coverage']:.1f}%
+
+Lift data schema keys: {compact_context['lift_schema_keys']}
+Run data schema keys: {compact_context['run_schema_keys']}
+
+Sample lift objects:
+{json.dumps(compact_context['lift_samples'], indent=2)}
+
+Sample run objects:
+{json.dumps(compact_context['run_samples'], indent=2)}
+
+Foreign key field: {compact_context['lift_foreign_key']}
+{html_snippets_text}
+IMPORTANT: For HTML content, use css_selector extraction method. The status text (ouvert/fermé) is typically inside a nested element.
 
 Please generate a complete config that will extract lift and run status data.
 Return valid JSON only."""

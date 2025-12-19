@@ -213,6 +213,41 @@ def _extract_element_text(element: Any, selector: str) -> str | None:
     return None
 
 
+def _extract_status_from_class(element: Any, selector: str) -> str | None:
+    """Extract status from element class names.
+
+    Handles patterns like:
+    - impianto-status-F (closed), impianto-status-A (open)
+    - class containing 'open', 'closed', etc.
+    """
+    target = element
+    if selector and hasattr(element, "select_one"):
+        target = element.select_one(selector)
+
+    if not target or not hasattr(target, "get"):
+        return None
+
+    classes = target.get("class", [])
+    if isinstance(classes, list):
+        class_str = " ".join(classes).lower()
+    else:
+        class_str = str(classes).lower()
+
+    # Check for status patterns in class names
+    if "status-f" in class_str or "status-closed" in class_str or "chiuso" in class_str:
+        return "closed"
+    if "status-a" in class_str or "status-open" in class_str or "aperto" in class_str:
+        return "open"
+
+    # Check for status words in class names
+    if "closed" in class_str or "ferme" in class_str or "fermé" in class_str:
+        return "closed"
+    if "open" in class_str or "ouvert" in class_str:
+        return "open"
+
+    return None
+
+
 def _extract_element_attr(element: Any, attr_name: str) -> str | None:
     """Extract attribute from an element."""
     if hasattr(element, "get"):
@@ -319,6 +354,11 @@ def _extract_from_html_source(
         # Extract fields
         name = _extract_element_text(element, source.name_selector)
         status = _extract_element_text(element, source.status_selector)
+
+        # If no status from text, try extracting from class names
+        if not status:
+            status = _extract_status_from_class(element, source.status_selector)
+
         item_id = _extract_element_attr(element, "data-id") or _extract_element_attr(element, "id")
         item_type = _extract_element_text(element, source.type_selector) if source.type_selector else None
 
@@ -424,17 +464,29 @@ class ConfigRunner:
 
         return entities
 
-    async def execute(self) -> ExecutionResult:
-        """Execute the config and extract data."""
+    async def execute(
+        self,
+        cached_content: dict[str, str] | None = None,
+    ) -> ExecutionResult:
+        """Execute the config and extract data.
+
+        Args:
+            cached_content: Optional dict mapping URL to cached content.
+                Useful for testing against pre-captured JavaScript-rendered HTML.
+        """
         result = ExecutionResult(success=True)
 
         for source in self.config.sources:
-            # Fetch content
-            content, error = await _fetch_source(source)
-
-            if error:
-                result.errors.append(f"Failed to fetch {source.url}: {error}")
-                continue
+            # Check for cached content first (for testing with rendered HTML)
+            content = None
+            if cached_content and source.url in cached_content:
+                content = cached_content[source.url]
+            else:
+                # Fetch content via HTTP
+                content, error = await _fetch_source(source)
+                if error:
+                    result.errors.append(f"Failed to fetch {source.url}: {error}")
+                    continue
 
             if not content:
                 continue
@@ -505,10 +557,23 @@ class ConfigRunner:
         return result
 
 
-async def run_config(config: ConfigSchema) -> ExecutionResult:
-    """Execute a config and return results."""
+async def run_config(
+    config: ConfigSchema,
+    cached_content: dict[str, str] | None = None,
+) -> ExecutionResult:
+    """Execute a config and return results.
+
+    Args:
+        config: The config to execute.
+        cached_content: Optional dict mapping URL to cached content.
+            Used for testing configs against already-captured data
+            (e.g., JavaScript-rendered HTML).
+
+    Returns:
+        ExecutionResult with extracted entities.
+    """
     runner = ConfigRunner(config)
-    return await runner.execute()
+    return await runner.execute(cached_content=cached_content)
 
 
 async def test_config_coverage(

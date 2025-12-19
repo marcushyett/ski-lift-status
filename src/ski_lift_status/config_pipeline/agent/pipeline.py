@@ -27,6 +27,7 @@ from ..analysis import (
     analyze_resources_for_status,
     extract_schema_from_content,
     extract_matching_samples,
+    extract_html_snippets,
     detect_foreign_keys,
     map_names_to_openskimap,
     deduplicate_by_locality,
@@ -173,19 +174,114 @@ async def load_data_node(state: PipelineState) -> dict:
 
 
 async def capture_traffic_node(state: PipelineState) -> dict:
-    """Capture network traffic from the status page."""
+    """Capture network traffic from the status page.
+
+    Also follows iframes that might contain lift/status data widgets
+    (e.g., Lumiplan, Skiplan).
+    """
+    from ..capture import capture_iframe_traffic
+
     try:
         traffic = await capture_page_traffic(
             state["status_page_url"],
-            wait_time_ms=8000,
-            use_browserless=True,
+            wait_time_ms=10000,
         )
 
-        if not traffic.resources:
+        if not traffic.resources and not traffic.page_html:
             return {
                 "errors": state["errors"] + ["No resources captured"],
                 "action": PipelineAction.FAIL,
             }
+
+        # Check for iframes that might contain data widgets
+        # Common providers: lumiplan, lumiplay, skiplan, skiinfo
+        data_iframe_patterns = [
+            "lumiplan", "lumiplay", "skiplan", "skiinfo",
+            "opensnow", "snow-online", "bergfex"
+        ]
+
+        iframes_to_follow = []
+        for r in traffic.resources:
+            if r.method == "IFRAME":
+                url_lower = r.url.lower()
+                if any(pattern in url_lower for pattern in data_iframe_patterns):
+                    iframes_to_follow.append(r.url)
+
+        # Follow data iframes and merge their resources
+        for iframe_url in iframes_to_follow[:2]:  # Limit to 2 iframes
+            try:
+                # Retry iframe capture up to 3 times if we get partial HTML
+                # Some providers like Skiplan need the page to fully render
+                iframe_traffic = None
+                for retry in range(3):
+                    import asyncio as aio
+                    if retry > 0:
+                        await aio.sleep(2)  # Wait before retry
+
+                    iframe_traffic = await capture_iframe_traffic(
+                        iframe_url,
+                        state["status_page_url"],
+                    )
+
+                    # Check if we got enough content (>800KB suggests full load)
+                    if iframe_traffic.page_html and len(iframe_traffic.page_html) > 800000:
+                        break
+
+                if not iframe_traffic:
+                    continue
+
+                # Add iframe's page HTML as a resource for analysis
+                # This is critical for providers like Skiplan that render HTML
+                # instead of using JSON APIs
+                if iframe_traffic.page_html and len(iframe_traffic.page_html) > 1000:
+                    from ..capture import CapturedResource, ResourceType
+                    html_resource = CapturedResource(
+                        url=iframe_url,
+                        method="GET",
+                        resource_type=ResourceType.HTML,
+                        content_type="text/html",
+                        status_code=200,
+                        request_headers={},
+                        response_headers={},
+                        body=iframe_traffic.page_html,
+                        body_size=len(iframe_traffic.page_html),
+                    )
+                    traffic.resources.append(html_resource)
+
+                # Also add any XHR resources from the iframe
+                if iframe_traffic.resources:
+                    for r in iframe_traffic.resources:
+                        if r.body and len(r.body) > 50:
+                            traffic.resources.append(r)
+            except Exception as e:
+                # Log but continue
+                pass
+
+        # Add main page HTML as a resource if it contains status data
+        # This is important for SSR sites like cervinia.it that don't use XHR
+        if traffic.page_html and len(traffic.page_html) > 10000:
+            html_lower = traffic.page_html.lower()
+            # Check if page contains status indicators
+            status_indicators = (
+                html_lower.count("open") + html_lower.count("closed") +
+                html_lower.count("ouvert") + html_lower.count("fermé") +
+                html_lower.count("aperto") + html_lower.count("chiuso") +
+                html_lower.count("geöffnet") + html_lower.count("geschlossen")
+            )
+            if status_indicators > 5:
+                from ..capture import CapturedResource, ResourceType
+                page_resource = CapturedResource(
+                    url=state["status_page_url"],
+                    method="GET",
+                    resource_type=ResourceType.HTML,
+                    content_type="text/html",
+                    status_code=200,
+                    request_headers={},
+                    response_headers={},
+                    body=traffic.page_html,
+                    body_size=len(traffic.page_html),
+                )
+                traffic.resources.append(page_resource)
 
         return {
             "traffic": traffic,
@@ -355,6 +451,25 @@ async def build_context_node(state: PipelineState) -> dict:
     context.lift_samples = state.get("samples", {}).get("lift", [])[:5]
     context.run_samples = state.get("samples", {}).get("run", [])[:5]
 
+    # Extract HTML snippets from best lift resource for CSS selector generation
+    lift_names = [l.get("name", "") for l in lifts if l.get("name")]
+    run_names = [r.get("name", "") for r in runs if r.get("name")]
+
+    if lift_results:
+        best_url = lift_results[0].get("resource_url")
+        for r in resources:
+            if r.get("url") == best_url and r.get("body"):
+                content_type = r.get("content_type", "")
+                if "html" in content_type.lower() or not content_type:
+                    snippets = extract_html_snippets(
+                        r["body"],
+                        lift_names,
+                        run_names,
+                        max_samples=3,
+                    )
+                    context.html_snippets = snippets
+                break
+
     # Set foreign keys
     fk = state.get("foreign_keys")
     if fk and fk.get("best_candidate"):
@@ -395,8 +510,13 @@ async def generate_config_node(state: PipelineState) -> dict:
 
 
 async def test_config_node(state: PipelineState) -> dict:
-    """Test the generated config."""
+    """Test the generated config against captured content.
+
+    Uses cached content from traffic capture to test configs that require
+    JavaScript-rendered HTML (e.g., Skiplan, Lumiplan widgets).
+    """
     config = state.get("config")
+    traffic = state.get("traffic")
 
     if not config:
         return {
@@ -404,8 +524,16 @@ async def test_config_node(state: PipelineState) -> dict:
             "action": PipelineAction.FAIL,
         }
 
+    # Build cached content map from captured traffic
+    # This allows testing against JavaScript-rendered HTML
+    cached_content: dict[str, str] = {}
+    if traffic:
+        for r in traffic.resources:
+            if r.body and len(r.body) > 100:
+                cached_content[r.url] = r.body
+
     try:
-        result = await run_config(config)
+        result = await run_config(config, cached_content=cached_content)
 
         test_result = result.to_dict()
 

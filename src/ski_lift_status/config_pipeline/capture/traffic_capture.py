@@ -262,6 +262,19 @@ def _extract_iframes(html: str) -> list[str]:
         if not _is_tracking_url(url) and 'googletagmanager' not in url.lower():
             # Unescape HTML entities
             url = url.replace('&amp;', '&')
+            # Fix malformed URLs with multiple ? marks
+            # e.g., "...station=la-plagne?wmode=transparent" -> "...station=la-plagne&wmode=transparent"
+            parts = url.split('?')
+            if len(parts) > 2:
+                # Keep first ? as query separator, replace others with &
+                url = parts[0] + '?' + '&'.join(parts[1:])
+
+            # Remove wmode parameter which causes Skiplan to return incomplete HTML
+            # wmode=transparent is a Flash-era parameter that some sites still include
+            url = re.sub(r'[&?]wmode=[^&]*', '', url)
+            # Clean up any trailing ? or &
+            url = url.rstrip('?&')
+
             iframes.append(url)
 
     return iframes

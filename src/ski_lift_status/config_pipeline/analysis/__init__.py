@@ -40,6 +40,7 @@ from .sample_extractor import (
     extract_samples_from_json,
     extract_samples_from_html,
     extract_matching_samples,
+    extract_html_snippets,
 )
 from .foreign_key_detector import (
     ForeignKeyCandidate,
@@ -87,6 +88,7 @@ __all__ = [
     "extract_samples_from_json",
     "extract_samples_from_html",
     "extract_matching_samples",
+    "extract_html_snippets",
     # Foreign key detection
     "ForeignKeyCandidate",
     "ForeignKeyResult",

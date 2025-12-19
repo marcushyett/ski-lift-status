@@ -334,6 +334,141 @@ def extract_samples_from_html(
     return parser.samples
 
 
+def extract_html_snippets(
+    content: str,
+    lift_names: list[str] | None = None,
+    run_names: list[str] | None = None,
+    max_samples: int = 5,
+) -> list[dict]:
+    """Extract raw HTML snippets containing lift/run data.
+
+    Returns actual HTML strings that can be passed to Codex
+    to help it understand the exact structure.
+
+    Args:
+        content: HTML content.
+        lift_names: List of lift names to search for.
+        run_names: List of run names to search for.
+        max_samples: Maximum samples to return.
+
+    Returns:
+        List of dicts with 'html', 'name', 'status' keys.
+    """
+    from bs4 import BeautifulSoup
+
+    snippets = []
+    lift_names = lift_names or []
+    run_names = run_names or []
+    all_names = [n.lower() for n in lift_names + run_names if n]
+
+    soup = BeautifulSoup(content, 'html.parser')
+
+    # Common container selectors for lift/run status
+    container_selectors = [
+        '.ouvertures-marker-popover',  # Skiplan
+        '.marker-popover',
+        '.lift-item',
+        '.lift-row',
+        '.run-item',
+        '.remontee',
+        '[class*="lift"]',
+        '[class*="remontee"]',
+        'tr[data-id]',  # Table rows with data
+        '[class*="impianto-status"]',  # Cervinia.it - status spans, look at parent
+    ]
+
+    for selector in container_selectors:
+        elements = soup.select(selector)
+        if len(elements) > 3:
+            # Special handling for impianto-status elements - look at parent
+            if 'impianto-status' in selector:
+                for el in elements[:max_samples * 2]:
+                    # Status is in class name: impianto-status-F (closed) or impianto-status-A (open)
+                    classes = ' '.join(el.get('class', []))
+                    status = None
+                    if 'impianto-status-F' in classes:
+                        status = 'closed'
+                    elif 'impianto-status-A' in classes:
+                        status = 'open'
+
+                    # Look at parent for the container with name
+                    parent = el.find_parent()
+                    if parent:
+                        grandparent = parent.find_parent()
+                        container = grandparent if grandparent else parent
+                        html_str = str(container)
+                        text_lower = container.get_text().lower()
+
+                        name_found = None
+                        for name in all_names:
+                            if name in text_lower:
+                                name_found = name
+                                break
+
+                        if (name_found or status) and len(html_str) < 2000:
+                            snippets.append({
+                                'html': html_str,
+                                'name': name_found,
+                                'status': status,
+                                'status_in_class': True,
+                                'container_selector': 'parent of ' + selector,
+                            })
+
+                    if len(snippets) >= max_samples:
+                        break
+            else:
+                # Normal handling
+                for el in elements[:max_samples * 2]:  # Get extras to filter
+                    html_str = str(el)
+                    text_lower = el.get_text().lower()
+
+                    # Check if this contains a lift/run name
+                    name_found = None
+                    for name in all_names:
+                        if name in text_lower:
+                            name_found = name
+                            break
+
+                    # Check for status in text
+                    status = None
+                    if 'ouvert' in text_lower:
+                        status = 'ouvert'
+                    elif 'fermé' in text_lower or 'ferme' in text_lower:
+                        status = 'fermé'
+                    elif 'open' in text_lower:
+                        status = 'open'
+                    elif 'closed' in text_lower:
+                        status = 'closed'
+                    elif 'aperto' in text_lower:
+                        status = 'aperto'
+                    elif 'chiuso' in text_lower:
+                        status = 'chiuso'
+
+                    # Also check for status in class names
+                    classes = ' '.join(el.get('class', []))
+                    if not status:
+                        if any(x in classes.lower() for x in ['status-open', 'status-a', 'open', 'aperto']):
+                            status = 'open'
+                        elif any(x in classes.lower() for x in ['status-closed', 'status-f', 'closed', 'chiuso']):
+                            status = 'closed'
+
+                    if (name_found or status) and len(html_str) < 2000:
+                        snippets.append({
+                            'html': html_str,
+                            'name': name_found,
+                            'status': status,
+                            'container_selector': selector,
+                        })
+
+                    if len(snippets) >= max_samples:
+                        break
+
+        if snippets:
+            break
+
+    return snippets
+
+
 def extract_matching_samples(
     content: str,
     content_type: str | None = None,
