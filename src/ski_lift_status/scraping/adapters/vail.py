@@ -12,19 +12,21 @@ Their websites embed lift/terrain status in a JavaScript object called
 `TerrainStatusFeed` which is included in a script tag on the page.
 
 Extraction approach:
-1. Fetch the terrain-and-lift-status.aspx page
-2. Find the script containing "TerrainStatusFeed = {"
-3. Parse the JavaScript object to extract lift names and statuses
-4. Status codes are numeric: 0=closed, 1=open, 2=hold, 3=scheduled
+1. Fetch the terrain-and-lift-status.aspx page (using curl to bypass TLS fingerprinting)
+2. Check for waiting room redirect and follow if needed
+3. Find the script containing "TerrainStatusFeed = {"
+4. Parse the JavaScript object to extract lift names and statuses
+5. Status codes are numeric: 0=closed, 1=open, 2=hold, 3=scheduled
 
 Based on the parsing logic from: https://github.com/pirxpilot/liftie
 """
 
+import asyncio
 import re
 import json
+import subprocess
 from dataclasses import dataclass
 
-import httpx
 import structlog
 from bs4 import BeautifulSoup
 
@@ -244,10 +246,86 @@ def _parse_html_fallback(html: str) -> tuple[list[VailLift], list[VailTrail]]:
     return lifts, trails
 
 
+async def _fetch_with_curl(url: str) -> str | None:
+    """Fetch URL using curl to bypass TLS fingerprinting.
+
+    Args:
+        url: URL to fetch
+
+    Returns:
+        HTML content or None if fetch fails
+    """
+    log = logger.bind(adapter="vail")
+
+    cmd = [
+        "curl", "-s", "-L",
+        "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "-H", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "-H", "Accept-Language: en-US,en;q=0.9",
+        url,
+    ]
+
+    try:
+        result = await asyncio.to_thread(
+            subprocess.run,
+            cmd,
+            capture_output=True,
+            timeout=30,
+        )
+
+        if result.returncode != 0:
+            log.error("curl_error", returncode=result.returncode, stderr=result.stderr.decode())
+            return None
+
+        return result.stdout.decode("utf-8", errors="ignore")
+
+    except subprocess.TimeoutExpired:
+        log.error("curl_timeout")
+        return None
+    except Exception as e:
+        log.error("fetch_error", error=str(e))
+        return None
+
+
+def _extract_waiting_room_redirect(html: str) -> str | None:
+    """Check if page contains a waiting room redirect.
+
+    Vail uses waitingroom.snow.com for traffic management.
+    Look for: document.location.href = '/?c=vailresorts...'
+
+    Args:
+        html: HTML content
+
+    Returns:
+        Redirect URL if found, None otherwise
+    """
+    # Pattern from Liftie: document.location.href = '/?c=vailresorts...'
+    match = re.search(r"document\.location\.href\s*=\s*'(/\?c=vailresorts[^']*)'", html)
+    if match:
+        return f"https://waitingroom.snow.com{match.group(1)}"
+    return None
+
+
+def _is_blocked_response(html: str) -> bool:
+    """Check if response is Akamai/Vail block page.
+
+    Vail uses Akamai which may block certain IPs or rate limit.
+    The block page contains "system cannot process your request".
+
+    Args:
+        html: Response content
+
+    Returns:
+        True if this is a block page
+    """
+    return "system cannot process your request" in html.lower() or "reservations.snow.com" in html
+
+
 async def fetch_vail_status(resort_url: str) -> VailData | None:
     """Fetch live status data from a Vail Resorts property.
 
     This is the HTTP-only execution path - NO browser automation.
+    Uses curl subprocess to bypass Cloudflare/Akamai TLS fingerprinting.
 
     Args:
         resort_url: The URL to the terrain-and-lift-status.aspx page
@@ -257,26 +335,26 @@ async def fetch_vail_status(resort_url: str) -> VailData | None:
     """
     log = logger.bind(adapter="vail", url=resort_url[:50])
 
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9",
-    }
-
-    try:
-        async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
-            log.debug("fetching_page")
-            response = await client.get(resort_url, headers=headers)
-            response.raise_for_status()
-            html = response.text
-
-    except httpx.HTTPError as e:
-        log.error("http_error", error=str(e))
-        return None
+    log.debug("fetching_page_with_curl")
+    html = await _fetch_with_curl(resort_url)
 
     if not html:
         log.warning("empty_response")
         return None
+
+    # Check if we're being blocked by Akamai
+    if _is_blocked_response(html):
+        log.warning("akamai_block_detected", hint="IP may be rate limited or blocked")
+        return None
+
+    # Check for waiting room redirect (from Liftie pattern)
+    waiting_room_url = _extract_waiting_room_redirect(html)
+    if waiting_room_url:
+        log.debug("following_waiting_room_redirect", redirect_url=waiting_room_url)
+        html = await _fetch_with_curl(waiting_room_url)
+        if not html:
+            log.warning("waiting_room_fetch_failed")
+            return None
 
     # Try to extract TerrainStatusFeed
     terrain_data = _extract_terrain_status_feed(html)
