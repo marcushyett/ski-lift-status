@@ -58,3 +58,9 @@ debug/
 .deep_agent_work/
 
 node_modules/
+
+# Debug/test scripts
+debug_samples.py
+explore_nuxt.py
+test_top30.py
+test_zermatt_fix.py
