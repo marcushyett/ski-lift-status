@@ -380,10 +380,13 @@ def _extract_from_html_source(
     return entities
 
 
-def _safe_execute_javascript(code: str, content: str) -> list[dict] | None:
+def _safe_execute_javascript(code: str, content: str, status_mapping: dict[str, str]) -> list[dict] | None:
     """Execute JavaScript extraction code in a restricted environment.
 
     SECURITY: This uses a whitelist approach - only specific operations allowed.
+
+    Instead of actually executing JavaScript, we analyze the code to understand
+    the extraction pattern and implement it in Python with BeautifulSoup.
 
     The code must define a function called `extract` that takes content string
     and returns an array of objects with {name, status, id?, type?} fields.
@@ -401,22 +404,93 @@ def _safe_execute_javascript(code: str, content: str) -> list[dict] | None:
         if pattern in code:
             return None
 
-    # Use a simple regex-based extraction as a safe fallback
-    # Real JavaScript execution would require isolated-vm or similar
     try:
-        # Parse the code to find extraction patterns
-        # This is a simplified safe executor that handles common patterns
+        soup = BeautifulSoup(content, "html.parser")
+        results = []
 
-        # Look for JSON.parse usage
+        # Pattern 1: impianto-status pattern (cervinia.it style)
+        # JavaScript code: querySelectorAll("span[class*='impianto-status']")
+        if "impianto-status" in code:
+            status_elements = soup.select("span[class*='impianto-status']")
+            for status_el in status_elements:
+                # Get parent container
+                parent = status_el.find_parent()
+                if not parent:
+                    continue
+
+                # Look for name in sibling or parent's children
+                name = None
+                # Try siblings first
+                for sibling in status_el.find_previous_siblings("span"):
+                    text = sibling.get_text(strip=True)
+                    if text and len(text) > 2:
+                        name = text
+                        break
+
+                # If not found, look in parent
+                if not name and parent:
+                    for child in parent.find_all("span"):
+                        if child != status_el:
+                            text = child.get_text(strip=True)
+                            if text and len(text) > 2:
+                                name = text
+                                break
+
+                # Extract status from class
+                classes = " ".join(status_el.get("class", []))
+                status = "unknown"
+                if "status-F" in classes:
+                    status = status_mapping.get("F", "closed")
+                elif "status-A" in classes or "status-O" in classes:
+                    status = status_mapping.get("A", status_mapping.get("O", "open"))
+                elif "status-P" in classes:
+                    status = status_mapping.get("P", "hold")
+
+                if name:
+                    results.append({"name": name, "status": status})
+
+            if results:
+                return results
+
+        # Pattern 2: querySelectorAll with generic class pattern
+        # Extract selector from code like querySelectorAll("selector")
+        selector_match = re.search(r'querySelectorAll\s*\(\s*["\']([^"\']+)["\']', code)
+        if selector_match:
+            selector = selector_match.group(1)
+            elements = soup.select(selector)
+            for el in elements:
+                # Try to extract name and status
+                name = None
+                status = "unknown"
+
+                # Look for name in text content or nested elements
+                text_content = el.get_text(strip=True)
+                if text_content:
+                    # Name might be the first meaningful text
+                    parts = [p.strip() for p in text_content.split() if len(p.strip()) > 2]
+                    if parts:
+                        name = " ".join(parts[:5])  # Take first few words as name
+
+                # Status from class
+                classes = " ".join(el.get("class", []))
+                if any(x in classes.lower() for x in ["status-f", "closed", "chiuso", "ferme"]):
+                    status = "closed"
+                elif any(x in classes.lower() for x in ["status-a", "status-o", "open", "aperto", "ouvert"]):
+                    status = "open"
+
+                if name and len(name) > 2:
+                    results.append({"name": name, "status": status})
+
+            if results:
+                return results
+
+        # Pattern 3: JSON.parse in code - try to parse JSON
         if "JSON.parse" in code:
             try:
                 data = json.loads(content)
-                # Try to extract using patterns found in the code
-                # This is a heuristic approach
                 if isinstance(data, list):
                     return data
                 if isinstance(data, dict):
-                    # Look for array properties
                     for key, value in data.items():
                         if isinstance(value, list) and len(value) > 0:
                             return value
@@ -507,7 +581,7 @@ class ConfigRunner:
                     entities = _extract_from_html_source(content, source, entity_type)
                 elif source.extraction_method == ExtractionMethod.JAVASCRIPT:
                     if source.extraction_code:
-                        raw_data = _safe_execute_javascript(source.extraction_code, content)
+                        raw_data = _safe_execute_javascript(source.extraction_code, content, source.status_mapping)
                         if raw_data:
                             entities = [
                                 ExtractedEntity(
