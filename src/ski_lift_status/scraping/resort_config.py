@@ -145,6 +145,94 @@ RESORT_CONFIGS: dict[str, ResortConfig] = {
             "lang": "en",
         },
     ),
+
+    # Tignes - Val d'Isère (Espace Killy) - Skiplan platform
+    # Discovered from: https://www.seetignes.com/lifts/status
+    "6ed5f25f0eb3e366ee2e0e667d998c0bf551225f": ResortConfig(
+        resort_id="6ed5f25f0eb3e366ee2e0e667d998c0bf551225f",
+        resort_name="Tignes - Val d'Isère",
+        platform="skiplan",
+        api_endpoints=[
+            "https://live.skiplan.com/moduleweb/2.0/php/getOuvertures.php?resort=tignes_valdisere_hiver",
+        ],
+        platform_config={
+            "resort_slug": "tignes_valdisere_hiver",
+        },
+    ),
+
+    # Les Arcs (Paradiski) - Skiplan platform
+    # Same skiplan resort as La Plagne (paradiski_hiver)
+    "dec537b602584db89d89ab114a619f1ae356398e": ResortConfig(
+        resort_id="dec537b602584db89d89ab114a619f1ae356398e",
+        resort_name="Les Arcs",
+        platform="skiplan",
+        api_endpoints=[
+            "https://live.skiplan.com/moduleweb/2.0/php/getOuvertures.php?resort=paradiski_hiver",
+        ],
+        platform_config={
+            "resort_slug": "paradiski_hiver",
+        },
+    ),
+
+    # Val Gardena (Gröden) - Dolomiti Superski platform
+    # Discovered from: https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm
+    "fc172b6fc8f8c454471e679be1c8b2ecc884621e": ResortConfig(
+        resort_id="fc172b6fc8f8c454471e679be1c8b2ecc884621e",
+        resort_name="Val Gardena (Gröden)",
+        platform="dolomitisuperski",
+        api_endpoints=[
+            "https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm",
+        ],
+        platform_config={
+            "resort_slug": "groden-seiser-alm",
+            "lang": "en",
+        },
+    ),
+
+    # Alta Badia - Dolomiti Superski platform
+    # Discovered from: https://www.altabadia.org/en/open-lifts-snow-report-dolomites
+    # Uses dolomitisuperski.com backend
+    "41ca531357e0d2a532b8ab94e3e9fe74ddbe88c4": ResortConfig(
+        resort_id="41ca531357e0d2a532b8ab94e3e9fe74ddbe88c4",
+        resort_name="Alta Badia",
+        platform="dolomitisuperski",
+        api_endpoints=[
+            "https://www.dolomitisuperski.com/en/live-info/lifts/alta-badia",
+        ],
+        platform_config={
+            "resort_slug": "alta-badia",
+            "lang": "en",
+        },
+    ),
+
+    # Espace Liberté (Châtel, Portes du Soleil) - Intermaps platform
+    # Same intermaps data as Les Gets-Morzine (portes_du_soleil)
+    "baca23b1d6c08055f995fe20b50e3f6910b2ea2b": ResortConfig(
+        resort_id="baca23b1d6c08055f995fe20b50e3f6910b2ea2b",
+        resort_name="Espace Liberté (Châtel)",
+        platform="intermaps",
+        api_endpoints=[
+            "https://winter.intermaps.com/portes_du_soleil/data?lang=en",
+        ],
+        platform_config={
+            "resort_slug": "portes_du_soleil",
+        },
+    ),
+
+    # Val Thorens - Orelle - Lumiplan platform (part of Les 3 Vallées)
+    # Same lumiplan map as Les Trois Vallées
+    "3ab7375c4734163405f0f77a7c5a6afdfd600b73": ResortConfig(
+        resort_id="3ab7375c4734163405f0f77a7c5a6afdfd600b73",
+        resort_name="Val Thorens - Orelle",
+        platform="lumiplan",
+        api_endpoints=[
+            "https://lumiplay.link/interactive-map-services/public/map/bd632c91-6957-494d-95a8-6a72eb87e341/dynamicPoiData",
+            "https://lumiplay.link/interactive-map-services/public/map/bd632c91-6957-494d-95a8-6a72eb87e341/staticPoiData",
+        ],
+        platform_config={
+            "map_uuid": "bd632c91-6957-494d-95a8-6a72eb87e341",
+        },
+    ),
 }
 
 

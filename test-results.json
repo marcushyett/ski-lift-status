@@ -1,0 +1,1028 @@
+{
+  "timestamp": "2025-12-19T09:39:35.854069Z",
+  "total_resorts": 13,
+  "passing_resorts": 13,
+  "failing_resorts": 0,
+  "results": [
+    {
+      "resort_id": "68b126bc3175516c9263aed7635d14e37ff360dc",
+      "resort_name": "Les Trois Vall\u00e9es",
+      "status_page_url": "https://lumiplay.link/interactive-map-services/public/map/bd632c91-6957-494d-95a8-6a72eb87e341/dynamicPoiData",
+      "success": true,
+      "platform": "lumiplan",
+      "extraction_method": "Lumiplan REST API (HTTP-only) - Fetches JSON from staticPoiData and dynamicPoiData endpoints. Extracts name, type, and operational status directly from JSON responses using simple field mapping.",
+      "total_lifts": 159,
+      "lifts_by_status": {
+        "open": 132,
+        "closed": 5,
+        "expected_to_open": 0,
+        "not_expected_to_open": 22
+      },
+      "total_trails": 474,
+      "trails_by_status": {
+        "open": 295,
+        "closed": 38,
+        "expected_to_open": 6,
+        "not_expected_to_open": 135
+      },
+      "lift_coverage": 0.8984375,
+      "trail_coverage": 0.8907103825136612,
+      "openskimap_lift_count": 141,
+      "openskimap_trail_count": 964,
+      "unique_lift_statuses": [
+        "CLOSED",
+        "OPEN",
+        "OUT_OF_PERIOD"
+      ],
+      "unique_trail_statuses": [
+        "CLOSED",
+        "FORECAST",
+        "OPEN",
+        "OUT_OF_PERIOD",
+        "unknown"
+      ],
+      "sample_lifts": [
+        {
+          "name": "Platti\u00e8res",
+          "raw_status": "OPEN",
+          "normalized_status": "open",
+          "lift_type": "GONDOLA",
+          "opening_time": "09:00",
+          "closing_time": "16:20"
+        },
+        {
+          "name": "PLANS",
+          "raw_status": "OPEN",
+          "normalized_status": "open",
+          "lift_type": "MAGIC_CARPET",
+          "opening_time": "09:00",
+          "closing_time": "16:40"
+        },
+        {
+          "name": "Altiport",
+          "raw_status": "OPEN",
+          "normalized_status": "open",
+          "lift_type": "DETACHABLE_CHAIRLIFT",
+          "opening_time": "09:00",
+          "closing_time": "16:30"
+        }
+      ],
+      "sample_trails": [
+        {
+          "name": "Bosses",
+          "raw_status": "CLOSED",
+          "normalized_status": "closed",
+          "difficulty": null,
+          "opening_time": "09:00",
+          "closing_time": "17:00"
+        },
+        {
+          "name": "1850 - Plantret - M\u00e9ribel Altiport",
+          "raw_status": "OUT_OF_PERIOD",
+          "normalized_status": "not_expected_to_open",
+          "difficulty": null,
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "T\u00e9tras",
+          "raw_status": "OPEN",
+          "normalized_status": "open",
+          "difficulty": null,
+          "opening_time": "09:20",
+          "closing_time": "16:20"
+        }
+      ],
+      "fetch_time_ms": 969.7456359863281,
+      "error": null
+    },
+    {
+      "resort_id": "f47f7e05cc676b25b6a00f77f0b86a897f03018c",
+      "resort_name": "La Plagne",
+      "status_page_url": "https://live.skiplan.com/moduleweb/2.0/php/getOuvertures.php?resort=paradiski_hiver",
+      "success": true,
+      "platform": "skiplan",
+      "extraction_method": "Skiplan HTTP API (HTTP-only) - Fetches HTML from getOuvertures.php endpoint. Parses .ouvertures-marker elements using BeautifulSoup to extract name, status, and type information from HTML structure.",
+      "total_lifts": 107,
+      "lifts_by_status": {
+        "open": 98,
+        "closed": 9,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "total_trails": 230,
+      "trails_by_status": {
+        "open": 175,
+        "closed": 53,
+        "expected_to_open": 2,
+        "not_expected_to_open": 0
+      },
+      "lift_coverage": 0.6829268292682927,
+      "trail_coverage": 0.7368421052631579,
+      "openskimap_lift_count": 83,
+      "openskimap_trail_count": 432,
+      "unique_lift_statuses": [
+        "closed",
+        "open"
+      ],
+      "unique_trail_statuses": [
+        "closed",
+        "open",
+        "waiting"
+      ],
+      "sample_lifts": [
+        {
+          "name": "2300",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "t\u00e9l\u00e9si\u00e8ge",
+          "opening_time": "09:15",
+          "closing_time": "16:25"
+        },
+        {
+          "name": "CABRI.",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "t\u00e9l\u00e9ski",
+          "opening_time": "09:15",
+          "closing_time": "16:25"
+        },
+        {
+          "name": "MONT BLANC.",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "t\u00e9l\u00e9si\u00e8ge d\u00e9brayable",
+          "opening_time": "09:00",
+          "closing_time": "16:25"
+        }
+      ],
+      "sample_trails": [
+        {
+          "name": "ROCHETTE",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "expert",
+          "opening_time": "09:00",
+          "closing_time": "16:30"
+        },
+        {
+          "name": "LEITCHOUMS",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "intermediate",
+          "opening_time": "09:05",
+          "closing_time": "16:30"
+        },
+        {
+          "name": "PAVANE",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "intermediate",
+          "opening_time": "09:05",
+          "closing_time": "16:45"
+        }
+      ],
+      "fetch_time_ms": 1699.8517513275146,
+      "error": null
+    },
+    {
+      "resort_id": "438e8330317f2f5a597b60acb0c0a11901b9329f",
+      "resort_name": "Zermatt-Cervinia",
+      "status_page_url": "https://www.cervinia.it/en/impianti",
+      "success": true,
+      "platform": "nuxtjs",
+      "extraction_method": "Nuxt.js HTML (HTTP-only) - Fetches server-rendered HTML page and extracts lift/trail data from embedded __NUXT__ hydration payload. Resolves compressed IIFE variable names to actual values.",
+      "total_lifts": 45,
+      "lifts_by_status": {
+        "open": 33,
+        "closed": 12,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "total_trails": 84,
+      "trails_by_status": {
+        "open": 73,
+        "closed": 11,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "lift_coverage": 0.5306122448979592,
+      "trail_coverage": 0.35251798561151076,
+      "openskimap_lift_count": 65,
+      "openskimap_trail_count": 330,
+      "unique_lift_statuses": [
+        "closed",
+        "open"
+      ],
+      "unique_trail_statuses": [
+        "closed",
+        "open"
+      ],
+      "sample_lifts": [
+        {
+          "name": "VALTOURNENCHE",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "cable_car",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "Salette",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "gondola",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "Bec Carre",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "TSD",
+          "opening_time": null,
+          "closing_time": null
+        }
+      ],
+      "sample_trails": [
+        {
+          "name": "10 Du Col",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "intermediate",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "11 Gran Sometta",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "intermediate",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "14 Tunnel",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "intermediate",
+          "opening_time": null,
+          "closing_time": null
+        }
+      ],
+      "fetch_time_ms": 945.7988739013672,
+      "error": null
+    },
+    {
+      "resort_id": "8432e3c536835ef8a690f63b62060a7993bfd964",
+      "resort_name": "Chamonix (Br\u00e9vent/Fl\u00e9g\u00e8re)",
+      "status_page_url": "https://live.skiplan.com/moduleweb/2.0/php/getOuvertures.php?resort=chamonix_hiver_general",
+      "success": true,
+      "platform": "skiplan",
+      "extraction_method": "Skiplan HTTP API (HTTP-only) - Fetches HTML from getOuvertures.php endpoint. Parses .ouvertures-marker elements using BeautifulSoup to extract name, status, and type information from HTML structure.",
+      "total_lifts": 16,
+      "lifts_by_status": {
+        "open": 14,
+        "closed": 2,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "total_trails": 0,
+      "trails_by_status": {
+        "open": 0,
+        "closed": 0,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "lift_coverage": 0.1875,
+      "trail_coverage": 0.0,
+      "openskimap_lift_count": 17,
+      "openskimap_trail_count": 88,
+      "unique_lift_statuses": [
+        "closed",
+        "open"
+      ],
+      "unique_trail_statuses": [],
+      "sample_lifts": [
+        {
+          "name": "TS PARSA",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "t\u00e9l\u00e9si\u00e8ge",
+          "opening_time": "09:00",
+          "closing_time": "16:30"
+        },
+        {
+          "name": "TSD TETE DE BALME",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "t\u00e9l\u00e9si\u00e8ge d\u00e9brayable",
+          "opening_time": "12:00",
+          "closing_time": "16:15"
+        },
+        {
+          "name": "TC CHARAMILLON",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "t\u00e9l\u00e9cabine",
+          "opening_time": "09:00",
+          "closing_time": "16:30"
+        }
+      ],
+      "sample_trails": [],
+      "fetch_time_ms": 559.0195655822754,
+      "error": null
+    },
+    {
+      "resort_id": "c329b1fe669c197d615896dfd4e38d4bb039e30c",
+      "resort_name": "Breckenridge",
+      "status_page_url": "https://www.breckenridge.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+      "success": true,
+      "platform": "vail",
+      "extraction_method": "Vail Resorts HTML (HTTP-only) - Fetches terrain-and-lift-status.aspx page and extracts TerrainStatusFeed JavaScript object. Status codes: 0=closed, 1=open, 2=hold, 3=scheduled.",
+      "total_lifts": 35,
+      "lifts_by_status": {
+        "open": 0,
+        "closed": 13,
+        "expected_to_open": 22,
+        "not_expected_to_open": 0
+      },
+      "total_trails": 0,
+      "trails_by_status": {
+        "open": 0,
+        "closed": 0,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "lift_coverage": 1.0,
+      "trail_coverage": 0.0,
+      "openskimap_lift_count": 34,
+      "openskimap_trail_count": 195,
+      "unique_lift_statuses": [
+        "closed",
+        "scheduled"
+      ],
+      "unique_trail_statuses": [],
+      "sample_lifts": [
+        {
+          "name": "6-Chair",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "double",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "A-Chair",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "triple",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "Admin Carpet 1",
+          "raw_status": "scheduled",
+          "normalized_status": "expected_to_open",
+          "lift_type": "conveyor",
+          "opening_time": null,
+          "closing_time": null
+        }
+      ],
+      "sample_trails": [],
+      "fetch_time_ms": 1377.3672580718994,
+      "error": null
+    },
+    {
+      "resort_id": "cafb6b6d5f25860a682a8b6d67efe689218618a5",
+      "resort_name": "Les Gets-Morzine (Portes du Soleil)",
+      "status_page_url": "https://winter.intermaps.com/portes_du_soleil/data?lang=en",
+      "success": true,
+      "platform": "intermaps",
+      "extraction_method": "Intermaps JSON API (HTTP-only) - Fetches JSON from Intermaps data endpoint. Extracts lift and trail objects with names, statuses, types, and metadata like altitude and capacity.",
+      "total_lifts": 194,
+      "lifts_by_status": {
+        "open": 67,
+        "closed": 127,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "total_trails": 282,
+      "trails_by_status": {
+        "open": 97,
+        "closed": 185,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "lift_coverage": 0.6808510638297872,
+      "trail_coverage": 0.7733333333333333,
+      "openskimap_lift_count": 48,
+      "openskimap_trail_count": 183,
+      "unique_lift_statuses": [
+        "closed",
+        "open",
+        "unknown"
+      ],
+      "unique_trail_statuses": [
+        "closed",
+        "open",
+        "unknown"
+      ],
+      "sample_lifts": [
+        {
+          "name": "TK LA CORNE 2",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "T-bar",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "TK GRAND FREMOUX",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "T-bar",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "TK PETIT FREMOUX",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "T-bar",
+          "opening_time": null,
+          "closing_time": null
+        }
+      ],
+      "sample_trails": [
+        {
+          "name": "RETOUR VILLAGE B.",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "difficulty": "easy",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "LE LAC",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "difficulty": "easy",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "LA CHAUX",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "difficulty": "easy",
+          "opening_time": null,
+          "closing_time": null
+        }
+      ],
+      "fetch_time_ms": 1255.6073665618896,
+      "error": null
+    },
+    {
+      "resort_id": "9a8be208c4f1832db8bf13c7102e2dcc3eef0a84",
+      "resort_name": "Cortina d'Ampezzo",
+      "status_page_url": "https://www.dolomitisuperski.com/en/live-info/lifts/cortina-d-ampezzo",
+      "success": true,
+      "platform": "dolomitisuperski",
+      "extraction_method": "Dolomiti Superski HTML (HTTP-only) - Fetches server-rendered HTML from dolomitisuperski.com. Parses lift data from table.itemsTableList elements. Row classes indicate status: tr-open-item, tr-close-item.",
+      "total_lifts": 35,
+      "lifts_by_status": {
+        "open": 13,
+        "closed": 22,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "total_trails": 0,
+      "trails_by_status": {
+        "open": 0,
+        "closed": 0,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "lift_coverage": 0.0,
+      "trail_coverage": 0.0,
+      "openskimap_lift_count": 0,
+      "openskimap_trail_count": 0,
+      "unique_lift_statuses": [
+        "closed",
+        "open"
+      ],
+      "unique_trail_statuses": [],
+      "sample_lifts": [
+        {
+          "name": "Falzarego - Lagazuoi",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "Cable car",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "Falzarego",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "Chairlift 3",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "Col Gallina",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "Ski lift",
+          "opening_time": null,
+          "closing_time": null
+        }
+      ],
+      "sample_trails": [],
+      "fetch_time_ms": 902.8406143188477,
+      "error": null
+    },
+    {
+      "resort_id": "6ed5f25f0eb3e366ee2e0e667d998c0bf551225f",
+      "resort_name": "Tignes - Val d'Is\u00e8re",
+      "status_page_url": "https://live.skiplan.com/moduleweb/2.0/php/getOuvertures.php?resort=tignes_valdisere_hiver",
+      "success": true,
+      "platform": "skiplan",
+      "extraction_method": "Skiplan HTTP API (HTTP-only) - Fetches HTML from getOuvertures.php endpoint. Parses .ouvertures-marker elements using BeautifulSoup to extract name, status, and type information from HTML structure.",
+      "total_lifts": 66,
+      "lifts_by_status": {
+        "open": 53,
+        "closed": 10,
+        "expected_to_open": 3,
+        "not_expected_to_open": 0
+      },
+      "total_trails": 161,
+      "trails_by_status": {
+        "open": 106,
+        "closed": 44,
+        "expected_to_open": 11,
+        "not_expected_to_open": 0
+      },
+      "lift_coverage": 0.4367816091954023,
+      "trail_coverage": 0.9779005524861878,
+      "openskimap_lift_count": 90,
+      "openskimap_trail_count": 424,
+      "unique_lift_statuses": [
+        "closed",
+        "open",
+        "waiting"
+      ],
+      "unique_trail_statuses": [
+        "closed",
+        "open",
+        "waiting"
+      ],
+      "sample_lifts": [
+        {
+          "name": "TK DE COMBE FOLLE",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "t\u00e9l\u00e9ski",
+          "opening_time": "09:15",
+          "closing_time": "16:30"
+        },
+        {
+          "name": "TS DES ALMES",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "t\u00e9l\u00e9si\u00e8ge",
+          "opening_time": "09:00",
+          "closing_time": "16:40"
+        },
+        {
+          "name": "TSD MADELEINE",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "t\u00e9l\u00e9si\u00e8ge d\u00e9brayable",
+          "opening_time": "09:10",
+          "closing_time": "16:25"
+        }
+      ],
+      "sample_trails": [
+        {
+          "name": "COL MADELEINE",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "intermediate",
+          "opening_time": "09:00",
+          "closing_time": "17:30"
+        },
+        {
+          "name": "ROCS",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "advanced",
+          "opening_time": "09:15",
+          "closing_time": "16:30"
+        },
+        {
+          "name": "ROSSET",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "intermediate",
+          "opening_time": "09:00",
+          "closing_time": "16:40"
+        }
+      ],
+      "fetch_time_ms": 1011.7886066436768,
+      "error": null
+    },
+    {
+      "resort_id": "dec537b602584db89d89ab114a619f1ae356398e",
+      "resort_name": "Les Arcs",
+      "status_page_url": "https://live.skiplan.com/moduleweb/2.0/php/getOuvertures.php?resort=paradiski_hiver",
+      "success": true,
+      "platform": "skiplan",
+      "extraction_method": "Skiplan HTTP API (HTTP-only) - Fetches HTML from getOuvertures.php endpoint. Parses .ouvertures-marker elements using BeautifulSoup to extract name, status, and type information from HTML structure.",
+      "total_lifts": 107,
+      "lifts_by_status": {
+        "open": 98,
+        "closed": 9,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "total_trails": 230,
+      "trails_by_status": {
+        "open": 175,
+        "closed": 53,
+        "expected_to_open": 2,
+        "not_expected_to_open": 0
+      },
+      "lift_coverage": 0.5441176470588235,
+      "trail_coverage": 0.6012658227848101,
+      "openskimap_lift_count": 81,
+      "openskimap_trail_count": 527,
+      "unique_lift_statuses": [
+        "closed",
+        "open"
+      ],
+      "unique_trail_statuses": [
+        "closed",
+        "open",
+        "waiting"
+      ],
+      "sample_lifts": [
+        {
+          "name": "2300",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "t\u00e9l\u00e9si\u00e8ge",
+          "opening_time": "09:15",
+          "closing_time": "16:25"
+        },
+        {
+          "name": "CABRI.",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "t\u00e9l\u00e9ski",
+          "opening_time": "09:15",
+          "closing_time": "16:25"
+        },
+        {
+          "name": "MONT BLANC.",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "t\u00e9l\u00e9si\u00e8ge d\u00e9brayable",
+          "opening_time": "09:00",
+          "closing_time": "16:25"
+        }
+      ],
+      "sample_trails": [
+        {
+          "name": "ROCHETTE",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "expert",
+          "opening_time": "09:00",
+          "closing_time": "16:30"
+        },
+        {
+          "name": "LEITCHOUMS",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "intermediate",
+          "opening_time": "09:05",
+          "closing_time": "16:30"
+        },
+        {
+          "name": "PAVANE",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "difficulty": "intermediate",
+          "opening_time": "09:05",
+          "closing_time": "16:45"
+        }
+      ],
+      "fetch_time_ms": 1501.6858577728271,
+      "error": null
+    },
+    {
+      "resort_id": "fc172b6fc8f8c454471e679be1c8b2ecc884621e",
+      "resort_name": "Val Gardena (Gr\u00f6den)",
+      "status_page_url": "https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm",
+      "success": true,
+      "platform": "dolomitisuperski",
+      "extraction_method": "Dolomiti Superski HTML (HTTP-only) - Fetches server-rendered HTML from dolomitisuperski.com. Parses lift data from table.itemsTableList elements. Row classes indicate status: tr-open-item, tr-close-item.",
+      "total_lifts": 81,
+      "lifts_by_status": {
+        "open": 72,
+        "closed": 9,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "total_trails": 0,
+      "trails_by_status": {
+        "open": 0,
+        "closed": 0,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "lift_coverage": 0.7647058823529411,
+      "trail_coverage": 0.0,
+      "openskimap_lift_count": 80,
+      "openskimap_trail_count": 268,
+      "unique_lift_statuses": [
+        "closed",
+        "open"
+      ],
+      "unique_trail_statuses": [],
+      "sample_lifts": [
+        {
+          "name": "Val",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "Chairlift 2",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "Dantercepies I",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "Gondola",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "Dantercepies II",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "Gondola",
+          "opening_time": null,
+          "closing_time": null
+        }
+      ],
+      "sample_trails": [],
+      "fetch_time_ms": 531.8608283996582,
+      "error": null
+    },
+    {
+      "resort_id": "41ca531357e0d2a532b8ab94e3e9fe74ddbe88c4",
+      "resort_name": "Alta Badia",
+      "status_page_url": "https://www.dolomitisuperski.com/en/live-info/lifts/alta-badia",
+      "success": true,
+      "platform": "dolomitisuperski",
+      "extraction_method": "Dolomiti Superski HTML (HTTP-only) - Fetches server-rendered HTML from dolomitisuperski.com. Parses lift data from table.itemsTableList elements. Row classes indicate status: tr-open-item, tr-close-item.",
+      "total_lifts": 58,
+      "lifts_by_status": {
+        "open": 45,
+        "closed": 13,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "total_trails": 0,
+      "trails_by_status": {
+        "open": 0,
+        "closed": 0,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "lift_coverage": 0.8148148148148148,
+      "trail_coverage": 0.0,
+      "openskimap_lift_count": 61,
+      "openskimap_trail_count": 290,
+      "unique_lift_statuses": [
+        "closed",
+        "open"
+      ],
+      "unique_trail_statuses": [],
+      "sample_lifts": [
+        {
+          "name": "Col Alto",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "Gondola",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "Braia Fraida",
+          "raw_status": "open",
+          "normalized_status": "open",
+          "lift_type": "Chairlift 6",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "Capanna Nera",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "Ski lift",
+          "opening_time": null,
+          "closing_time": null
+        }
+      ],
+      "sample_trails": [],
+      "fetch_time_ms": 721.576452255249,
+      "error": null
+    },
+    {
+      "resort_id": "baca23b1d6c08055f995fe20b50e3f6910b2ea2b",
+      "resort_name": "Espace Libert\u00e9 (Ch\u00e2tel)",
+      "status_page_url": "https://winter.intermaps.com/portes_du_soleil/data?lang=en",
+      "success": true,
+      "platform": "intermaps",
+      "extraction_method": "Intermaps JSON API (HTTP-only) - Fetches JSON from Intermaps data endpoint. Extracts lift and trail objects with names, statuses, types, and metadata like altitude and capacity.",
+      "total_lifts": 194,
+      "lifts_by_status": {
+        "open": 67,
+        "closed": 127,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "total_trails": 282,
+      "trails_by_status": {
+        "open": 97,
+        "closed": 185,
+        "expected_to_open": 0,
+        "not_expected_to_open": 0
+      },
+      "lift_coverage": 0.6538461538461539,
+      "trail_coverage": 0.7555555555555555,
+      "openskimap_lift_count": 54,
+      "openskimap_trail_count": 239,
+      "unique_lift_statuses": [
+        "closed",
+        "open",
+        "unknown"
+      ],
+      "unique_trail_statuses": [
+        "closed",
+        "open",
+        "unknown"
+      ],
+      "sample_lifts": [
+        {
+          "name": "TK LA CORNE 2",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "T-bar",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "TK GRAND FREMOUX",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "T-bar",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "TK PETIT FREMOUX",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "lift_type": "T-bar",
+          "opening_time": null,
+          "closing_time": null
+        }
+      ],
+      "sample_trails": [
+        {
+          "name": "RETOUR VILLAGE B.",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "difficulty": "easy",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "LE LAC",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "difficulty": "easy",
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "LA CHAUX",
+          "raw_status": "closed",
+          "normalized_status": "closed",
+          "difficulty": "easy",
+          "opening_time": null,
+          "closing_time": null
+        }
+      ],
+      "fetch_time_ms": 529.9651622772217,
+      "error": null
+    },
+    {
+      "resort_id": "3ab7375c4734163405f0f77a7c5a6afdfd600b73",
+      "resort_name": "Val Thorens - Orelle",
+      "status_page_url": "https://lumiplay.link/interactive-map-services/public/map/bd632c91-6957-494d-95a8-6a72eb87e341/dynamicPoiData",
+      "success": true,
+      "platform": "lumiplan",
+      "extraction_method": "Lumiplan REST API (HTTP-only) - Fetches JSON from staticPoiData and dynamicPoiData endpoints. Extracts name, type, and operational status directly from JSON responses using simple field mapping.",
+      "total_lifts": 159,
+      "lifts_by_status": {
+        "open": 132,
+        "closed": 5,
+        "expected_to_open": 0,
+        "not_expected_to_open": 22
+      },
+      "total_trails": 474,
+      "trails_by_status": {
+        "open": 295,
+        "closed": 38,
+        "expected_to_open": 6,
+        "not_expected_to_open": 135
+      },
+      "lift_coverage": 0.8409090909090909,
+      "trail_coverage": 0.85,
+      "openskimap_lift_count": 54,
+      "openskimap_trail_count": 559,
+      "unique_lift_statuses": [
+        "CLOSED",
+        "OPEN",
+        "OUT_OF_PERIOD"
+      ],
+      "unique_trail_statuses": [
+        "CLOSED",
+        "FORECAST",
+        "OPEN",
+        "OUT_OF_PERIOD",
+        "unknown"
+      ],
+      "sample_lifts": [
+        {
+          "name": "Platti\u00e8res",
+          "raw_status": "OPEN",
+          "normalized_status": "open",
+          "lift_type": "GONDOLA",
+          "opening_time": "09:00",
+          "closing_time": "16:20"
+        },
+        {
+          "name": "PLANS",
+          "raw_status": "OPEN",
+          "normalized_status": "open",
+          "lift_type": "MAGIC_CARPET",
+          "opening_time": "09:00",
+          "closing_time": "16:40"
+        },
+        {
+          "name": "Altiport",
+          "raw_status": "OPEN",
+          "normalized_status": "open",
+          "lift_type": "DETACHABLE_CHAIRLIFT",
+          "opening_time": "09:00",
+          "closing_time": "16:30"
+        }
+      ],
+      "sample_trails": [
+        {
+          "name": "Bosses",
+          "raw_status": "CLOSED",
+          "normalized_status": "closed",
+          "difficulty": null,
+          "opening_time": "09:00",
+          "closing_time": "17:00"
+        },
+        {
+          "name": "1850 - Plantret - M\u00e9ribel Altiport",
+          "raw_status": "OUT_OF_PERIOD",
+          "normalized_status": "not_expected_to_open",
+          "difficulty": null,
+          "opening_time": null,
+          "closing_time": null
+        },
+        {
+          "name": "T\u00e9tras",
+          "raw_status": "OPEN",
+          "normalized_status": "open",
+          "difficulty": null,
+          "opening_time": "09:20",
+          "closing_time": "16:20"
+        }
+      ],
+      "fetch_time_ms": 907.9389572143555,
+      "error": null
+    }
+  ]
+}
