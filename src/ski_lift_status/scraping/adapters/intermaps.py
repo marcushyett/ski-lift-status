@@ -17,7 +17,6 @@ Extraction approach:
 3. Extract names, statuses, and metadata
 """
 
-import re
 from dataclasses import dataclass
 
 import httpx

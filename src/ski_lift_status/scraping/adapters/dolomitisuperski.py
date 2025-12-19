@@ -91,10 +91,14 @@ def _parse_lift_tables(soup: BeautifulSoup) -> list[DolomitisuperskiLift]:
 
     for row in rows:
         # Determine status from row class
-        row_classes = row.get("class", [])
-        if "tr-open-item" in row_classes:
+        row_classes = row.get("class")
+        if not row_classes:
+            continue
+        # BeautifulSoup returns list of classes
+        class_list = row_classes if isinstance(row_classes, list) else [row_classes]
+        if "tr-open-item" in class_list:
             status = "open"
-        elif "tr-close-item" in row_classes:
+        elif "tr-close-item" in class_list:
             status = "closed"
         else:
             continue  # Not a lift row
@@ -126,14 +130,16 @@ def _parse_lift_tables(soup: BeautifulSoup) -> list[DolomitisuperskiLift]:
 
         # Get season dates if available
         season_elem = row.select_one("p.season")
-        season_start = None
-        season_end = None
+        season_start: str | None = None
+        season_end: str | None = None
         if season_elem:
             time_elems = season_elem.select("time")
             if len(time_elems) >= 1:
-                season_start = time_elems[0].get("datetime")
+                dt = time_elems[0].get("datetime")
+                season_start = str(dt) if dt else None
             if len(time_elems) >= 2:
-                season_end = time_elems[1].get("datetime")
+                dt = time_elems[1].get("datetime")
+                season_end = str(dt) if dt else None
 
         # Get opening hours
         hours_cells = row.select("td")

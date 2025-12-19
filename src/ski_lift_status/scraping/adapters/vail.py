@@ -220,7 +220,13 @@ def _parse_html_fallback(html: str) -> tuple[list[VailLift], list[VailTrail]]:
     lift_elements = soup.select("[data-lift-name], [data-name], .lift-item, .lift-status-item")
 
     for elem in lift_elements:
-        name = elem.get("data-lift-name") or elem.get("data-name")
+        name_attr = elem.get("data-lift-name") or elem.get("data-name")
+        # Handle BeautifulSoup returning list for multi-value attributes
+        if isinstance(name_attr, list):
+            name = name_attr[0] if name_attr else None
+        else:
+            name = name_attr
+
         if not name:
             name_elem = elem.select_one(".lift-name, .name")
             if name_elem:
@@ -241,7 +247,7 @@ def _parse_html_fallback(html: str) -> tuple[list[VailLift], list[VailTrail]]:
             elif "scheduled" in status_text:
                 status = "scheduled"
 
-        lifts.append(VailLift(name=name, status=status))
+        lifts.append(VailLift(name=str(name), status=status))
 
     return lifts, trails
 

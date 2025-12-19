@@ -12,7 +12,7 @@ Normalized Status Schema:
 """
 
 from enum import Enum
-from typing import Any
+
 
 from pydantic import BaseModel
 
@@ -150,8 +150,7 @@ KNOWN_STATUS_MAPPINGS: dict[str, NormalizedStatus] = {
     "cerrada": NormalizedStatus.CLOSED,
     "suspendido": NormalizedStatus.CLOSED,
 
-    # Spanish - Expected
-    "previsto": NormalizedStatus.EXPECTED_TO_OPEN,
+    # Spanish - Expected (previsto already in Italian section)
     "programado": NormalizedStatus.EXPECTED_TO_OPEN,
 
     # Spanish - Not expected

@@ -337,10 +337,9 @@ def extract_cervinia(html: str) -> NuxtData | None:
     # Also try to find the timing data
     timing_pattern = r'orari_impianti_singoli:\[([^\]]+)\]'
     timing_match = re.search(timing_pattern, html)
-    timing_data: dict[str, tuple[str, str]] = {}
 
     if timing_match:
-        # Parse timing entries
+        # Parse timing entries (currently just for logging)
         timing_entries = re.findall(
             r'\{nome:([^,]+),orario_apertura:([^,]+),orario_chiusura:([^}]+)\}',
             timing_match.group(1)
