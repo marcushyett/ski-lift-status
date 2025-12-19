@@ -31,6 +31,15 @@ class LumiplanLift:
     station: str | None
     opening_status: str
     operating: bool | None
+    # Additional fields
+    opening_time: str | None = None
+    closing_time: str | None = None
+    wait_time_minutes: int | None = None
+    # Lift metadata
+    arrival_altitude: float | None = None
+    departure_altitude: float | None = None
+    capacity: int | None = None
+    duration_minutes: float | None = None
 
 
 @dataclass
@@ -43,6 +52,10 @@ class LumiplanTrail:
     station: str | None
     opening_status: str
     grooming_status: str | None
+    # Additional fields
+    opening_time: str | None = None
+    closing_time: str | None = None
+    snow_condition: str | None = None
 
 
 @dataclass
@@ -118,6 +131,22 @@ def parse_dynamic_data(content: dict[str, Any]) -> dict[int, dict[str, Any]]:
     return {item["id"]: item for item in items if "id" in item}
 
 
+def extract_opening_times(static_item: dict[str, Any]) -> tuple[str | None, str | None]:
+    """Extract opening and closing times from static POI data.
+
+    Args:
+        static_item: The static data dict for a lift/trail
+
+    Returns:
+        Tuple of (opening_time, closing_time) in HH:MM format, or None if not available
+    """
+    theoretic_times = static_item.get("openingTimesTheoretic", [])
+    if theoretic_times and isinstance(theoretic_times, list) and len(theoretic_times) > 0:
+        first_slot = theoretic_times[0]
+        return first_slot.get("beginTime"), first_slot.get("endTime")
+    return None, None
+
+
 def extract(resources: list[CapturedResource]) -> LumiplanData | None:
     """Extract lift/run data from Lumiplan API responses.
 
@@ -155,6 +184,7 @@ def extract(resources: list[CapturedResource]) -> LumiplanData | None:
     for data_id, static_item in static_data.items():
         item_type = static_item.get("type")
         dynamic_item = dynamic_data.get(data_id, {})
+        opening_time, closing_time = extract_opening_times(static_item)
 
         if item_type == "LIFT":
             lifts.append(
@@ -165,6 +195,13 @@ def extract(resources: list[CapturedResource]) -> LumiplanData | None:
                     station=static_item.get("station") or static_item.get("stationName"),
                     opening_status=dynamic_item.get("openingStatus", "unknown"),
                     operating=dynamic_item.get("operating"),
+                    opening_time=opening_time,
+                    closing_time=closing_time,
+                    wait_time_minutes=dynamic_item.get("waitTime"),
+                    arrival_altitude=static_item.get("arrivalAltitude"),
+                    departure_altitude=static_item.get("departureAltitude"),
+                    capacity=static_item.get("capacity"),
+                    duration_minutes=static_item.get("duration"),
                 )
             )
         elif item_type == "TRAIL":
@@ -176,6 +213,9 @@ def extract(resources: list[CapturedResource]) -> LumiplanData | None:
                     station=static_item.get("station") or static_item.get("stationName"),
                     opening_status=dynamic_item.get("openingStatus", "unknown"),
                     grooming_status=dynamic_item.get("groomingStatus"),
+                    opening_time=opening_time,
+                    closing_time=closing_time,
+                    snow_condition=dynamic_item.get("snowCondition"),
                 )
             )
 
@@ -262,6 +302,7 @@ async def fetch_live_status(map_uuid: str) -> LumiplanData | None:
     for data_id, static_item in static_data.items():
         item_type = static_item.get("type")
         dynamic_item = dynamic_data.get(data_id, {})
+        opening_time, closing_time = extract_opening_times(static_item)
 
         if item_type == "LIFT":
             lifts.append(
@@ -272,6 +313,13 @@ async def fetch_live_status(map_uuid: str) -> LumiplanData | None:
                     station=static_item.get("station") or static_item.get("stationName"),
                     opening_status=dynamic_item.get("openingStatus", "unknown"),
                     operating=dynamic_item.get("operating"),
+                    opening_time=opening_time,
+                    closing_time=closing_time,
+                    wait_time_minutes=dynamic_item.get("waitTime"),
+                    arrival_altitude=static_item.get("arrivalAltitude"),
+                    departure_altitude=static_item.get("departureAltitude"),
+                    capacity=static_item.get("capacity"),
+                    duration_minutes=static_item.get("duration"),
                 )
             )
         elif item_type == "TRAIL":
@@ -283,6 +331,9 @@ async def fetch_live_status(map_uuid: str) -> LumiplanData | None:
                     station=static_item.get("station") or static_item.get("stationName"),
                     opening_status=dynamic_item.get("openingStatus", "unknown"),
                     grooming_status=dynamic_item.get("groomingStatus"),
+                    opening_time=opening_time,
+                    closing_time=closing_time,
+                    snow_condition=dynamic_item.get("snowCondition"),
                 )
             )
 
