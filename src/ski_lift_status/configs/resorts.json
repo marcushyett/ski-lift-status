@@ -1,0 +1,372 @@
+{
+  "resorts": [
+    {
+      "id": "la-plagne",
+      "name": "La Plagne",
+      "openskimap_id": "f47f7e05cc676b25b6a00f77f0b86a897f03018c",
+      "platform": "skiplan",
+      "url": "https://www.la-plagne.com/en/practical-info/mountain-info/live.html",
+      "dataUrl": "https://ws-booking.la-plagne.com/ajax/get_piste_etat",
+      "liftieId": "laplagne",
+      "notes": "Uses Skiplan API"
+    },
+    {
+      "id": "les-arcs",
+      "name": "Les Arcs",
+      "openskimap_id": "dec537b602584db89d89ab114a619f1ae356398e",
+      "platform": "skiplan",
+      "url": "https://www.lesarcs.com/en/practical-info/mountain-info/live.html",
+      "dataUrl": "https://ws-booking.lesarcs.com/ajax/get_piste_etat",
+      "liftieId": "lesarcs",
+      "notes": "Uses Skiplan API (same as La Plagne - Paradiski)"
+    },
+    {
+      "id": "courchevel",
+      "name": "Courchevel - 3 Vallées",
+      "openskimap_id": "68b126bc3175516c9263aed7635d14e37ff360dc",
+      "platform": "lumiplan",
+      "url": "https://courchevel.com",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=courchevel&region=alpes&pays=france&lang=en",
+      "liftieId": "courchevel",
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
+      "id": "meribel",
+      "name": "Méribel - 3 Vallées",
+      "openskimap_id": "68b126bc3175516c9263aed7635d14e37ff360dc",
+      "platform": "lumiplan",
+      "url": "https://meribel.net",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=meribel&region=alpes&pays=france&lang=en",
+      "liftieId": "meribel",
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
+      "id": "val-thorens",
+      "name": "Val Thorens - Orelle",
+      "openskimap_id": "3ab7375c4734163405f0f77a7c5a6afdfd600b73",
+      "platform": "lumiplan",
+      "url": "https://www.valthorens.com",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=valthorens&region=alpes&pays=france&lang=en",
+      "liftieId": null,
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
+      "id": "tignes",
+      "name": "Tignes",
+      "openskimap_id": "6ed5f25f0eb3e366ee2e0e667d998c0bf551225f",
+      "platform": "lumiplan",
+      "url": "https://www.tignes.net",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=tignes&region=alpes&pays=france&lang=en",
+      "liftieId": "tignes",
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
+      "id": "val-disere",
+      "name": "Val d'Isère",
+      "openskimap_id": "6ed5f25f0eb3e366ee2e0e667d998c0bf551225f",
+      "platform": "lumiplan",
+      "url": "https://valdisere.com",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=valdisere&region=alpes&pays=france&lang=en",
+      "liftieId": "valdisere",
+      "notes": "Uses Lumiplan bulletin (same domain as Tignes)"
+    },
+    {
+      "id": "chamonix",
+      "name": "Brévent/Flégère (Chamonix)",
+      "openskimap_id": "8432e3c536835ef8a690f63b62060a7993bfd964",
+      "platform": "lumiplan",
+      "url": "https://www.chamonix.com",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=chamonix&region=alpes&pays=france&lang=en",
+      "liftieId": "chamonix",
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
+      "id": "megeve",
+      "name": "Megève",
+      "openskimap_id": "97a14cedc5b0e781e9bd9857df1426b9376c7462",
+      "platform": "lumiplan",
+      "url": "https://forfait.megeve.com",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=megeve&region=alpes&pays=france&lang=en",
+      "liftieId": "megeve",
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
+      "id": "breckenridge",
+      "name": "Breckenridge",
+      "openskimap_id": "c329b1fe669c197d615896dfd4e38d4bb039e30c",
+      "platform": "vail",
+      "url": "https://www.breckenridge.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+      "liftieId": "breck",
+      "notes": "Vail Resorts / Epic Pass"
+    },
+    {
+      "id": "alta-badia",
+      "name": "Alta Badia",
+      "openskimap_id": "41ca531357e0d2a532b8ab94e3e9fe74ddbe88c4",
+      "platform": "dolomiti",
+      "url": "https://www.dolomitisuperski.com/en/live-info/lifts/alta-badia",
+      "liftieId": "alta-badia",
+      "notes": "Dolomiti Superski"
+    },
+    {
+      "id": "cortina",
+      "name": "Cortina d'Ampezzo",
+      "openskimap_id": "9a8be208c4f1832db8bf13c7102e2dcc3eef0a84",
+      "platform": "dolomiti",
+      "url": "https://www.dolomitisuperski.com/en/live-info/lifts/cortina-d-ampezzo",
+      "liftieId": "cortina-d-ampezzo",
+      "notes": "Dolomiti Superski"
+    },
+    {
+      "id": "val-gardena",
+      "name": "Val Gardena",
+      "openskimap_id": "fc172b6fc8f8c454471e679be1c8b2ecc884621e",
+      "platform": "dolomiti",
+      "url": "https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm",
+      "liftieId": "val-gardena",
+      "notes": "Dolomiti Superski"
+    },
+    {
+      "id": "zermatt-cervinia",
+      "name": "Zermatt - Breuil-Cervinia",
+      "openskimap_id": "438e8330317f2f5a597b60acb0c0a11901b9329f",
+      "platform": "nuxt",
+      "url": "https://www.cervinia.it/en/impianti",
+      "config": {
+        "lifts": "$.state.impianti.SECTEUR[*].REMONTEE[*]",
+        "runs": "$.state.impianti.SECTEUR[*].PISTE[*]",
+        "name": "@attributes.nom",
+        "status": "@attributes.etat",
+        "statusMap": {"O": "open", "A": "open", "F": "closed", "P": "scheduled"}
+      },
+      "liftieId": "cervino",
+      "notes": "Nuxt.js site with embedded __NUXT__ data"
+    },
+    {
+      "id": "verbier",
+      "name": "4 Vallées – Verbier",
+      "openskimap_id": "0ed72c1a44d748a815d1efcd54caacf169610f05",
+      "platform": "infosnow",
+      "url": "https://verbier4vallees.ch/en/useful-information/live-information-winter",
+      "dataUrl": "http://www.infosnow.ch/~apgmontagne/?lang=en&pid=31&tab=web-wi",
+      "liftieId": "verbier",
+      "notes": "Uses Infosnow platform (liftie pattern)"
+    },
+    {
+      "id": "alpe-dhuez",
+      "name": "Alpe d'Huez Grand Domaine",
+      "openskimap_id": "721dd142d0af653027c7569e1bd0799586bdefa1",
+      "platform": "custom",
+      "url": "https://www.seealpedhuez.com/lifts/status",
+      "liftieId": null,
+      "notes": "See* network site - requires browser rendering"
+    },
+    {
+      "id": "arosa-lenzerheide",
+      "name": "Arosa Lenzerheide",
+      "openskimap_id": "4ae9b0cba5454d6f0921bf413c33a267f1d63cca",
+      "platform": "custom",
+      "url": "https://arosalenzerheide.swiss/en/Ski-Area/Lift-Company/Operating-hours-winter",
+      "liftieId": null,
+      "notes": "Custom extraction needed"
+    },
+    {
+      "id": "grandvalira",
+      "name": "GrandValira",
+      "openskimap_id": "de4f884c40976fe9d18c23d0bab174c1d6b79218",
+      "platform": "custom",
+      "url": "https://www.grandvalira.com/en/ski-resort/pistes-and-facilities",
+      "liftieId": null,
+      "notes": "Andorra - custom extraction needed"
+    },
+    {
+      "id": "kitzski",
+      "name": "KitzSki",
+      "openskimap_id": "0e7f017d9c830408aebfc40144372d483b040462",
+      "platform": "kitzski",
+      "url": "https://www.kitzski.at/en/current-info/kitz-lift-status.html",
+      "liftieId": "kitzbuehel",
+      "notes": "Kitzbühel (liftie pattern)"
+    },
+    {
+      "id": "la-clusaz",
+      "name": "La Clusaz",
+      "openskimap_id": "9cb83fdd2a49011eec76e3d1bbc2af8f582888a9",
+      "platform": "lumiplan",
+      "url": "https://www.laclusaz.com/en/ski/alpine-skiing/",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=laclusaz&region=alpes&pays=france&lang=en",
+      "liftieId": null,
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
+      "id": "espace-diamant",
+      "name": "Espace Diamant",
+      "openskimap_id": "0345d73f7a4bf0f49815ccb16306a3ec6371544b",
+      "platform": "lumiplan",
+      "url": "https://www.espacediamant.com",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=espacediamant&region=alpes&pays=france&lang=en",
+      "liftieId": null,
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
+      "id": "les-gets-morzine",
+      "name": "Les Gets-Morzine",
+      "openskimap_id": "cafb6b6d5f25860a682a8b6d67efe689218618a5",
+      "platform": "lumiplan",
+      "url": "https://www.lesgets.com/en/discover-the-resort/ski-winter-sports/live-info-slopes/",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=lesgets&region=alpes&pays=france&lang=en",
+      "liftieId": "morzine",
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
+      "id": "les-sybelles",
+      "name": "Les Sybelles",
+      "openskimap_id": "775634f8f5f5b0724ecd27d82909b2008d58f7d5",
+      "platform": "skiplan",
+      "url": "https://www.sybelles.ski/en/skiing-in-les-sybelles/slopes-and-lifts-open/",
+      "liftieId": null,
+      "notes": "Uses Skiplan"
+    },
+    {
+      "id": "les-trois-vallees",
+      "name": "Les Trois Vallées",
+      "openskimap_id": "68b126bc3175516c9263aed7635d14e37ff360dc",
+      "platform": "lumiplan",
+      "url": "https://www.les3vallees.com/fr/live/ouverture-des-pistes-et-remontees",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=3vallees&region=alpes&pays=france&lang=en",
+      "liftieId": null,
+      "notes": "Uses Lumiplan - combines Courchevel, Méribel, Val Thorens"
+    },
+    {
+      "id": "le-grand-massif",
+      "name": "Le Grand Massif",
+      "openskimap_id": "efaa82d7ae8e42868f19ed2abb8001f518a404d0",
+      "platform": "lumiplan",
+      "url": "https://www.grand-massif.com/en/information-on-trail-openings/",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=grandmassif&region=alpes&pays=france&lang=en",
+      "liftieId": null,
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
+      "id": "serre-chevalier",
+      "name": "Serre Chevalier",
+      "openskimap_id": "39136d396c46f03d9e84227cd2bccbdf60c55efd",
+      "platform": "lumiplan",
+      "url": "https://www.serre-chevalier.com/en/schedules-mechanical-lifts",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=serrechevalier&region=alpes&pays=france&lang=en",
+      "liftieId": null,
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
+      "id": "mayrhofen",
+      "name": "Mayrhofen Hippach",
+      "openskimap_id": "f967615083aaed557fa47068b9d894e66d763f0a",
+      "platform": "custom",
+      "url": "https://www.mayrhofen.at/en/stories/open-cable-cars-mayrhofner-bergbahnen-winter",
+      "liftieId": null,
+      "notes": "Austria - custom extraction needed"
+    },
+    {
+      "id": "serfaus-fiss-ladis",
+      "name": "Serfaus Fiss Ladis",
+      "openskimap_id": "e587928ea763f20b3232a5069c5d2438d09b6908",
+      "platform": "serfaus",
+      "url": "https://www.serfaus-fiss-ladis.at/en/winter-holiday/ski-area-status",
+      "liftieId": "serfaus-fiss-ladis",
+      "notes": "Austria (liftie pattern)"
+    },
+    {
+      "id": "skiwelt",
+      "name": "SkiWelt Wilder Kaiser - Brixental",
+      "openskimap_id": "37ee9c6ba5b44864ba844f804938a8b815f8b717",
+      "platform": "skiwelt",
+      "url": "https://www.skiwelt.at/en/lift-status-winter.html",
+      "liftieId": "skiwelt",
+      "notes": "Austria (liftie pattern)"
+    },
+    {
+      "id": "saalbach",
+      "name": "Skicircus Saalbach-Hinterglemm Leogang Fieberbrunn",
+      "openskimap_id": "5b78e5652d097c7679cef7128ee1b57ff09fb86e",
+      "platform": "custom",
+      "url": "https://www.saalbach.com/en/live-info/lifts-and-pistes",
+      "liftieId": null,
+      "notes": "Austria - custom extraction"
+    },
+    {
+      "id": "zillertal-arena",
+      "name": "Zillertal Arena",
+      "openskimap_id": "4a041686ec032469cd3d58aaaf73ed9864e4a173",
+      "platform": "custom",
+      "url": "https://www.zillertalarena.com/en/information-services/live-cams-weather/snow-report/",
+      "liftieId": null,
+      "notes": "Austria - custom extraction"
+    },
+    {
+      "id": "cerna-hora-pec",
+      "name": "Skiresort Černá Hora-Pec",
+      "openskimap_id": "583dbc4651db7ebcc7875a11180b634ec108ba8a",
+      "platform": "custom",
+      "url": "https://www.skiresort.cz/en/skiarealy/cerna-hora/ch-lanovky-a-vleky/",
+      "liftieId": null,
+      "notes": "Czech Republic - custom extraction"
+    }
+  ],
+  "platforms": {
+    "skiplan": {
+      "description": "Skiplan JSON API - French ski resorts",
+      "extractor": "runner.js:extractSkiplan"
+    },
+    "lumiplan": {
+      "description": "Lumiplan bulletin system",
+      "extractor": "runner.js:extractLumiplan"
+    },
+    "vail": {
+      "description": "Vail Resorts / Epic Pass TerrainStatusFeed",
+      "extractor": "runner.js:extractVail"
+    },
+    "dolomiti": {
+      "description": "Dolomiti Superski",
+      "extractor": "runner.js:extractDolomiti"
+    },
+    "nuxt": {
+      "description": "Nuxt.js with __NUXT__ embedded data",
+      "extractor": "runner.js:extractNuxt"
+    },
+    "infosnow": {
+      "description": "Swiss Infosnow platform (APGSGA)",
+      "extractor": "runner.js:extractInfosnow"
+    },
+    "skiwelt": {
+      "description": "SkiWelt data-state pattern",
+      "extractor": "runner.js:extractSkiwelt"
+    },
+    "kitzski": {
+      "description": "Kitzbühel pattern",
+      "extractor": "runner.js:extractKitzski"
+    },
+    "serfaus": {
+      "description": "Serfaus-Fiss-Ladis pattern",
+      "extractor": "runner.js:extractSerfaus"
+    },
+    "custom": {
+      "description": "Custom extraction required",
+      "extractor": null
+    }
+  },
+  "stats": {
+    "total": 33,
+    "byPlatform": {
+      "lumiplan": 14,
+      "skiplan": 3,
+      "dolomiti": 3,
+      "vail": 1,
+      "nuxt": 1,
+      "infosnow": 1,
+      "skiwelt": 1,
+      "kitzski": 1,
+      "serfaus": 1,
+      "custom": 7
+    }
+  }
+}

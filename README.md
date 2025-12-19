@@ -60,7 +60,19 @@ This project is built on top of amazing open-source work:
 
 - **[OpenSkiMap](https://openskimap.org/)** - Open-source ski map providing comprehensive resort, lift, and run data. All resort/lift/run IDs and reference data come from OpenSkiMap.
 
-- **[Liftie](https://liftie.info/)** - Inspiration for providing unified ski lift status data. Liftie pioneered the concept of aggregating lift status across resorts.
+- **[Liftie](https://github.com/pirxpilot/liftie)** ([liftie.info](https://liftie.info/)) - An excellent open-source ski lift status aggregator with 190+ resorts. Our config system is inspired by liftie's approach of using platform-specific extractors (Skiplan, Lumiplan, Vail, etc.). If you need a production-ready lift status service, check out liftie!
+
+## Supported Platforms
+
+Our config system supports the following ski resort platforms:
+
+| Platform | Description | Example Resorts |
+|----------|-------------|-----------------|
+| **Lumiplan** | Bulletin system used by French resorts | Courchevel, Tignes, Val d'Isère, Méribel |
+| **Skiplan** | CMS used by Paradiski resorts | La Plagne, Les Arcs |
+| **Dolomiti Superski** | Italian Dolomites network | Alta Badia, Cortina, Val Gardena |
+| **Vail Resorts** | Epic Pass network | Breckenridge, Park City, Whistler |
+| **Nuxt.js** | Sites with embedded __NUXT__ data | Zermatt/Cervinia |
 
 ## License
 
