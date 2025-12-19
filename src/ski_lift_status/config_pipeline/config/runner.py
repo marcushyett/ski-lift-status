@@ -221,15 +221,18 @@ def _extract_element_attr(element: Any, attr_name: str) -> str | None:
 
 
 async def _fetch_source(source: DataSource) -> tuple[str | None, str | None]:
-    """Fetch data from a source URL.
+    """Fetch data from a source URL using plain HTTP.
 
     Returns (content, error).
+
+    NOTE: This MUST use plain HTTP requests only. No browserless/playwright.
+    The configs are designed to work with simple HTTP scraping.
     """
     try:
         async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
             headers = {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept": "application/json, text/html, application/xml, */*",
                 **source.headers,
             }
 
@@ -238,9 +241,14 @@ async def _fetch_source(source: DataSource) -> tuple[str | None, str | None]:
                     source.url,
                     headers=headers,
                     content=source.body,
+                    follow_redirects=True,
                 )
             else:
-                response = await client.get(source.url, headers=headers)
+                response = await client.get(
+                    source.url,
+                    headers=headers,
+                    follow_redirects=True,
+                )
 
             response.raise_for_status()
             return response.text, None

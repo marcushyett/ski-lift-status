@@ -215,16 +215,33 @@ def get_browserql_endpoint() -> str | None:
     return None
 
 
-def _build_capture_query(url: str, wait_until: str = "networkIdle") -> str:
-    """Build the BrowserQL mutation for capturing traffic."""
-    # Use GraphQL mutation to navigate and get page content
-    # Skip XHR body capture as it often fails; we'll discover APIs from HTML instead
+def _build_capture_query(url: str, wait_until: str = "networkIdle", wait_selector: str | None = None) -> str:
+    """Build the BrowserQL mutation for capturing traffic.
+
+    This captures:
+    1. The final rendered page HTML
+    2. All XHR/fetch responses (API calls) with their bodies
+
+    We capture requests too since response body capture can fail.
+    For SPAs, we can optionally wait for a specific selector to appear.
+    """
+    wait_for_selector = ""
+    if wait_selector:
+        wait_for_selector = f"""
+  waitForContent: waitForSelector(selector: "{wait_selector}", timeout: 30000) {{
+    selector
+  }}"""
+
     return f"""
 mutation CaptureTraffic {{
   goto(url: "{url}", waitUntil: {wait_until}, timeout: 60000) {{
     status
     url
     time
+  }}{wait_for_selector}
+  xhrRequests: request(type: [xhr, fetch]) {{
+    url
+    method
   }}
   pageHtml: html {{
     html
@@ -238,54 +255,6 @@ def _parse_headers(headers_list: list[dict] | None) -> dict[str, str]:
     if not headers_list:
         return {}
     return {h.get("name", ""): h.get("value", "") for h in headers_list if h.get("name")}
-
-
-def _discover_api_urls(html: str, base_url: str) -> list[str]:
-    """Discover potential API URLs from HTML content."""
-    urls = set()
-
-    # Common API URL patterns in JavaScript/HTML
-    patterns = [
-        # API endpoint patterns in JS
-        r'["\']([^"\']*(?:/api/|/rest/|/graphql|/v[0-9]+/)[^"\']*)["\']',
-        # JSON file URLs
-        r'["\']([^"\']+\.json(?:\?[^"\']*)?)["\']',
-        # Fetch/XHR URLs
-        r'fetch\s*\(\s*["\']([^"\']+)["\']',
-        r'\.get\s*\(\s*["\']([^"\']+)["\']',
-        r'\.post\s*\(\s*["\']([^"\']+)["\']',
-        # Data URLs
-        r'data-url\s*=\s*["\']([^"\']+)["\']',
-        r'data-api\s*=\s*["\']([^"\']+)["\']',
-        r'data-endpoint\s*=\s*["\']([^"\']+)["\']',
-    ]
-
-    for pattern in patterns:
-        for match in re.finditer(pattern, html, re.IGNORECASE):
-            url = match.group(1)
-            # Skip obvious non-API URLs
-            if any(ext in url.lower() for ext in ['.css', '.png', '.jpg', '.gif', '.svg', '.woff', '.ttf']):
-                continue
-            # Skip tracking URLs
-            if _is_tracking_url(url):
-                continue
-            # Make absolute URL
-            if url.startswith('//'):
-                url = 'https:' + url
-            elif url.startswith('/'):
-                url = urljoin(base_url, url)
-            elif not url.startswith('http'):
-                url = urljoin(base_url, url)
-
-            # Only include valid URLs
-            try:
-                parsed = urlparse(url)
-                if parsed.scheme in ('http', 'https') and parsed.netloc:
-                    urls.add(url)
-            except Exception:
-                continue
-
-    return list(urls)
 
 
 def _extract_embedded_json(html: str) -> list[tuple[str, str]]:
@@ -313,82 +282,13 @@ def _extract_embedded_json(html: str) -> list[tuple[str, str]]:
     return results
 
 
-async def _discover_and_fetch_apis(
-    html: str,
-    base_url: str,
-    client: httpx.AsyncClient,
-    max_body_size: int,
-) -> list[CapturedResource]:
-    """Discover API endpoints from HTML and fetch them."""
-    resources = []
-
-    # First, extract embedded JSON data from script tags
-    embedded_data = _extract_embedded_json(html)
-    for source_name, json_content in embedded_data:
-        resource = CapturedResource(
-            url=f"embedded://{source_name}",
-            method="EMBEDDED",
-            resource_type=ResourceType.JSON,
-            content_type="application/json",
-            status_code=200,
-            request_headers={},
-            response_headers={},
-            body=json_content[:max_body_size] if len(json_content) > max_body_size else json_content,
-            body_size=len(json_content),
-        )
-        resources.append(resource)
-
-    # Discover API URLs from HTML
-    api_urls = _discover_api_urls(html, base_url)
-
-    # Fetch discovered API URLs (limit to avoid overloading)
-    for url in api_urls[:20]:  # Limit to 20 URLs
-        try:
-            response = await client.get(
-                url,
-                headers={
-                    "Accept": "application/json, text/html, */*",
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                },
-                timeout=10.0,
-                follow_redirects=True,
-            )
-
-            content_type = response.headers.get("content-type", "")
-            body = response.text
-
-            # Skip non-text responses
-            if not body or "text/" not in content_type and "json" not in content_type and "xml" not in content_type:
-                continue
-
-            resource_type = _classify_resource_type(None, content_type, url)
-
-            resource = CapturedResource(
-                url=url,
-                method="GET",
-                resource_type=resource_type,
-                content_type=content_type,
-                status_code=response.status_code,
-                request_headers={},
-                response_headers=dict(response.headers),
-                body=body[:max_body_size] if len(body) > max_body_size else body,
-                body_size=len(body),
-            )
-            resources.append(resource)
-
-        except Exception:
-            # Skip failed requests
-            continue
-
-    return resources
-
-
 async def capture_page_traffic(
     url: str,
     wait_time_ms: int = 8000,
     use_browserless: bool = True,
     capture_tracking: bool = False,
     max_body_size: int = 10_000_000,  # 10MB
+    wait_selector: str | None = None,
 ) -> CapturedTraffic:
     """Capture all network traffic when loading a page using BrowserQL.
 
@@ -398,6 +298,8 @@ async def capture_page_traffic(
         use_browserless: Whether to use Browserless.io (if available).
         capture_tracking: Whether to capture tracking/analytics requests.
         max_body_size: Maximum body size to capture (bytes).
+        wait_selector: Optional CSS selector to wait for before capturing.
+            Useful for SPAs that load content dynamically.
 
     Returns:
         CapturedTraffic with all captured resources.
@@ -413,7 +315,7 @@ async def capture_page_traffic(
         return traffic
 
     # Build the GraphQL query
-    query = _build_capture_query(url)
+    query = _build_capture_query(url, wait_selector=wait_selector)
 
     try:
         async with httpx.AsyncClient(timeout=90.0) as client:
@@ -452,13 +354,83 @@ async def capture_page_traffic(
             html_result = data.get("pageHtml", {})
             traffic.page_html = html_result.get("html")
 
-            # Discover and fetch API endpoints from HTML
-            resources = await _discover_and_fetch_apis(
-                traffic.page_html or "",
-                traffic.final_url or url,
-                client,
-                max_body_size,
-            )
+            resources: list[CapturedResource] = []
+
+            # Parse XHR/fetch requests captured by BrowserQL
+            # We capture requests (not responses) because response body capture often fails
+            # The config builder can use these URLs to fetch the API data via plain HTTP
+            xhr_requests = data.get("xhrRequests", []) or []
+            for req in xhr_requests:
+                req_url = req.get("url", "")
+
+                # Skip tracking URLs
+                if not capture_tracking and _is_tracking_url(req_url):
+                    continue
+
+                # Skip non-data URLs
+                if any(ext in req_url.lower() for ext in ['.css', '.js', '.png', '.jpg', '.gif', '.svg', '.woff']):
+                    continue
+
+                # Determine resource type from URL
+                resource_type = ResourceType.XHR
+                if '.json' in req_url.lower() or '/api/' in req_url.lower():
+                    resource_type = ResourceType.JSON
+
+                # Fetch the URL content via plain HTTP for analysis
+                try:
+                    fetch_response = await client.get(
+                        req_url,
+                        headers={
+                            "Accept": "application/json, text/html, */*",
+                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                        },
+                        timeout=15.0,
+                        follow_redirects=True,
+                    )
+                    body = fetch_response.text
+                    content_type = fetch_response.headers.get("content-type", "")
+                    status_code = fetch_response.status_code
+
+                    # Update resource type based on actual content type
+                    if "json" in content_type:
+                        resource_type = ResourceType.JSON
+                    elif "xml" in content_type:
+                        resource_type = ResourceType.XML
+
+                except Exception:
+                    body = None
+                    content_type = ""
+                    status_code = None
+
+                resource = CapturedResource(
+                    url=req_url,
+                    method=req.get("method", "GET"),
+                    resource_type=resource_type,
+                    content_type=content_type,
+                    status_code=status_code,
+                    request_headers={},
+                    response_headers={},
+                    body=body[:max_body_size] if body and len(body) > max_body_size else body,
+                    body_size=len(body) if body else 0,
+                )
+                resources.append(resource)
+
+            # Also extract embedded JSON from HTML (doesn't need network)
+            embedded_data = _extract_embedded_json(traffic.page_html or "")
+            for source_name, json_content in embedded_data:
+                resource = CapturedResource(
+                    url=f"embedded://{source_name}",
+                    method="EMBEDDED",
+                    resource_type=ResourceType.JSON,
+                    content_type="application/json",
+                    status_code=200,
+                    request_headers={},
+                    response_headers={},
+                    body=json_content[:max_body_size] if len(json_content) > max_body_size else json_content,
+                    body_size=len(json_content),
+                )
+                resources.append(resource)
+
             traffic.resources = resources
             traffic.load_time_ms = (time.time() - start_time) * 1000
 
