@@ -92,19 +92,52 @@ async function fetch(url) {
 
 /**
  * Extract __NUXT__ data from HTML
+ *
+ * Handles multiple Nuxt.js data formats:
+ * 1. Simple object: window.__NUXT__ = {...}
+ * 2. IIFE format: window.__NUXT__ = (function(a,b,...){return {...}})(val1,val2,...)
  */
 function extractNuxtData(html) {
-  const match = html.match(/window\.__NUXT__\s*=\s*(\(function[\s\S]*?\}\([^)]*\))/);
-  if (!match) return null;
+  // Try multiple patterns for different Nuxt versions
 
-  try {
-    const context = { window: {} };
-    vm.runInNewContext(`window.__NUXT__ = ${match[1]}`, context);
-    return context.window.__NUXT__;
-  } catch (e) {
-    console.error('Failed to parse __NUXT__:', e.message);
-    return null;
+  // Pattern 1: IIFE format (e.g., Cervinia)
+  // Match from window.__NUXT__ to the closing );
+  const iifeMatch = html.match(/window\.__NUXT__\s*=\s*(\(function\([^)]*\)\{[\s\S]*?\}\)\([^;]*\));/);
+  if (iifeMatch) {
+    try {
+      const context = { window: {} };
+      vm.runInNewContext(`window.__NUXT__ = ${iifeMatch[1]}`, context);
+      return context.window.__NUXT__;
+    } catch (e) {
+      console.error('Failed to parse IIFE __NUXT__:', e.message);
+    }
   }
+
+  // Pattern 2: Try extracting just the script containing __NUXT__
+  const scriptMatch = html.match(/<script[^>]*>([^<]*window\.__NUXT__[^<]*)<\/script>/);
+  if (scriptMatch) {
+    try {
+      const context = { window: {} };
+      vm.runInNewContext(scriptMatch[1], context);
+      return context.window.__NUXT__;
+    } catch (e) {
+      console.error('Failed to parse script __NUXT__:', e.message);
+    }
+  }
+
+  // Pattern 3: Simple object format
+  const simpleMatch = html.match(/window\.__NUXT__\s*=\s*(\{[\s\S]*?\});/);
+  if (simpleMatch) {
+    try {
+      const context = { window: {} };
+      vm.runInNewContext(`window.__NUXT__ = ${simpleMatch[1]}`, context);
+      return context.window.__NUXT__;
+    } catch (e) {
+      console.error('Failed to parse simple __NUXT__:', e.message);
+    }
+  }
+
+  return null;
 }
 
 /**

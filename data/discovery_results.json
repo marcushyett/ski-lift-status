@@ -1,0 +1,4474 @@
+{
+  "total": 500,
+  "with_status_page": 440,
+  "results": [
+    {
+      "resort_id": "68b126bc3175516c9263aed7635d14e37ff360dc",
+      "resort_name": "Les Trois Vall\u00e9es",
+      "website_url": "https://www.les3vallees.com/",
+      "status_page_url": "https://www.les3vallees.com/fr/live/ouverture-des-pistes-et-remontees",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "0345d73f7a4bf0f49815ccb16306a3ec6371544b",
+      "resort_name": "Espace Diamant",
+      "website_url": "https://www.espacediamant.com/",
+      "status_page_url": "https://peakvisor.com/ski/france/france/espace-diamant/live",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "6ed5f25f0eb3e366ee2e0e667d998c0bf551225f",
+      "resort_name": "Tignes - Val d'Is\u00e8re",
+      "website_url": "https://www.espacekilly.com/",
+      "status_page_url": "https://www.seetignes.com/lifts/status",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "f47f7e05cc676b25b6a00f77f0b86a897f03018c",
+      "resort_name": "La Plagne",
+      "website_url": "https://paradiski.com/",
+      "status_page_url": "https://www.seelaplagne.com/lifts/status",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "721dd142d0af653027c7569e1bd0799586bdefa1",
+      "resort_name": "Alpe d'Huez Grand Domaine",
+      "website_url": "https://www.alpedhuez.com/",
+      "status_page_url": "https://www.seealpedhuez.com/lifts/status",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "dec537b602584db89d89ab114a619f1ae356398e",
+      "resort_name": "Les Arcs",
+      "website_url": "https://paradiski.com/",
+      "status_page_url": "https://www.seelesarcs.com/lifts/status",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "37ee9c6ba5b44864ba844f804938a8b815f8b717",
+      "resort_name": "SkiWelt Wilder Kaiser - Brixental",
+      "website_url": "https://www.skiwelt.at/",
+      "status_page_url": "https://www.skiwelt.at/en/lift-status-winter.html",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "fc172b6fc8f8c454471e679be1c8b2ecc884621e",
+      "resort_name": "Val Gardena, Gr\u00f6den, Gherd\u00ebina",
+      "website_url": "https://www.dolomitisuperski.com/ https://www.valgardena.it/",
+      "status_page_url": "https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "5b78e5652d097c7679cef7128ee1b57ff09fb86e",
+      "resort_name": "Skicircus Saalbach-Hinterglemm Leogang Fieberbrunn",
+      "website_url": "https://www.saalbach.com/",
+      "status_page_url": "https://www.saalbach.com/en/live-info/lifts-and-pistes",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "0ed72c1a44d748a815d1efcd54caacf169610f05",
+      "resort_name": "4 Vall\u00e9es \u2013 Verbier/La Tzoumaz/Nendaz/Veysonnaz/Thyon",
+      "website_url": "http://www.4vallees.ch/",
+      "status_page_url": "https://verbier4vallees.ch/en/useful-information/live-information-winter",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "775634f8f5f5b0724ecd27d82909b2008d58f7d5",
+      "resort_name": "Les Sybelles",
+      "website_url": "https://www.sybelles.ski/",
+      "status_page_url": "https://www.sybelles.ski/en/skiing-in-les-sybelles/slopes-and-lifts-open/",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "39136d396c46f03d9e84227cd2bccbdf60c55efd",
+      "resort_name": "Serre Chevalier",
+      "website_url": "https://www.serre-chevalier.com",
+      "status_page_url": "https://www.serre-chevalier.com/en/schedules-mechanical-lifts",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "efaa82d7ae8e42868f19ed2abb8001f518a404d0",
+      "resort_name": "Le Grand Massif",
+      "website_url": "https://www.grand-massif.com/",
+      "status_page_url": "https://www.grand-massif.com/en/information-on-trail-openings/",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "438e8330317f2f5a597b60acb0c0a11901b9329f",
+      "resort_name": "Zermatt - Breuil-Cervinia, Breuil-Cervinia Ski Paradise",
+      "website_url": "https://www.matterhornparadise.ch",
+      "status_page_url": "https://www.cervinia.it/en/impianti",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "0e7f017d9c830408aebfc40144372d483b040462",
+      "resort_name": "KitzSki",
+      "website_url": "https://www.kitzbuehel.com/ https://www.kitzski.at/",
+      "status_page_url": "https://www.kitzski.at/en/current-info/kitz-lift-status.html",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "97a14cedc5b0e781e9bd9857df1426b9376c7462",
+      "resort_name": "Meg\u00e8ve",
+      "website_url": "https://www.megeve.com/",
+      "status_page_url": "https://forfait.megeve.com/hiver/en/ski-area-opening-information/",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "41ca531357e0d2a532b8ab94e3e9fe74ddbe88c4",
+      "resort_name": "Alta Badia",
+      "website_url": "https://www.altabadia.org/",
+      "status_page_url": "https://www.altabadia.org/en/open-lifts-snow-report-dolomites",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "f5fcc0e543cfb0e4d50280c286081c27d975697f",
+      "resort_name": "Le Grand Domaine",
+      "website_url": "https://www.legranddomaine.fr/",
+      "status_page_url": "https://www.snowplaza.co.uk/france/le-grand-domaine/snow-report/",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "3ab7375c4734163405f0f77a7c5a6afdfd600b73",
+      "resort_name": "Val Thorens - Orelle",
+      "website_url": "https://www.les3vallees.com/",
+      "status_page_url": "https://www.seevalthorens.com/lifts/status",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "baca23b1d6c08055f995fe20b50e3f6910b2ea2b",
+      "resort_name": "Espace Libert\u00e9",
+      "website_url": "https://en.chatel.com/chatel-and-portes-du-soleil-ski-areas.html",
+      "status_page_url": "https://www.seechamonix.com/lifts/status",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "de4f884c40976fe9d18c23d0bab174c1d6b79218",
+      "resort_name": "GrandValira",
+      "website_url": "https://www.grandvalira.com/",
+      "status_page_url": "https://www.snow-online.com/snow-report/ski-resort/grandvalira.html",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "f967615083aaed557fa47068b9d894e66d763f0a",
+      "resort_name": "Mayrhofen Hippach",
+      "website_url": "https://www.mayrhofner-bergbahnen.com/",
+      "status_page_url": "https://www.mayrhofen.at/en/stories/open-cable-cars-mayrhofner-bergbahnen-winter",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "583dbc4651db7ebcc7875a11180b634ec108ba8a",
+      "resort_name": "Skiresort \u010cern\u00e1 Hora-Pec",
+      "website_url": "https://skiresort.cz/",
+      "status_page_url": "https://www.skiresort.cz/en/skiarealy/cerna-hora/ch-lanovky-a-vleky/",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "9cb83fdd2a49011eec76e3d1bbc2af8f582888a9",
+      "resort_name": "La Clusaz",
+      "website_url": "https://www.laclusaz.com/",
+      "status_page_url": "https://www.laclusaz.com/en/ski/alpine-skiing/",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "94cb050e1e20e04e822c14216840885aea2eafcc",
+      "resort_name": "Serre-Chevalier",
+      "website_url": "https://www.serre-chevalier.com/",
+      "status_page_url": "https://www.serre-chevalier.com/en/schedules-mechanical-lifts",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "d7f0152ded3f23d4e4cf3ad4571f131ec267ab40",
+      "resort_name": "Wendelstein",
+      "website_url": "https://www.wendelsteinbahn.de/",
+      "status_page_url": "https://www.wendelsteinbahn.de/en/weather",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "4a041686ec032469cd3d58aaaf73ed9864e4a173",
+      "resort_name": "Zillertal Arena",
+      "website_url": "https://www.zillertalarena.com/",
+      "status_page_url": "https://www.zillertalarena.com/en/information-services/live-cams-weather/snow-report/",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "e587928ea763f20b3232a5069c5d2438d09b6908",
+      "resort_name": "Serfaus Fiss Ladis",
+      "website_url": "https://www.serfaus-fiss-ladis.at/de/winter",
+      "status_page_url": "https://www.serfaus-fiss-ladis.at/en/winter-holiday/ski-area-status",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "cafb6b6d5f25860a682a8b6d67efe689218618a5",
+      "resort_name": "Les Gets-Morzine",
+      "website_url": "https://pass.lesgets.com/",
+      "status_page_url": "https://www.lesgets.com/en/discover-the-resort/ski-winter-sports/live-info-slopes/",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "4ae9b0cba5454d6f0921bf413c33a267f1d63cca",
+      "resort_name": "Arosa Lenzerheide",
+      "website_url": "http://arosalenzerheide.ch",
+      "status_page_url": "https://arosalenzerheide.swiss/en/Ski-Area/Lift-Company/Operating-hours-winter",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "4968c991f3910142689f5f0d2fabee02df54e214",
+      "resort_name": "\u00c5re",
+      "website_url": "https://www.skistar.com/en/ski-destinations/are/",
+      "status_page_url": "https://www.skistar.com/en/ski-destinations/are/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ef817c42b82422721b05028c6d58ce10f8a2190c",
+      "resort_name": "Alpe Cimbra",
+      "website_url": "http://www.lavaroneski.it/ https://www.alpecimbra.it/de/skigebiet-alpe-cimbra/lavarone-folgaria-skigebiet/46-0.html",
+      "status_page_url": "http://www.lavaroneski.it/ https://www.alpecimbra.it/de/skigebiet-alpe-cimbra/lavarone-folgaria-skigebiet/46-0.html/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "b57f20e0c7ea594ef8ec8289fd87022b36417629",
+      "resort_name": "Snow Space Salzburg",
+      "website_url": "https://www.snow-space.com/",
+      "status_page_url": "https://www.snow-space.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f9beaf4e37ef88b422b9ee4aa2ae9224f10afd02",
+      "resort_name": "Corviglia",
+      "website_url": "https://www.mountains.ch/",
+      "status_page_url": "https://www.mountains.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7c2f2690d339d9df6f820e7c6e596a9b0ba3dce5",
+      "resort_name": "Silvretta Arena Ischgl/Samnaun",
+      "website_url": "https://www.ischgl.com/ https://www.silvretta-bielerhoehe.at/",
+      "status_page_url": "https://www.ischgl.com/ https://www.silvretta-bielerhoehe.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "5bd589496339e89cf9be3d93c86e7e6c41f72208",
+      "resort_name": "Les Deux Alpes",
+      "website_url": "https://www.les2alpes.com",
+      "status_page_url": "https://les2alpes.com/en/ski/snow-front/",
+      "platform": "custom",
+      "confidence": 0.85,
+      "method": "known_domain"
+    },
+    {
+      "resort_id": "3885048f9cb77cae837d23131d2f8fb78d06f807",
+      "resort_name": "Perisher",
+      "website_url": "https://www.charlottepass.com.au/ https://www.perisher.com.au/",
+      "status_page_url": "https://www.charlottepass.com.au/ https://www.perisher.com.au/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "be21197d101373cf2bc532a9fcce6d6e1d1bd76e",
+      "resort_name": "Park City Mountain Resort",
+      "website_url": "https://parkcitymountain.com",
+      "status_page_url": "https://parkcitymountain.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+      "platform": "vail",
+      "confidence": 0.85,
+      "method": "known_domain"
+    },
+    {
+      "resort_id": "d264be37a4fd40a4de858be7fee0a5c077cb1068",
+      "resort_name": "Aletsch Arena",
+      "website_url": "https://www.aletscharena.ch/",
+      "status_page_url": "https://www.aletscharena.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7cac2b19d023f887e458c354be9caf833b6aed6d",
+      "resort_name": "Avoriaz",
+      "website_url": "https://www.avoriaz.com/en/discover/discover/ski-area-and-maps/",
+      "status_page_url": "https://seeavoriaz.com/lifts/status",
+      "platform": "custom",
+      "confidence": 0.85,
+      "method": "known_domain"
+    },
+    {
+      "resort_id": "00fb2c5ba89284e0b4e3708d04d549905f260cf3",
+      "resort_name": "Big Sky Resort",
+      "website_url": "https://bigskyresort.com",
+      "status_page_url": "https://bigskyresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "66e672470add74c3e6a2bd8d4c1bb07cc4721728",
+      "resort_name": "St. Anton/St. Christoph/Stuben",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "403c8d67ddd348bfa3f7d02c6c21163479964926",
+      "resort_name": "Parsenn",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "e7c4c03bd7f9a3d907ff566775cfba1823bcf2ae",
+      "resort_name": "Espace Lumi\u00e8re",
+      "website_url": "https://www.praloup.com/",
+      "status_page_url": "https://www.praloup.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9d0b2c5e0fcac9deba9c727a834cac4b43a5d2c9",
+      "resort_name": "For\u00eat Blanche : Vars/Risoul",
+      "website_url": "https://www.vars.com/hiver/",
+      "status_page_url": "https://www.vars.com/hiver/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d5ff708ce6a4ab382afaeb81310e7317494b6fbb",
+      "resort_name": "Laax",
+      "website_url": "https://www.laax.com/",
+      "status_page_url": "https://www.laax.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "78e5f98d8527df7216b08962f372659abcd4f711",
+      "resort_name": "S\u00f6lden",
+      "website_url": "https://www.soelden.com/",
+      "status_page_url": "https://www.soelden.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "5ffd86e2374dc98261a846de36bfc510ab758dfc",
+      "resort_name": "Monterosa Ski",
+      "website_url": "https://monterosaski.eu/en",
+      "status_page_url": "https://monterosaski.eu/en/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9e8a091097aeb5af7c87b5f53922e3db043a9849",
+      "resort_name": "Gletscher-Skigebiet Zugspitze, Ski resort Zugspitze",
+      "website_url": "https://zugspitze.de/de/winter/skigebiet/zugspitze",
+      "status_page_url": "https://zugspitze.de/de/winter/skigebiet/zugspitze/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "870daba91bf45e41f76102b45565876b61861a50",
+      "resort_name": "Super Besse",
+      "website_url": "https://lemontdore.fr https://www.sancy.com/",
+      "status_page_url": "https://lemontdore.fr https://www.sancy.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f654467c75bb645ac3a8e664b656d00b2e90ef2e",
+      "resort_name": "Silvretta Montafon",
+      "website_url": "https://www.silvretta-montafon.at",
+      "status_page_url": "https://www.silvretta-montafon.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "876c2ec22f98746e8a3e32860f961b30e6e161c7",
+      "resort_name": "Trysil",
+      "website_url": "https://www.skistar.com/no/vare-skisteder/trysil/vinter-i-trysil/",
+      "status_page_url": "https://www.skistar.com/no/vare-skisteder/trysil/vinter-i-trysil/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f98ca6c4487bfae371b3149fb493e4aa10f8e7a7",
+      "resort_name": "Livigno",
+      "website_url": "https://www.skipasslivigno.com/",
+      "status_page_url": "https://www.skipasslivigno.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "125d02338620dc079d5d635595a099370161bf83",
+      "resort_name": "Estaci\u00f3 d'Esqu\u00ed Baqueira-Beret",
+      "website_url": "http://www.baqueira.cat",
+      "status_page_url": "http://www.baqueira.cat/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "99cef648d8c6f7231b60448092fb29de26069d0f",
+      "resort_name": "Hochzillertal-Hochf\u00fcgen",
+      "website_url": "https://www.hochzillertal.com/",
+      "status_page_url": "https://www.hochzillertal.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "e900dece35df9bc16a5d4e8e71d3027ced7ea3fb",
+      "resort_name": "Lindvallen",
+      "website_url": "https://www.skistar.com/en/ski-destinations/salen",
+      "status_page_url": "https://www.skistar.com/en/ski-destinations/salen/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "b88b846a0807188fc4d5794280840a6b92bb1b29",
+      "resort_name": "Deer Valley Resort",
+      "website_url": "https://www.deervalley.com/",
+      "status_page_url": "https://www.deervalley.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "bd8c1ad24047f06b8a06fd4d2172399e8babbb8d",
+      "resort_name": "\u8535\u738b\u6e29\u6cc9\u30b9\u30ad\u30fc\u5834, Zao Onsen Ski Resort",
+      "website_url": "https://www.zao-ski.or.jp/",
+      "status_page_url": "https://www.zao-ski.or.jp/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0c1ee22aff92dce160be7b206226d0e3b73328b2",
+      "resort_name": "Galibier-Thabor",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "c329b1fe669c197d615896dfd4e38d4bb039e30c",
+      "resort_name": "Breckenridge",
+      "website_url": "https://www.breckenridge.com/",
+      "status_page_url": "https://www.breckenridge.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "dc38c005346ecf95ae82d52334753ff6b594784b",
+      "resort_name": "Bran\u00e4s",
+      "website_url": "https://www.branas.se/?nr=1",
+      "status_page_url": "https://www.branas.se/?nr=1/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "99ae575c13123d2b1fcabf60180a7cf2b4c3efe0",
+      "resort_name": "Val Cenis",
+      "website_url": "https://www.valcenis.com",
+      "status_page_url": "https://www.valcenis.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ce9e507474fc78e61f5eb00985c79c4ab5148599",
+      "resort_name": "Vail",
+      "website_url": "https://www.vail.com",
+      "status_page_url": "https://vail.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+      "platform": "vail",
+      "confidence": 0.85,
+      "method": "known_domain"
+    },
+    {
+      "resort_id": "c5107fc2eb3f59b23211a3251a229b06d36f765c",
+      "resort_name": "Lech/Z\u00fcrs",
+      "website_url": "https://www.skiarlberg.at/",
+      "status_page_url": "https://www.skiarlberg.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2f30e6cc24791f93fe1c0eabc3ddc75f5eae8584",
+      "resort_name": "Folgaria, Area sciistica Folgaria",
+      "website_url": "https://www.alpecimbra.it/de/skigebiet-alpe-cimbra/lavarone-folgaria-skigebiet/46-0.html",
+      "status_page_url": "https://www.alpecimbra.it/de/skigebiet-alpe-cimbra/lavarone-folgaria-skigebiet/46-0.html/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "5aab8555b0a533bbab416e958475b98050eda5bb",
+      "resort_name": "Champ\u00e9ry \u2013 Les Crosets \u2013 Champoussin \u2013 Morgins",
+      "website_url": "https://www.regiondentsdumidi.ch",
+      "status_page_url": "https://www.regiondentsdumidi.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9acabdff8a4e7ac9bd74c5812a03220c3a2cf1ab",
+      "resort_name": "Whistler Blackcomb",
+      "website_url": "https://www.whistlerblackcomb.com",
+      "status_page_url": "https://www.whistlerblackcomb.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "fc37a3084eeca48d1ce164dc7a5862723aaf2013",
+      "resort_name": "Saas Fee",
+      "website_url": "https://www.saas-fee.ch/",
+      "status_page_url": "https://www.saas-fee.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "5ecb06388006e4740e7ce8234e26d036ce85edb7",
+      "resort_name": "Pal-Arinsal",
+      "website_url": "https://www.vallnord.com/",
+      "status_page_url": "https://www.vallnord.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "da710e6cc602f54dfb5e724d4758c5fb5384c8d6",
+      "resort_name": "Skigebiet Dam\u00fcls-Mellau-Faschina",
+      "website_url": "https://www.damuels-mellau.at/ https://www.fontanella.at/",
+      "status_page_url": "https://www.damuels-mellau.at/ https://www.fontanella.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6241bfbd7c4e6009c515ba06344e7315f0859ee2",
+      "resort_name": "Zieleniec",
+      "website_url": "https://zieleniec.pl/",
+      "status_page_url": "https://zieleniec.pl/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9a33e5f4f12b2568f28a5a2744f0fb9e5d1b46ed",
+      "resort_name": "Palisades Tahoe Olympic Valley",
+      "website_url": "https://whitewolftahoe.com/ https://www.palisadestahoe.com",
+      "status_page_url": "https://whitewolftahoe.com/ https://www.palisadestahoe.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "aa87548d9445d366123e7ef7aee40af9d4a78dff",
+      "resort_name": "Les Portes du Mont-Blanc",
+      "website_url": "https://www.lesportesdumontblanc.fr/",
+      "status_page_url": "https://www.lesportesdumontblanc.fr/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "97e9df8fc8d999cf9e62628866e49af00598fba0",
+      "resort_name": "Skipisten Titlis Bergbahnen",
+      "website_url": "https://www.engelberg.ch/",
+      "status_page_url": "https://www.engelberg.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4d9c0191491227da58bc418ee8633c62485f29c8",
+      "resort_name": "Grand Tourmalet",
+      "website_url": "https://www.n-py.com/fr/grand-tourmalet",
+      "status_page_url": "https://www.n-py.com/fr/grand-tourmalet/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c98a7d946853fffdaa82714e15903353c697bb66",
+      "resort_name": "Cerro Catedral",
+      "website_url": "https://www.catedralaltapatagonia.com/",
+      "status_page_url": "https://www.catedralaltapatagonia.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "659e9454e8138a2a73f4ab3565bff030e4ab724c",
+      "resort_name": "\u30cb\u30bb\u30b3\u30e6\u30ca\u30a4\u30c6\u30c3\u30c9, Niseko United",
+      "website_url": "https://www.niseko.ne.jp/",
+      "status_page_url": "https://www.niseko.ne.jp/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9fcdb330aa5e2cfd3758cf11fbff20466c4c0fd4",
+      "resort_name": "La Rosi\u00e8re",
+      "website_url": "https://www.larosiere.ski/",
+      "status_page_url": "https://www.larosiere.ski/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "14b4ddb66d56cfb67e579c250c5931cb86a1f989",
+      "resort_name": "Flachau",
+      "website_url": "https://www.snow-space.com/",
+      "status_page_url": "https://www.snow-space.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0a53d621d2c7d7efc5f5c3e600a8b56a0bbbf4ff",
+      "resort_name": "Nassfeld, Mokrine",
+      "website_url": "https://www.nassfeld.at/",
+      "status_page_url": "https://www.nassfeld.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8fa0c17d9d0002fc83e30363e42c43b874d21a8f",
+      "resort_name": "Ponte di Legno - Passo Tonale",
+      "website_url": "https://www.pontedilegnotonale.com/",
+      "status_page_url": "https://www.pontedilegnotonale.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "246c066d501b55857937068a8ddc67866edd0aa8",
+      "resort_name": "\u0420\u043e\u0437\u0430 \u0425\u0443\u0442\u043e\u0440, Rosa Khutor",
+      "website_url": "https://rosaski.com",
+      "status_page_url": "https://rosaski.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "00e3880c19b3ca1bb412d2274d3c15bf4a2598f9",
+      "resort_name": "Ski Civetta",
+      "website_url": "https://www.skicivetta.com/",
+      "status_page_url": "https://www.skicivetta.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8f1c9e1dd61d51f2e3b41daa18860b6cdbffc037",
+      "resort_name": "Hochk\u00f6nig",
+      "website_url": "https://www.hochkoenig.at",
+      "status_page_url": "https://www.hochkoenig.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "acfe7d6f0bca1d418d56a97a3853e6d9ebf7d3c2",
+      "resort_name": "Roccaraso - Rivisondoli",
+      "website_url": "https://roccaraso.net/",
+      "status_page_url": "https://roccaraso.net/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d80f68ddd7c42f263e86f0efb9d1e872a692662d",
+      "resort_name": "Skiliftkarussell Winterberg",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "b28af962323890eb2dc4f2705ed7b6893d894add",
+      "resort_name": "Obertauern",
+      "website_url": "https://www.obertauern.com/",
+      "status_page_url": "https://www.obertauern.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "eeb2093cd64adef211261520c569179894373a74",
+      "resort_name": "Skiarena",
+      "website_url": "https://www.andermatt-sedrun-disentis.ch",
+      "status_page_url": "https://www.andermatt-sedrun-disentis.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1a132aee8f40c3ea1e676d4c270d212e1f991dc4",
+      "resort_name": "Saint-Lary",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "10f2ef5a778b65fdea26f0662b08e83c8b979356",
+      "resort_name": "Les Contamines",
+      "website_url": "https://www.lescontamines.net/",
+      "status_page_url": "https://www.lescontamines.net/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "bc0ee62d23f20f8e6f30661302cd2a2d3ee2a897",
+      "resort_name": "Stoos",
+      "website_url": "http://www.morschach-stoos.ch",
+      "status_page_url": "http://www.morschach-stoos.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6c2c802a4ed9e8dbf548c062c08b8e7dcd81f86a",
+      "resort_name": "Seiser Alm - Mont de S\u00ebuc - Alpe di Siusi, Seiser Alm, Alpe di Siusi, Mont de S\u00ebuc",
+      "website_url": "https://www.seiseralm.it/",
+      "status_page_url": "https://www.seiseralm.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "e7711ce026b712e5b6f11097184014845bcc2ec3",
+      "resort_name": "Levin hiihtokeskus, Levi Ski Resort",
+      "website_url": "https://www.levi.fi/",
+      "status_page_url": "https://www.levi.fi/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "669b5ff8d29a5a73f293dec2f318ed7554c32511",
+      "resort_name": "Villars/Gryon/Les Diablerets",
+      "website_url": "http://www.tvgd.ch",
+      "status_page_url": "http://www.tvgd.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "66df7f28d6136f0c1c76b4b3f09f8f0c46443547",
+      "resort_name": "Schmittenh\u00f6he Zell am See",
+      "website_url": "https://www.schmitten.at",
+      "status_page_url": "https://www.schmitten.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "aaea5a8af2e4bbcafe21bedf8accd50ee1700dae",
+      "resort_name": "Folgarida-Marilleva",
+      "website_url": "https://www.visittrentino.info/en/trentino/ski-areas/alpine-skiing/folgarida-marilleva-skiarea-campiglio-dolomiti-di-brenta-val-di-sole-val-rendena_md_2211",
+      "status_page_url": "https://www.visittrentino.info/en/trentino/ski-areas/alpine-skiing/folgarida-marilleva-skiarea-campiglio-dolomiti-di-brenta-val-di-sole-val-rendena_md_2211/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "143a22b6dca9119510a125afff37672952de837e",
+      "resort_name": "Jasna Low Tatras",
+      "website_url": "https://www.jasna.sk/",
+      "status_page_url": "https://www.jasna.sk/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1ad6e25ebaadb56de905f0eb8c1d43bca1548e35",
+      "resort_name": "Kopaonik",
+      "website_url": "https://www.skijalistasrbije.rs/",
+      "status_page_url": "https://www.skijalistasrbije.rs/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "26a9807d860d8692b4fde7a7620e033168068131",
+      "resort_name": "\u0411\u0443\u043a\u043e\u0432\u0435\u043b\u044c",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "c71e417e9551491fd1680f0e9879c132f0278d37",
+      "resort_name": "Tand\u00e5dalen",
+      "website_url": "https://www.skistar.com/en/ski-destinations/salen",
+      "status_page_url": "https://www.skistar.com/en/ski-destinations/salen/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "bf0c4d265b68ee4f2cd4f75ad0728f6edb6425bf",
+      "resort_name": "Mammoth Mountain",
+      "website_url": "https://www.mammothmountain.com/",
+      "status_page_url": "https://mammothmountain.com/on-the-mountain/mountain-information/lift-status",
+      "platform": "custom",
+      "confidence": 0.85,
+      "method": "known_domain"
+    },
+    {
+      "resort_id": "d9ac8983541d7960d801802ce64751267338b5e4",
+      "resort_name": "M\u00fcrren/Schilthorn",
+      "website_url": "https://schilthorn.ch/",
+      "status_page_url": "https://schilthorn.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8ebbe708c3f7b24aac9cd9d3293dc3b53d405f92",
+      "resort_name": "Ski Gastein - Schlossalm/Angertal/Stubnerkogel",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "aa394929d0dfb9b8da2302ba9febe95046a1657f",
+      "resort_name": "Kronplatz - Plan de Corones, Kronplatz, Plan de Corones",
+      "website_url": "https://www.kronplatz.com/",
+      "status_page_url": "https://www.kronplatz.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1e6bbe90c52ffa3fce748d4728d071b61c03b989",
+      "resort_name": "Yll\u00e4s Ski Resort, \u00c4k\u00e4slompolo",
+      "website_url": "https://ski.yllas.fi/",
+      "status_page_url": "https://ski.yllas.fi/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "824c7b22068010ed9590671f95a41f7eaf5f3819",
+      "resort_name": "Orci\u00e8res Merlette",
+      "website_url": "https://orcieres.com/",
+      "status_page_url": "https://orcieres.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "02c16b90a7163ca4590f103ee62d0ceddf245db0",
+      "resort_name": "Uluda\u011f",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "53dd0fd9ec1c2ed9709b27830f36dcb87a31f8c3",
+      "resort_name": "Heavenly Mountain Resort",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "8af93a64c41b59fca4705d30c106ef29fb24e042",
+      "resort_name": "Le Grand-Bornand",
+      "website_url": "https://www.legrandbornand.com/",
+      "status_page_url": "https://www.legrandbornand.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f83cb97ace9308e949a7638a1922ba589f5cc40d",
+      "resort_name": "Skigebiet Dam\u00fcls-Mellau",
+      "website_url": "https://www.damuels-mellau.at/",
+      "status_page_url": "https://www.damuels-mellau.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4a30e21219abb7c297eea39860578ad22572d0eb",
+      "resort_name": "Font-Romeu Pyr\u00e9n\u00e9es 2000, Font-Romeu",
+      "website_url": "https://font-romeu.fr/",
+      "status_page_url": "https://font-romeu.fr/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4de82b980d8c12b83cda0083ec49b22e97cf6224",
+      "resort_name": "Montgen\u00e8vre",
+      "website_url": "https://www.montgenevre.com",
+      "status_page_url": "https://www.montgenevre.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c6e8e5bc5ed5c1e2d8e96e251ef9737969fa29ca",
+      "resort_name": "Villard de Lans - Corren\u00e7on",
+      "website_url": "https://www.villarddelans-correnconenvercors.com/",
+      "status_page_url": "https://www.villarddelans-correnconenvercors.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "601bfb3f203a581f551010122bccc17ed19aafe3",
+      "resort_name": "Obergurgl-Hochgurgl",
+      "website_url": "https://www.obergurgl.com/",
+      "status_page_url": "https://www.obergurgl.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2d453ae31d2fcdbbff50bf6b145e9aae9e7824fa",
+      "resort_name": "Rukatunturi, Ruka",
+      "website_url": "https://www.ruka.fi",
+      "status_page_url": "https://www.ruka.fi/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2850c5910e1f12d55d96373d4adc29212a791432",
+      "resort_name": "Skiregion Dachstein West",
+      "website_url": "https://www.dachstein.at/",
+      "status_page_url": "https://www.dachstein.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "35aa13ee7428fd8c73935ec40297cce0c8d6e14e",
+      "resort_name": "Stubaier Gletscher",
+      "website_url": "https://www.stubaier-gletscher.com/",
+      "status_page_url": "https://www.stubaier-gletscher.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "eb1044922f55b6eec4a91393a33d13f36138696d",
+      "resort_name": "Skigebiet Bad Kleinkirchheim",
+      "website_url": "https://www.badkleinkirchheim.com/bergbahnen-skigebiet/skigebiet/",
+      "status_page_url": "https://www.badkleinkirchheim.com/bergbahnen-skigebiet/skigebiet/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d33fdae30ec8d64328941afdb3e23384f564839a",
+      "resort_name": "Domaine skiable Valberg",
+      "website_url": "https://www.valberg.com",
+      "status_page_url": "https://www.valberg.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "e1ecf30641b9fcacec240124d73bcd5efef9c3fd",
+      "resort_name": "Winter Park Resort",
+      "website_url": "https://www.winterparkresort.com",
+      "status_page_url": "https://www.winterparkresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "304d72fa57c50cd759b4ebeff3e48dbee4789b17",
+      "resort_name": "Candanchu",
+      "website_url": "https://www.candanchu.com/",
+      "status_page_url": "https://www.candanchu.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f9d49079770850663f3c200a1956a203489c57ac",
+      "resort_name": "Flumserberg",
+      "website_url": "https://www.flumserberg.ch/",
+      "status_page_url": "https://www.flumserberg.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c4b221a54713b4e084b5bae02668c68dfaf6c1e3",
+      "resort_name": "Les Rousses",
+      "website_url": "https://www.lesrousses.com/",
+      "status_page_url": "https://www.lesrousses.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0f46917975b8dab5e541edf6469105c3c091ec22",
+      "resort_name": "Formigal",
+      "website_url": "https://www.formigal-panticosa.com/",
+      "status_page_url": "https://www.formigal-panticosa.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "34c3dc543a71495ffe5c7267a898311a3b49014e",
+      "resort_name": "Canaro",
+      "website_url": "https://www.grandvalira.com/",
+      "status_page_url": "https://www.grandvalira.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7764d597cda909bb1bc7fd66a07bbfa6bb8ab695",
+      "resort_name": "Crans-Montana",
+      "website_url": "https://www.crans-montana.ch/",
+      "status_page_url": "https://www.crans-montana.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "cb17ba3f010488194237ab23a00c94f211bf46da",
+      "resort_name": "Ax 3 Domaines",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "b4602a014c2e38badc16189c4cebcf8fb20054ef",
+      "resort_name": "Seefeld - Rossh\u00fctte",
+      "website_url": "https://www.seefeld.com/winter/ski",
+      "status_page_url": "https://www.seefeld.com/winter/ski/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "349f901b7ae1ab9e324e59654d401933e7ff48ba",
+      "resort_name": "Courmayeur",
+      "website_url": "https://www.courmayeur-montblanc.com/",
+      "status_page_url": "https://www.courmayeur-montblanc.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "783cee8f57ebb3a5a13548d10557b890e0469d4e",
+      "resort_name": "Idre Fj\u00e4ll",
+      "website_url": "https://www.idrefjall.se/en/skiing/",
+      "status_page_url": "https://www.idrefjall.se/en/skiing/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7218febe9d8f23877d54283872e3ff7860b6cbcc",
+      "resort_name": "Beaver Creek",
+      "website_url": "https://www.beavercreek.com/",
+      "status_page_url": "https://www.beavercreek.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8e5dbdde0808be45e5e47253e905635c9f867c3b",
+      "resort_name": "D\u00e9voluy",
+      "website_url": "https://www.ledevoluy.com/",
+      "status_page_url": "https://www.ledevoluy.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "17a2aed27cfa6b593c5df9770900555623db6adf",
+      "resort_name": "Praz de Lys Sommand",
+      "website_url": "https://www.prazdelys-sommand.com/",
+      "status_page_url": "https://www.prazdelys-sommand.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "516bab490035b2ec5b8cf843a4c2929e4028642d",
+      "resort_name": "Jahorina olimpijski centar, Olympic Center Jahorina, \u0408\u0430\u0445\u043e\u0440\u0438\u043d\u0430 \u043e\u043b\u0438\u043c\u043f\u0438\u0458\u0441\u043a\u0438 \u0446\u0435\u043d\u0442\u0430\u0440",
+      "website_url": "https://www.oc-jahorina.com/",
+      "status_page_url": "https://www.oc-jahorina.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "851128bb56a54648e73d41ecdaca409350648f33",
+      "resort_name": "Peyragudes",
+      "website_url": "https://www.n-py.com/fr/peyragudes",
+      "status_page_url": "https://www.n-py.com/fr/peyragudes/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0e32d9bd72195acaa33ba6c2d18ba4ad1562a055",
+      "resort_name": "Le Sauze 1400 / Le Super-Sauze 1700",
+      "website_url": "https://www.sauze.com",
+      "status_page_url": "https://www.sauze.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "e18255e7d2167bde2ed8fb9099d3b4e3dfd3f1a3",
+      "resort_name": "Braunwald",
+      "website_url": "https://www.braunwald.ch/",
+      "status_page_url": "https://www.braunwald.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f3673494c5e9c944c88bc2482e1b42785db85488",
+      "resort_name": "Donovaly",
+      "website_url": "https://www.parksnow.sk/zima/",
+      "status_page_url": "https://www.parksnow.sk/zima/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7f3dde2cf70f25d4f6dab9271332f2942bbf5543",
+      "resort_name": "Campiglio Dolomiti di Brenta",
+      "website_url": "https://www.funiviecampiglio.it/",
+      "status_page_url": "https://www.funiviecampiglio.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1ffe57b7257e8e6f0d45c04ce32786c6b04438f4",
+      "resort_name": "Belvedere - Col Rodella - Passo Pordoi",
+      "website_url": "https://www.dolomitisuperski.com/ https://www.fassa.it/ https://www.valdifassalift.it/",
+      "status_page_url": "https://dolomitisuperski.com/en/live-info/lifts",
+      "platform": "dolomiti",
+      "confidence": 0.85,
+      "method": "known_domain"
+    },
+    {
+      "resort_id": "ed495f08be5bb41505f6fdf15bc569477b1cd358",
+      "resort_name": "Zinal / Grimentz",
+      "website_url": "https://www.valdanniviers.ch/fr/grimentz-zinal-134.html",
+      "status_page_url": "https://www.valdanniviers.ch/fr/grimentz-zinal-134.html/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "e802f4736b99042270c8e9d8b6417c31f15b4931",
+      "resort_name": "Les 7 Laux",
+      "website_url": "http://www.les7laux.com/",
+      "status_page_url": "http://www.les7laux.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "281e56de7763cdc212ca3a98156c7eed710764c8",
+      "resort_name": "Hemsedal skisenter",
+      "website_url": "http://www.skistar.com/hemsedal",
+      "status_page_url": "http://www.skistar.com/hemsedal/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7464f379f1806addd8f3976a39005c4628587fac",
+      "resort_name": "Copper Mountain",
+      "website_url": "https://www.coppercolorado.com/",
+      "status_page_url": "https://www.coppercolorado.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "01bb562d07c3063c474c861a253f6644550c977c",
+      "resort_name": "\u0428\u0435\u0440\u0435\u0433\u0435\u0448, Sheregesh",
+      "website_url": "https://www.sheregesh.su/",
+      "status_page_url": "https://www.sheregesh.su/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "fc5c595e1d019acccb554e126e719c2fed6f0502",
+      "resort_name": "Skiarena Jizerky",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "d4c30482dd7589be58b5597546bab89f29722bc2",
+      "resort_name": "\u0413\u0430\u0437\u043f\u0440\u043e\u043c, Gazprom",
+      "website_url": "https://polyanaski.ru/",
+      "status_page_url": "https://polyanaski.ru/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "bc021726b4d576c20e3d1b1b55d15175eb5323a4",
+      "resort_name": "\u0421\u043a\u0438 \u0446\u0435\u043d\u0442\u0430\u0440 \u041a\u043e\u043f\u0430\u043e\u043d\u0438\u043a, Ski Center Kopaonik",
+      "website_url": "https://www.skijalistasrbije.rs/",
+      "status_page_url": "https://www.skijalistasrbije.rs/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f8176e48416adcfc9118014d5c390cd2099a6a18",
+      "resort_name": "La Rosi\u00e8re",
+      "website_url": "https://www.espacesanbernardo.ski/",
+      "status_page_url": "https://www.espacesanbernardo.ski/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4ae8be1df66f9e30fd3ba0b03cd191cda44665bc",
+      "resort_name": "Ski Juwel Alpbachtal-Wildsch\u00f6nau",
+      "website_url": "https://skijuwel.com",
+      "status_page_url": "https://skijuwel.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "dc3f198b305b2f8ec1db8b15a47548900646d93d",
+      "resort_name": "Estaci\u00f3n de Esqu\u00ed y Monta\u00f1a de Sierra Nevada",
+      "website_url": "https://sierranevada.es",
+      "status_page_url": "https://sierranevada.es/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "68097edf550d07d2fc63a0dd9d521a97210d59e9",
+      "resort_name": "San Martino di Castrozza - Passo Rolle",
+      "website_url": "https://www.sanmartino.com/",
+      "status_page_url": "https://www.sanmartino.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "24ea25d80078f2f69f1ed3d653041100cae37c55",
+      "resort_name": "Sestriere",
+      "website_url": "https://www.vialattea.it",
+      "status_page_url": "https://www.vialattea.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "41ab128ddaa817aee0126dd981df00095dc57e60",
+      "resort_name": "Kl\u00e4ppen",
+      "website_url": "https://www.klappen.se/",
+      "status_page_url": "https://www.klappen.se/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7df36f601b9f9e0824f6b57943ff98586584da80",
+      "resort_name": "Killington Resort",
+      "website_url": "https://www.killington.com/",
+      "status_page_url": "https://www.killington.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "15fc32fb65bb27bee41d456d42f74d5f07faf6e6",
+      "resort_name": "Nanshan Ski Resort, \u5357\u5c71\u6ed1\u96ea\u573a",
+      "website_url": "https://www.nanshanski.com/",
+      "status_page_url": "https://www.nanshanski.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "62f3daa02b915e9b7877e047b079bbed79bcf55d",
+      "resort_name": "\u767d\u99ac\u516b\u65b9\u5c3e\u6839, Hakuba Happo One",
+      "website_url": "https://www.happo-one.jp/",
+      "status_page_url": "https://www.happo-one.jp/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "df2bd5abc7c60af896261373af4d7b9d6085e5bf",
+      "resort_name": "Wildkogel",
+      "website_url": "https://www.wildkogel-arena.at/",
+      "status_page_url": "https://www.wildkogel-arena.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "bc0361849d0e6e33ef5d9cd035522200a3125df1",
+      "resort_name": "Kaprun - Kitzsteinhorn/Maiskogel",
+      "website_url": "https://www.kitzsteinhorn.at/",
+      "status_page_url": "https://www.kitzsteinhorn.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "28bc6b32b26b2c57edacb1c31e4ebdc1ec6e518f",
+      "resort_name": "Hirmentaz - Les Hab\u00e8res",
+      "website_url": "https://hirmentaz-bellevaux.com/",
+      "status_page_url": "https://hirmentaz-bellevaux.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4236aff4e09a8a34af56ec12b7c0085e579204db",
+      "resort_name": "Pra-Loup 1600",
+      "website_url": "https://www.praloup.com/",
+      "status_page_url": "https://www.praloup.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "a2fed1f3149f7c9e4f9ccaac4b8e29f0bfccd632",
+      "resort_name": "Les Angles, Els Angles",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "c16a9ecc277a8ad0b7e90224430ffe1767c3a755",
+      "resort_name": "Glenshee Ski Center",
+      "website_url": "https://www.ski-glenshee.co.uk/",
+      "status_page_url": "https://www.ski-glenshee.co.uk/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "cece2d5f54131184f301a127d3f1e0f747031367",
+      "resort_name": "3 Zinnen Dolomites (Dobbiaco - San Candido - Braies - Sesto - Alta Pusteria)",
+      "website_url": "https://www.dreizinnen.com/",
+      "status_page_url": "https://www.dreizinnen.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "305ec2278ecc0503c3d92c9d101c61695c66d1b4",
+      "resort_name": "O\u015brodek Narciarski Kotelnica Bia\u0142cza\u0144ska, Kotelnica Bia\u0142cza\u0144ska Ski Resort",
+      "website_url": "https://bialkatatrzanska.pl",
+      "status_page_url": "https://bialkatatrzanska.pl/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "fdbe9df85d02479357a5a789328b43cb5b6aef1c",
+      "resort_name": "Adelboden - Lenk",
+      "website_url": "https://www.adelboden-lenk.ch/de/Erlebnis/Skiregion/Adelboden-Lenk",
+      "status_page_url": "https://www.adelboden-lenk.ch/de/Erlebnis/Skiregion/Adelboden-Lenk/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "3d64e85db09d580e3ac612574f3c4bf4298e54ba",
+      "resort_name": "Skiare\u00e1l Kl\u00ednovec",
+      "website_url": "http://skiarealbozidar.cz/en/homepage-en/ https://klinovec.cz/",
+      "status_page_url": "http://skiarealbozidar.cz/en/homepage-en/ https://klinovec.cz/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "3e6c5af7f4a754f0d701e371d3eaca725a08170c",
+      "resort_name": "Hintertuxer Gletscher",
+      "website_url": "https://www.hintertuxergletscher.at",
+      "status_page_url": "https://www.hintertuxergletscher.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0a4d24c79daa6d712c1d7908b54a875ba3fd12ce",
+      "resort_name": "Les Orres",
+      "website_url": "https://www.lesorres.com",
+      "status_page_url": "https://www.lesorres.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "083130d6713ac93c9eed6c074b958271f2995e4d",
+      "resort_name": "Afton Alps",
+      "website_url": "https://www.aftonalps.com/",
+      "status_page_url": "https://www.aftonalps.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0f0d574cfdbd7b9a55296a94c4683b3e732a543b",
+      "resort_name": "Okemo Mountain",
+      "website_url": "https://www.okemo.com",
+      "status_page_url": "https://www.okemo.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "bf24d3a7ef53b94159795d6d663dad89ac81cbf2",
+      "resort_name": "Mount Buller",
+      "website_url": "https://www.mtbuller.com.au/",
+      "status_page_url": "https://www.mtbuller.com.au/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d09876081e42349fefcd79d88991e34820af2a16",
+      "resort_name": "Skiliftkarussell Winterberg",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "df4c0541e78ace196a344e169cb23e9464c26224",
+      "resort_name": "Obersaxen",
+      "website_url": "https://www.obersaxen-mundaun.ch",
+      "status_page_url": "https://www.obersaxen-mundaun.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6a9f3afdd5d590a14770fdb7a8e90c6285b18035",
+      "resort_name": "Isola 2000",
+      "website_url": "https://www.isola2000.com/",
+      "status_page_url": "https://www.isola2000.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "29248afecbb89253d31145bb08025956c1bfb71a",
+      "resort_name": "Warth-Schr\u00f6cken",
+      "website_url": "https://www.skiarlberg.at/",
+      "status_page_url": "https://www.skiarlberg.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "064c258440982ec02bbffeb24ad3acffc7fa5ef0",
+      "resort_name": "La Thuile ski",
+      "website_url": "https://www.espacesanbernardo.ski/",
+      "status_page_url": "https://www.espacesanbernardo.ski/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1d111e0379650f6a9186eaa3d21dadf973340c88",
+      "resort_name": "Grindelwald - Wengen (Kleine Scheidegg - M\u00e4nnlichen)",
+      "website_url": "https://www.jungfrau.ch/de-ch/jungfrau-ski-region/grindelwald-wengen/",
+      "status_page_url": "https://www.jungfrau.ch/de-ch/jungfrau-ski-region/grindelwald-wengen/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4684082ba7a884e51f003f63750ecc7c47f68b42",
+      "resort_name": "Gro\u00dfarltal-Dorfgastein",
+      "website_url": "https://www.grossarltal.info/",
+      "status_page_url": "https://www.grossarltal.info/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d9dbd36650fb264e3fd35269d10a3645bf7d0493",
+      "resort_name": "Tauplitz / Bad Mitterndorf",
+      "website_url": "https://www.dietauplitz.com/",
+      "status_page_url": "https://www.dietauplitz.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1b2d642d45256699542b9355f9c1c6830c6b37da",
+      "resort_name": "Latemar Dolomites",
+      "website_url": "https://www.latemar.it/",
+      "status_page_url": "https://www.latemar.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4ab0026be1ab8a2d0d68eec95baa7bce6d1fda67",
+      "resort_name": "Klewenalp - Stockh\u00fctte",
+      "website_url": "https://www.klewenalp.ch/",
+      "status_page_url": "https://www.klewenalp.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "31297131594299a446bc94ebea4e1b9d48f1be2a",
+      "resort_name": "St\u00f6ten i S\u00e4len",
+      "website_url": "https://www.stoten.se/",
+      "status_page_url": "https://www.stoten.se/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8084c4abdbb04493340fe3c511cb144334b800d0",
+      "resort_name": "Skigebiet Gerlitzen Alpe",
+      "website_url": "https://www.gerlitzen.com/",
+      "status_page_url": "https://www.gerlitzen.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8ed98940b7c222930ed16efefbb13b42e5840a02",
+      "resort_name": "Klausberg Skiarena",
+      "website_url": "https://www.kronplatz.com/de/klausberg",
+      "status_page_url": "https://www.kronplatz.com/de/klausberg/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7ccf68e28c0dfb0a0d21e0ad24260a5775c63263",
+      "resort_name": "G\u00e9rardmer",
+      "website_url": "https://www.gerardmer-ski.com/",
+      "status_page_url": "https://www.gerardmer-ski.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7e8c8f1b234ed4ecc63550680e2ad5bc66817491",
+      "resort_name": "\u03a7\u03b9\u03bf\u03bd\u03bf\u03b4\u03c1\u03bf\u03bc\u03b9\u03ba\u03cc \u039a\u03ad\u03bd\u03c4\u03c1\u03bf \u03a0\u03b1\u03c1\u03bd\u03b1\u03c3\u03c3\u03bf\u03cd, Parnassos Ski resort",
+      "website_url": "https://parnassos-ski.gr/",
+      "status_page_url": "https://parnassos-ski.gr/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "97cc8e4e3ede3b475750c7140bfa844b8fb0bce5",
+      "resort_name": "\u0645\u0646\u0637\u0642\u0629 \u0644\u0644\u062a\u0632\u0644\u062c \u0645\u0632\u0627\u0631 \u0643\u0641\u0631\u062f\u0628\u064a\u0627\u0646, Mzaar Kfardebian Ski Resort",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "e84b2395b4f4574af6df61521ef84881b380b01d",
+      "resort_name": "Auron",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "112c632b48f7b6446c54e0f7e21ff6f6dd642707",
+      "resort_name": "Riekstukalns",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "54bceeb62ccd2209e50b8dc7e06b8daa1727ce34",
+      "resort_name": "Sunday River",
+      "website_url": "https://www.sundayriver.com/",
+      "status_page_url": "https://www.sundayriver.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9092c1bd90194143f2e1c2fcf7ffecc67ef58670",
+      "resort_name": "Steamboat Ski Resort",
+      "website_url": "https://www.steamboat.com/",
+      "status_page_url": "https://www.steamboat.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "e9d26c72f918e002659f0e9ba565f8d51b7793a8",
+      "resort_name": "Keystone",
+      "website_url": "http://keystoneresort.com/",
+      "status_page_url": "http://keystoneresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2c339c62fc87dfea7c1c62e0a5a5be4bb1af972a",
+      "resort_name": "Summit at Snoqualmie",
+      "website_url": "https://summitatsnoqualmie.com/ https://www.fs.usda.gov/recarea/okawen/recarea/?recid=57459 https://www.summitatsnoqualmie.com/",
+      "status_page_url": "https://summitatsnoqualmie.com/ https://www.fs.usda.gov/recarea/okawen/recarea/?recid=57459 https://www.summitatsnoqualmie.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "3c9f145171f1936107e2fa026ca8cb624a4353f2",
+      "resort_name": "Northstar at Tahoe Resort",
+      "website_url": "https://www.northstarcalifornia.com/",
+      "status_page_url": "https://www.northstarcalifornia.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "bdd08a03378f40f323db3efc27d51bafea12c040",
+      "resort_name": "Bansko",
+      "website_url": "http://www.banskoski.com",
+      "status_page_url": "http://www.banskoski.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "96be13b1dd69f96a46471628f93fb9efdcb8fa4b",
+      "resort_name": "Arabba",
+      "website_url": "http://www.arabba.it",
+      "status_page_url": "http://www.arabba.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "280793b5c7cf28d9a453319f9612737ecde74a6d",
+      "resort_name": "Wurzeralm",
+      "website_url": "https://skisport.com/HiWu",
+      "status_page_url": "https://skisport.com/HiWu/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "17bf348db2822fa217ab7118b044c1c33a45928e",
+      "resort_name": "Le Lioran",
+      "website_url": "https://skipass.lelioran.com",
+      "status_page_url": "https://skipass.lelioran.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "25a3eaf5ab883b31c42bf5b3b62fbfd6d49a39f9",
+      "resort_name": "Hinterstoder",
+      "website_url": "https://skisport.com/Hinterstoder/",
+      "status_page_url": "https://skisport.com/Hinterstoder/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0676537b2321c8a246c519dc56bcc6e15f4d1474",
+      "resort_name": "Comprensorio di Passo del Lupo",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "705c23e66271d234c4f99f8ea662dfbed74e18c7",
+      "resort_name": "Chamrousse",
+      "website_url": "https://www.chamrousse.com/",
+      "status_page_url": "https://www.chamrousse.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "31448f6acd1c42f66ba4b466f00261c81d791b52",
+      "resort_name": "Telluride Ski Area",
+      "website_url": "https://tellurideskiresort.com/",
+      "status_page_url": "https://tellurideskiresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7d5123086c5d8855b491bf4905f3b6c5e336c846",
+      "resort_name": "Aspen Snowmass",
+      "website_url": "https://www.aspensnowmass.com/",
+      "status_page_url": "https://www.aspensnowmass.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d3f269fa632577f05e24199329b15e97f70c23b2",
+      "resort_name": "Mount Snow",
+      "website_url": "https://www.mountsnow.com/",
+      "status_page_url": "https://www.mountsnow.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "20ac327186091ca88822bcf3f9325608f7c53aa2",
+      "resort_name": "\u4e0a\u8d8a\u56fd\u969b, Joetsu International, J\u014detsu kokusai",
+      "website_url": "https://www.jkokusai.co.jp/",
+      "status_page_url": "https://www.jkokusai.co.jp/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c8df10ba59b2c80f2302566b5b0b9958292c8075",
+      "resort_name": "Riserva Bianca",
+      "website_url": "https://www.riservabianca.it/",
+      "status_page_url": "https://www.riservabianca.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7ac48fc0dbac27e15b38832f1f0df58bfe60e84e",
+      "resort_name": "Tarvisio, Tarvis",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "05ec7627488328fb30e0d502b021045a348af622",
+      "resort_name": "Val d'Allos - La Foux",
+      "website_url": "https://www.valdallos.com/",
+      "status_page_url": "https://www.valdallos.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1b306639a276ae1103bb8f7f682db30d717d65be",
+      "resort_name": "Cerler",
+      "website_url": "https://www.cerler.com/",
+      "status_page_url": "https://www.cerler.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "03fcc0299c9030bf81bf077f9a94ee0b327040d9",
+      "resort_name": "Masella",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "4f29aa0694d65e2fdda688ea60209f7ad9f18729",
+      "resort_name": "Brauneck",
+      "website_url": "https://www.brauneck-bergbahn.de/",
+      "status_page_url": "https://www.brauneck-bergbahn.de/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ffc04590f75f3e275d90108cc0984829ee429dda",
+      "resort_name": "Area Sciistica Abetone",
+      "website_url": "https://multipassabetone.it/",
+      "status_page_url": "https://multipassabetone.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "40ad60323d89371113e5751f8c1597a5cbc29d29",
+      "resort_name": "Wagrain",
+      "website_url": "http://www.bergbahnen-wagrain.at/de/winter",
+      "status_page_url": "http://www.bergbahnen-wagrain.at/de/winter/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "a28270143c38a4fdd9830c42c08cbd4625efdf2c",
+      "resort_name": "Chopok Jasn\u00e1",
+      "website_url": "https://www.jasna.sk/",
+      "status_page_url": "https://www.jasna.sk/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "83cf447c80c167c7472d9883e6bd88c30fd5b1d4",
+      "resort_name": "Ski Area San Pellegrino - Falcade",
+      "website_url": "https://www.skiareasanpellegrino.it/",
+      "status_page_url": "https://www.skiareasanpellegrino.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "41b930598f272928bfdbd4b166056816da79733e",
+      "resort_name": "Sauze D'Oulx",
+      "website_url": "https://www.vialattea.it",
+      "status_page_url": "https://www.vialattea.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "44f53c733df11c956209186be9b720ac2b391522",
+      "resort_name": "Ski Geilo",
+      "website_url": "https://www.skigeilo.no/",
+      "status_page_url": "https://www.skigeilo.no/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9fe896a648d66b5c9d92d7d85fb2aff59ca5e5d7",
+      "resort_name": "Domaine Skiable Chamrousse",
+      "website_url": "https://www.chamrousse.com/",
+      "status_page_url": "https://www.chamrousse.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "21a648855e9be69e7a077523014c81c2c8859484",
+      "resort_name": "Cairngorm (Aviemore)",
+      "website_url": "https://www.cairngormmountain.co.uk/",
+      "status_page_url": "https://www.cairngormmountain.co.uk/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f733f44e7f4ba14c3270c734a10424ed8ff5905f",
+      "resort_name": "Yellowstone Club",
+      "website_url": "https://yellowstoneclub.com/",
+      "status_page_url": "https://yellowstoneclub.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "b67c4aec66917728d37f522a8bfdc12cb0e9c84d",
+      "resort_name": "Sugarbush Resort",
+      "website_url": "https://www.sugarbush.com/",
+      "status_page_url": "https://www.sugarbush.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "eddc850d601b2db3c793fab90c63a4c8d84355a7",
+      "resort_name": "\u30eb\u30b9\u30c4\u30ea\u30be\u30fc\u30c8\u30b9\u30ad\u30fc\u5834, Rusutsu Resort Ski Area",
+      "website_url": "https://rusutsu.com/",
+      "status_page_url": "https://rusutsu.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f8716222688069b2907d592ee40781b30ac4971a",
+      "resort_name": "\u91ce\u6ca2\u6e29\u6cc9\u30b9\u30ad\u30fc\u5834, Nozawa Onsen",
+      "website_url": "https://www.nozawaski.com/",
+      "status_page_url": "https://www.nozawaski.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6eebeff16c8b480fc1335c8bed596286706cb776",
+      "resort_name": "La Molina",
+      "website_url": "https://www.masella.com/en/paginas/alp-2500-trail",
+      "status_page_url": "https://www.masella.com/en/paginas/alp-2500-trail/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "170c8c0d276b50ceeb50658829c7dcd487fcd18c",
+      "resort_name": "Saint-Luc - Chandolin",
+      "website_url": "https://www.anniviers.ch/",
+      "status_page_url": "https://www.anniviers.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4d065e674fc26a1c1142f9449bee9528e741468b",
+      "resort_name": "Axamer Lizum - Muttereralm",
+      "website_url": "https://www.axamer-lizum.at/ https://www.muttereralm.at/",
+      "status_page_url": "https://www.axamer-lizum.at/ https://www.muttereralm.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "05da072f8aa4be470ecc66e34e63b4a8153e0bdd",
+      "resort_name": "Kayseri-Erciyes",
+      "website_url": "https://www.kayserierciyes.com.tr/",
+      "status_page_url": "https://www.kayserierciyes.com.tr/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "fa473fa12ab6059b9e93af8498afa0efdea2cff6",
+      "resort_name": "Skigebiet Garmisch-Classic",
+      "website_url": "https://zugspitze.de/en/winter/skiarea/garmisch-classic",
+      "status_page_url": "https://zugspitze.de/en/winter/skiarea/garmisch-classic/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ac6e8db707345e560695c24c1d0ec5bc069a797f",
+      "resort_name": "Feldberg",
+      "website_url": "https://www.liftverbund-feldberg.de/",
+      "status_page_url": "https://www.liftverbund-feldberg.de/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "27892035f6676422fecf162968cf2f39486245eb",
+      "resort_name": "T\u00e4nndalen",
+      "website_url": "https://www.tanndalen.com/",
+      "status_page_url": "https://www.tanndalen.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "70abdba86a3663031137e484a58e1360a2cda496",
+      "resort_name": "Kl\u00f6vsj\u00f6 / Storhogna",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "8432e3c536835ef8a690f63b62060a7993bfd964",
+      "resort_name": "Br\u00e9vent/Fl\u00e9g\u00e8re (Chamonix)",
+      "website_url": "https://en.chamonix.com/activities/winter/skiing-in-chamonix-mont-blanc-valley/list-of-ski-areas/domaine-skiable-brevent-flegere",
+      "status_page_url": "https://www.seechamonix.com/lifts/status",
+      "confidence": 1.0,
+      "method": "existing"
+    },
+    {
+      "resort_id": "41629c07606b21cd89ede704bb1fe2a939ae9aea",
+      "resort_name": "Glacier 3000",
+      "website_url": "https://www.glacier3000.ch/",
+      "status_page_url": "https://www.glacier3000.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "5d03639020e719e7c51127b60424030c19d1ab29",
+      "resort_name": "Planai",
+      "website_url": "https://www.planai.at/",
+      "status_page_url": "https://www.planai.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "b81dcb25c037df81ace4af7b21ae77104df03ce4",
+      "resort_name": "Romme Alpin",
+      "website_url": "https://www.rommealpin.se",
+      "status_page_url": "https://www.rommealpin.se/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c0763aa655c8d14f82ed2da8660f6e9ad8b7310e",
+      "resort_name": "Hafjell",
+      "website_url": "https://www.hafjell.no/",
+      "status_page_url": "https://www.hafjell.no/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d6559b7a4d17d00b9d62c84d797cc3bf3fc6d292",
+      "resort_name": "Hundfj\u00e4llet",
+      "website_url": "https://www.skistar.com/en/ski-destinations/salen",
+      "status_page_url": "https://www.skistar.com/en/ski-destinations/salen/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ed8a4aac9d167e593f2e02bb3989fb48579264d3",
+      "resort_name": "Katschberg-Aineck",
+      "website_url": "https://www.katschi.at/",
+      "status_page_url": "https://www.katschi.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7524213ba3c51817951bc7bd31dfe502cb522152",
+      "resort_name": "Lyon - La Sarra",
+      "website_url": "https://stationsfantomes.wordpress.com/2017/06/02/lyon-la-sarra/",
+      "status_page_url": "https://stationsfantomes.wordpress.com/2017/06/02/lyon-la-sarra/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "5599f5c55105bf3996fec9a4e6f309e1a79e421d",
+      "resort_name": "Valle Nevado",
+      "website_url": "https://www.vallenevado.com/index.php",
+      "status_page_url": "https://www.vallenevado.com/index.php/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "78ac27731bb078db310933e9828665ca59858de2",
+      "resort_name": "Sommet Saint-Sauveur",
+      "website_url": "https://glissade.ca/ https://www.sommets.com/fr/montagne-de-ski/sommet-saint-sauveur/",
+      "status_page_url": "https://glissade.ca/ https://www.sommets.com/fr/montagne-de-ski/sommet-saint-sauveur/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4e9295e870b927f90f542cd716b60fe0c2b04cb8",
+      "resort_name": "Big White Ski Resort",
+      "website_url": "https://www.bigwhite.com/",
+      "status_page_url": "https://www.bigwhite.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "76d2732379666c2a1a0b22913d755625f1a01407",
+      "resort_name": "Stratton Mountain Resort",
+      "website_url": "https://www.stratton.com/",
+      "status_page_url": "https://www.stratton.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6188b040922df2ed99ef3762659adf5cb67149b0",
+      "resort_name": "Campo Felice",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "8f52a4cffc57a788e69b889d7b5c12197a606047",
+      "resort_name": "Roc d'Enfer",
+      "website_url": "https://www.rocdenfer.com/",
+      "status_page_url": "https://www.rocdenfer.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ee641621de5a919b160ac4c3ab756713ff8876ba",
+      "resort_name": "Pec pod Sn\u011b\u017ekou",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "cb461faaed3fbddd289cb3d86c6d8a7bbb4649bd",
+      "resort_name": "Mariborsko Pohorje",
+      "website_url": "http://www.mariborskopohorje.si/",
+      "status_page_url": "http://www.mariborskopohorje.si/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "611c5f306d193965d569b1d45fd531b4b4a6e14b",
+      "resort_name": "\u10d2\u10e3\u10d3\u10d0\u10e3\u10e0\u10d8, Gudauri, \u0413\u0443\u0434\u0430\u0443\u0440\u0438",
+      "website_url": "https://mta.ski",
+      "status_page_url": "https://mta.ski/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7e2b2e2ae39a8764945229ed9d6314ee6d0aae47",
+      "resort_name": "Astun",
+      "website_url": "https://www.astun.com/",
+      "status_page_url": "https://www.astun.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "73a929fdb6f99344480b7fc4e7f2e457e444b217",
+      "resort_name": "Meiringen - Hasliberg",
+      "website_url": "https://www.meiringen-hasliberg.ch/",
+      "status_page_url": "https://www.meiringen-hasliberg.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "29f3c8064a8a521656127c68e52b3b7ec31e5f9a",
+      "resort_name": "Jansk\u00e9 L\u00e1zn\u011b - \u010cern\u00e1 hora",
+      "website_url": "https://skiresort.cz/",
+      "status_page_url": "https://skiresort.cz/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4f8cc7c822ff08fe15a457cfd10dacbe603a16cf",
+      "resort_name": "Dam\u00fcls",
+      "website_url": "https://www.damuels-mellau.at/",
+      "status_page_url": "https://www.damuels-mellau.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "05f2a87af29f8bfb62a2f603adca4b58fd9bc94b",
+      "resort_name": "Nordkette",
+      "website_url": "https://www.nordkette.com/",
+      "status_page_url": "https://www.nordkette.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1a0088907c983cf22ebde01fbc7d28fed495f34d",
+      "resort_name": "La Norma",
+      "website_url": "https://www.la-norma.ski/",
+      "status_page_url": "https://www.la-norma.ski/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "80f1b9fb69d6d58d8c0211a019de956673e86a18",
+      "resort_name": "Pila ski",
+      "website_url": "https://www.pila.it/",
+      "status_page_url": "https://www.pila.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d3c7b897d3dac0b590961eb352677d3070e52fe1",
+      "resort_name": "Thollon-les-M\u00e9mises",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "2b04168ef9b209ad4cd6b13f80f42eb7e9a652d5",
+      "resort_name": "Ch\u00e4serrug-Alt St. Johann",
+      "website_url": "https://www.chaeserrugg.ch/",
+      "status_page_url": "https://www.chaeserrugg.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "427712e1430959c6a91b120331da6c7c3981e312",
+      "resort_name": "Steinplatte Waidring-Tirol",
+      "website_url": "https://www.steinplatte.tirol/",
+      "status_page_url": "https://www.steinplatte.tirol/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "110c472bd3eabb683e1002a1654c3299ef8ccc7c",
+      "resort_name": "S\u00f6renberg",
+      "website_url": "https://www.soerenberg.ch/",
+      "status_page_url": "https://www.soerenberg.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0aa5aaeb0e973a831d28b19dd334d2dea6291f21",
+      "resort_name": "Piancavallo",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "28cd6829ec529bdf62b5fba43fe2cbcda6e7d813",
+      "resort_name": "San Martino di Castrozza",
+      "website_url": "https://www.sanmartino.com",
+      "status_page_url": "https://www.sanmartino.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "92a349c51194cc530b9b7ef1cde60959e74c14ed",
+      "resort_name": "Paganella, Area sciistica Andalo Fai della Paganella",
+      "website_url": "https://www.paganella.net/",
+      "status_page_url": "https://www.paganella.net/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "a1a0c4585d1fe87ca6ff3104e6e5ff5dc93af329",
+      "resort_name": "Sch\u00f6nried - Saanenm\u00f6ser - Zweisimmen - St. Stephan",
+      "website_url": "https://www.gstaad.ch/",
+      "status_page_url": "https://www.gstaad.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0bcc31494b9b87b9cc66f9b5655dacc021c1d7b8",
+      "resort_name": "\u067e\u06cc\u0633\u062a \u0627\u0633\u06a9\u06cc \u062f\u06cc\u0632\u06cc\u0646, Dizin Ski Resort",
+      "website_url": "https://dizinskiresort.ir/",
+      "status_page_url": "https://dizinskiresort.ir/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "553e5c0881466894501e5f56ab41ba951300fc75",
+      "resort_name": "Snow Summit",
+      "website_url": "https://www.bigbearmountainresort.com/",
+      "status_page_url": "https://www.bigbearmountainresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "afaacd3410e33de806ed0177a6e3e6e743877f03",
+      "resort_name": "Jackson Hole",
+      "website_url": "https://www.jacksonhole.com",
+      "status_page_url": "https://www.jacksonhole.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "b722bd835aaa6e9597fa6cc41f40a4b3f6ed7834",
+      "resort_name": "Whitefish Mountain Resort",
+      "website_url": "https://skiwhitefish.com",
+      "status_page_url": "https://skiwhitefish.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c93e7cec002e1289e63f9e9c51defc39d7d8058a",
+      "resort_name": "Mont Tremblant Resort, Station Mont Tremblant",
+      "website_url": "https://www.tremblant.ca",
+      "status_page_url": "https://www.tremblant.ca/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8e8a2328ddca41517300284a9ddd2839299de448",
+      "resort_name": "Alpine Valley Resort",
+      "website_url": "https://www.alpinevalleyresort.com/",
+      "status_page_url": "https://www.alpinevalleyresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1a8468ff9dfaf2dabcec8452076e0b425c1dd6b9",
+      "resort_name": "\u82d7\u5834\u30b9\u30ad\u30fc\u5834, Naeba Ski Resort, Naeba suk\u012b-ba",
+      "website_url": "https://www.princehotels.co.jp/ski/naeba/",
+      "status_page_url": "https://www.princehotels.co.jp/ski/naeba/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c8f66e784133d6becb1aba654e27b446daa7af7b",
+      "resort_name": "Guzet-Neige",
+      "website_url": "https://www.guzet.ski/",
+      "status_page_url": "https://www.guzet.ski/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "3fe9a6b2c3b2fddc054259af7b561d7d91f7b9f0",
+      "resort_name": "Skiarea Valchiavenna Madesimo/Campodolcino",
+      "website_url": "https://www.skiareavalchiavenna.it/",
+      "status_page_url": "https://www.skiareavalchiavenna.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ea9dfe26da36c33e8cf007b22b628c153ac69ab4",
+      "resort_name": "Les Houches - Saint-Gervais",
+      "website_url": "https://www.leshouches.com/",
+      "status_page_url": "https://www.leshouches.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9ea685d2404d5268c6cb02acbda87feb44cb0db4",
+      "resort_name": "Gr\u00e4chen",
+      "website_url": "https://www.graechen.ch/",
+      "status_page_url": "https://www.graechen.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "13756027a3c85c2f3e1b8742865baa4f2469a277",
+      "resort_name": "Corvatsch-Furtschellas",
+      "website_url": "https://www.corvatsch-diavolezza.ch/ https://www.engadin.ch/de/langlauf",
+      "status_page_url": "https://www.corvatsch-diavolezza.ch/ https://www.engadin.ch/de/langlauf/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "21def33c68a75c001d3342fc3e711e0f1e997637",
+      "resort_name": "Skigebiet Heuberg Arena/Walmendingerhorn",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "a6792c241300dee70b989ffcf6a12b8225bbd7d9",
+      "resort_name": "Estaci\u00f3n de esqu\u00ed de Valdesqu\u00ed",
+      "website_url": "https://www.valdesqui.es/",
+      "status_page_url": "https://www.valdesqui.es/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7de1bcf43b60126cd7ec928effe87c5257cfca30",
+      "resort_name": "Espace Cambre d'Aze",
+      "website_url": "https://www.cambre-d-aze.com/",
+      "status_page_url": "https://www.cambre-d-aze.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "b11f8a9b8390463caf77e7adc3db6c226cfe088b",
+      "resort_name": "Aram\u00f2n Panticosa",
+      "website_url": "https://www.formigal-panticosa.com/",
+      "status_page_url": "https://www.formigal-panticosa.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2f1bc005a66588a88f53bb3917b1904401f10869",
+      "resort_name": "La Bresse - Hohneck",
+      "website_url": "https://labresse.labellemontagne.com",
+      "status_page_url": "https://labresse.labellemontagne.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7ed532f09ad353d121841f56c60990bde6d70741",
+      "resort_name": "Carezza",
+      "website_url": "https://carezza.it/",
+      "status_page_url": "https://carezza.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "51474b305d4503f5ab3131b6c859bd4cf4f2088b",
+      "resort_name": "Kranjska Gora",
+      "website_url": "https://ski-kranjska-gora.com",
+      "status_page_url": "https://ski-kranjska-gora.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f188964e40a2c3d00d8638f937cc91842fc0b532",
+      "resort_name": "Aprica",
+      "website_url": "https://www.apricaonline.com/index.php",
+      "status_page_url": "https://www.apricaonline.com/index.php/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d19b617dc3a4c9a07b0f8b3360f7f5a20d384a48",
+      "resort_name": "Ar\u00eaches Beaufort",
+      "website_url": "https://www.areches-beaufort.com",
+      "status_page_url": "https://www.areches-beaufort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6d3a6779aeccfa475be6c0a5f9b52f427d64c037",
+      "resort_name": "Tahko",
+      "website_url": "https://www.tahko.com/en/",
+      "status_page_url": "https://www.tahko.com/en/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "28f8c6f1610cd4cb9840dabdd1eae0eedaf41294",
+      "resort_name": "Bj\u00f6rnrike",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "3785884556b34a04d38077287cb93f5bc0fb3477",
+      "resort_name": "Ski Center Lavarone",
+      "website_url": "https://www.alpecimbra.it/de/skigebiet-alpe-cimbra/lavarone-folgaria-skigebiet/46-0.html",
+      "status_page_url": "https://www.alpecimbra.it/de/skigebiet-alpe-cimbra/lavarone-folgaria-skigebiet/46-0.html/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "dfc5c773c999f3cf6df73a599e3d647a0da2c9e7",
+      "resort_name": "Bardonecchia",
+      "website_url": "https://www.bardonecchiaski.com",
+      "status_page_url": "https://www.bardonecchiaski.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6071fe4a9ab2ea3859cfdda2fa3e1f5d556889dc",
+      "resort_name": "Zauchensee-Flachauwinkl",
+      "website_url": "https://www.zauchensee.at/",
+      "status_page_url": "https://www.zauchensee.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2e16768bb85528d510acd8aa58e14a82502ea66a",
+      "resort_name": "Skigebiet Oberwiesenthal",
+      "website_url": "https://www.fichtelberg-ski.de/",
+      "status_page_url": "https://www.fichtelberg-ski.de/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1648984800eeaf4c7d1f8774dc5ae107df61a927",
+      "resort_name": "Turracher H\u00f6he",
+      "website_url": "https://www.turracherhoehe.at/",
+      "status_page_url": "https://www.turracherhoehe.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "cafed86430d9ca4117593778c25c8ac57654b9f3",
+      "resort_name": "Zoncolan, \u00c7oncolan",
+      "website_url": "https://www.turismofvg.it/en/mountain365/ski-area-ravascletto-zoncolan",
+      "status_page_url": "https://www.turismofvg.it/en/mountain365/ski-area-ravascletto-zoncolan/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "edd2880bbf98e186ecb381b898fd7b8e0c6ba1e7",
+      "resort_name": "Oppdal Skisenter",
+      "website_url": "https://www.oppdalskisenter.no/",
+      "status_page_url": "https://www.oppdalskisenter.no/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "82dc09affb379bc9f88a1fc518ac2ded2508f9da",
+      "resort_name": "La Parva",
+      "website_url": "https://www.laparva.cl/",
+      "status_page_url": "https://www.laparva.cl/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "a69e726ad816e743f1abff11e3813659637a008f",
+      "resort_name": "Camelback Resort",
+      "website_url": "https://www.camelbackresort.com/ski-tube/poconos-ski-snowboarding-resort/",
+      "status_page_url": "https://www.camelbackresort.com/ski-tube/poconos-ski-snowboarding-resort/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d7cc8768ea056dd9a46d954ce7d03d433288ba8a",
+      "resort_name": "Mountain High",
+      "website_url": "https://www.mthigh.com/",
+      "status_page_url": "https://www.mthigh.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d2de9aebeedb736c0bbef6911782b5fdfe2246b1",
+      "resort_name": "Mt. Bachelor",
+      "website_url": "https://www.mtbachelor.com/",
+      "status_page_url": "https://www.mtbachelor.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "650f96a36dc89d4a1a3d3dbf420184eedbe0747e",
+      "resort_name": "Seven Springs Mountain Resort",
+      "website_url": "https://www.7springs.com/",
+      "status_page_url": "https://www.7springs.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8ab7176879f602eb83ffe4a235a84e0f84e839e4",
+      "resort_name": "Crested Butte Mountain Resort",
+      "website_url": "https://www.skicb.com/",
+      "status_page_url": "https://www.skicb.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6991829b1f27814a62b03cc9a37771b38f7ff862",
+      "resort_name": "Mt. Holly Ski & Snowboard Resort",
+      "website_url": "https://www.skimtholly.com/",
+      "status_page_url": "https://www.skimtholly.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "14114018bd9e7dfbbcfe5fa8d117e222081a3fbc",
+      "resort_name": "Chapelco Ski Resort",
+      "website_url": "http://www.laspendientes.com/ https://www.cerrochapelco.com.ar/",
+      "status_page_url": "http://www.laspendientes.com/ https://www.cerrochapelco.com.ar/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "b80dd18fc32df44f83dad7576cdbb0316286ef66",
+      "resort_name": "Blue Mountain Resort",
+      "website_url": "https://www.skibluemt.com/",
+      "status_page_url": "https://www.skibluemt.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6e606a86fc0790050c9c7220e8fa4fb2cf48cbae",
+      "resort_name": "Wanlong Paradise Resort, \u4e07\u9f99\u5ea6\u5047\u5929\u5802",
+      "website_url": "https://www.secretgardenresorts.com/",
+      "status_page_url": "https://www.secretgardenresorts.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c0b5e854cce5bf84da14a43752dd12117ca30144",
+      "resort_name": "\u6802\u6c60\u9ad8\u539f, Tsugaike Kogen",
+      "website_url": "https://www.tsugaike.gr.jp/",
+      "status_page_url": "https://www.tsugaike.gr.jp/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "44690cfab489d7d1c5b65e92e57dc0ce6362d903",
+      "resort_name": "\u4e9a\u5e03\u529b\u6ed1\u96ea\u65c5\u6e38\u5ea6\u5047\u533a\uff08\u90e8\u5206\u5bf9\u5ba2\u5f00\u653e\uff09",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "890292ea837546e59f76bc5ebe6215c87576f8cf",
+      "resort_name": "Thredbo Resort",
+      "website_url": "https://www.thredbo.com.au/",
+      "status_page_url": "https://www.thredbo.com.au/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "81e46b4e77e5ad2de0a64e7fe71e5a2390f8bc5e",
+      "resort_name": "Paland\u00f6ken Kayak Merkezi",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "f21450a542a05b0b1d7dc7e647189168f962fa66",
+      "resort_name": "\u041a\u0443\u0440\u043e\u0440\u0442 \u041a\u0440\u0430\u0441\u043d\u0430\u044f \u041f\u043e\u043b\u044f\u043d\u0430, Krasnaya Polyana Resort",
+      "website_url": "https://krasnayapolyanaresort.ru/",
+      "status_page_url": "https://krasnayapolyanaresort.ru/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f5023cc992ce7e785b7226435512549698ee597b",
+      "resort_name": "Cimetta",
+      "website_url": "https://www.cardada.ch/",
+      "status_page_url": "https://www.cardada.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7e1c3bbe5dc96f84472363c502e595691f2862c0",
+      "resort_name": "\u0414\u043e\u043c\u0431\u0430\u0439, Dombay",
+      "website_url": "https://www.dombai.info/",
+      "status_page_url": "https://www.dombai.info/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8ebb23da67e4e5ad4059d78ad442e7694eccfb2f",
+      "resort_name": "Nauders Bergkastel",
+      "website_url": "https://www.nauders.com/",
+      "status_page_url": "https://www.nauders.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "59daf3cc15cc3c231203bce41e59f1258093568a",
+      "resort_name": "Superbagn\u00e8res",
+      "website_url": "http://www.luchon-superbagneres.com/",
+      "status_page_url": "http://www.luchon-superbagneres.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "a3f181286a5893208aa7d7b7d1704bb923673003",
+      "resort_name": "Les Karellis",
+      "website_url": "https://www.karellis.com/",
+      "status_page_url": "https://www.karellis.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6fc2b7bd9404c7cf68e49ca9fd83600e3de149d4",
+      "resort_name": "S\u00f6renberg",
+      "website_url": "https://www.soerenberg.ch",
+      "status_page_url": "https://www.soerenberg.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0bc0af67288ed7c592e1f3364a400234763eb023",
+      "resort_name": "La Pinilla",
+      "website_url": "https://www.lapinilla.es/",
+      "status_page_url": "https://www.lapinilla.es/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "3c30eddac708122c98a1ad904d7a67fc8499b342",
+      "resort_name": "Pizol",
+      "website_url": "https://pizol.com/",
+      "status_page_url": "https://pizol.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "71adb82590d35e6b256c14d2cb266024f2723c27",
+      "resort_name": "Skiarena Steibis",
+      "website_url": "http://www.imbergbahn.de/",
+      "status_page_url": "http://www.imbergbahn.de/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7bbe4370de755694437795af4d89234c73ed73d4",
+      "resort_name": "St Johann in Tirol",
+      "website_url": "https://www.bergbahnen-stjohann.at/",
+      "status_page_url": "https://www.bergbahnen-stjohann.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c9f7bd1feef91e49dbdae4831ed347243b5dfa33",
+      "resort_name": "Scuol Motta Naluns",
+      "website_url": "https://www.scuol.ch/",
+      "status_page_url": "https://www.scuol.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "23c484a02dad8207dee185a68f77c03e314a395d",
+      "resort_name": "Anz\u00e8re",
+      "website_url": "https://www.anzere.ch",
+      "status_page_url": "https://www.anzere.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c0e65ff5494198c3e504ff30257b990d92b29cfc",
+      "resort_name": "L'Alpe du Grand Serre",
+      "website_url": "https://www.alpedugrandserre.info/",
+      "status_page_url": "https://www.alpedugrandserre.info/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2bb6a71b243972bb44faef0f818e1d6a4979cacc",
+      "resort_name": "Ancelle",
+      "website_url": "https://www.ancelleski.fr",
+      "status_page_url": "https://www.ancelleski.fr/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "88ddffa4f0c73d737eef158a9d0725f81bdde054",
+      "resort_name": "\u0414\u0440\u0430\u0433\u043e\u0431\u0440\u0430\u0442, Drahobrat",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "a44ab6f1b177b983f22ab22cc15fdb83f3a1b7ed",
+      "resort_name": "Kals-Matrei",
+      "website_url": "https://www.gg-resort.at/",
+      "status_page_url": "https://www.gg-resort.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c4fe645047e06c17f033f3092f88a83b9f7012e2",
+      "resort_name": "Domaine Autrans - M\u00e9audre",
+      "website_url": "https://autrans-meaudre.com/",
+      "status_page_url": "https://autrans-meaudre.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "db230da8ae03e645cb56642e15e00767f43f5252",
+      "resort_name": "Gitschberg Jochtal, Rio Pusteria",
+      "website_url": "https://www.gitschberg-jochtal.com",
+      "status_page_url": "https://www.gitschberg-jochtal.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "06cb9ef9adb612dff70c48ef69264b86c993ce64",
+      "resort_name": "Mavrovo",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "6520fde4643dba824360f5f75edb51e8048eaa88",
+      "resort_name": "Berwang - Bichlbach (Zugspitz Arena)",
+      "website_url": "https://www.berwang.tirol/",
+      "status_page_url": "https://www.berwang.tirol/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "35632469fb7cccf46b30c15b9f1758f7dff918ac",
+      "resort_name": "El Colorado",
+      "website_url": "https://centrofarellones.cl/ https://www.elcolorado.cl/",
+      "status_page_url": "https://centrofarellones.cl/ https://www.elcolorado.cl/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "003fc7a8c53bae5af9b05470f7e6a95002eee00f",
+      "resort_name": "North Creek Ski Bowl",
+      "website_url": "https://goremountain.com/the-mountain/about-the-ski-bowl/",
+      "status_page_url": "https://goremountain.com/the-mountain/about-the-ski-bowl/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "cd52cfebdda8e84997b3447573546b8d17bc8e6d",
+      "resort_name": "Stevens Pass Ski Area",
+      "website_url": "https://www.stevenspass.com",
+      "status_page_url": "https://www.stevenspass.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8477e343b0af5c6d75f1a3d08329339d3417cc6b",
+      "resort_name": "Belleayre Mountain Ski Center",
+      "website_url": "https://www.belleayre.com/",
+      "status_page_url": "https://www.belleayre.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "e50191099424643e8e4ca4a469361c801b6c5094",
+      "resort_name": "Purgatory Resort",
+      "website_url": "https://www.durangomountainresort.com/",
+      "status_page_url": "https://www.durangomountainresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "521fc91f7033d24900230c6c4e0366c228a7f805",
+      "resort_name": "Perfect North Slopes",
+      "website_url": "https://www.perfectnorth.com/",
+      "status_page_url": "https://www.perfectnorth.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "5c5fcebef97c88619e841e8be5f8dbb92fcc2899",
+      "resort_name": "Sugarloaf",
+      "website_url": "https://www.sugarloaf.com/",
+      "status_page_url": "https://www.sugarloaf.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "aeb6db58121288dc0287b4254df4adbe5a40c3ec",
+      "resort_name": "Snowbird",
+      "website_url": "https://www.snowbird.com/",
+      "status_page_url": "https://www.snowbird.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d384d3efef189d58a9bcc558a821feac9874fa55",
+      "resort_name": "Taos Ski Valley",
+      "website_url": "https://www.skitaos.com/",
+      "status_page_url": "https://www.skitaos.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "53a081a74035a3c500ea5fb7b4012a7a75926ef5",
+      "resort_name": "Portillo",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "e76ccebb361abdc258bf279a3b41dd00d61e64d7",
+      "resort_name": "\u8d64\u5009\u6e29\u6cc9\u30b9\u30ad\u30fc\u5834, Akakura Onsen Ski Area",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "2ea01c73118f9c02add82629743aade1a80abcce",
+      "resort_name": "Falls Creek",
+      "website_url": "https://www.skifalls.com.au/",
+      "status_page_url": "https://www.skifalls.com.au/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "fd839899582c8f2457f330931b333696e0d6a800",
+      "resort_name": "Mount Hotham",
+      "website_url": "https://www.mthotham.com.au/",
+      "status_page_url": "https://www.mthotham.com.au/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ccdd8e9f8cf942b21aad02955e0974d9361c61ee",
+      "resort_name": "\u77f3\u6253\u4e38\u5c71\u30b9\u30ad\u30fc\u5834, Ishiuchi Maruyama Ski Resort",
+      "website_url": "https://www.ishiuchi.or.jp/",
+      "status_page_url": "https://www.ishiuchi.or.jp/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "03211df1a9413a2f292903b230b4dd0c55cf7b5f",
+      "resort_name": "\u661f\u91ce\u30ea\u30be\u30fc\u30c8 \u732b\u9b54\u30b9\u30ad\u30fc\u5834, Hoshino Resorts Nekoma Mountain",
+      "website_url": "https://www.alts.co.jp/index.php",
+      "status_page_url": "https://www.alts.co.jp/index.php/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4c8e9f587dad71635802f326189d0f10e10404d2",
+      "resort_name": "\u5c06\u519b\u5c71\u6ed1\u96ea\u573a",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "b9a27c0be001e3a1542b3cabcafe2d5ee588cc37",
+      "resort_name": "\u677e\u82b1\u6e56\u6ed1\u96ea\u573a, Songhua Lake Ski Resort",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "f8a135103929215d692c27c3b10670b5b8ff1e7b",
+      "resort_name": "Metabief - Mont d'or",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "8ba91e97233bc526702e679b13a0ce110bad3f6a",
+      "resort_name": "Sch\u00f6neben - Belpiano, Sch\u00f6neben",
+      "website_url": "https://www.schoeneben.it/",
+      "status_page_url": "https://www.schoeneben.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d49fb763370f4ddb93f355430d537911de694958",
+      "resort_name": "Disentis/Must\u00e9r",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "c32e64673614d65c65f0123491f1976f62e9a55c",
+      "resort_name": "Borovets",
+      "website_url": "https://www.borovets-bg.com/",
+      "status_page_url": "https://www.borovets-bg.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4243519f890596507243ce624d660bfddd378b16",
+      "resort_name": "Queyras - Molines/Saint-V\u00e9ran",
+      "website_url": "https://www.queyras.ski/",
+      "status_page_url": "https://www.queyras.ski/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "64a4879a2a2c802d498419c7f97401156810641a",
+      "resort_name": "Kasberg Gr\u00fcnau - Almtal",
+      "website_url": "https://www.kasberg.at/",
+      "status_page_url": "https://www.kasberg.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1c25cf660c84f21364c1905e7eb788e3789ccfbd",
+      "resort_name": "Krvavec",
+      "website_url": "https://www.rtc-krvavec.si/",
+      "status_page_url": "https://www.rtc-krvavec.si/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4f28d329e3135d4beda7482aac1820ad0f7cad63",
+      "resort_name": "Nevis Range",
+      "website_url": "https://www.nevisrange.co.uk/",
+      "status_page_url": "https://www.nevisrange.co.uk/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "222578468bd24884d04bf5d8d29f7e2fe76a5198",
+      "resort_name": "Schlick 2000",
+      "website_url": "http://www.schlick2000.at/",
+      "status_page_url": "http://www.schlick2000.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "26ac3476ebcc3ff9c7e4d046d5cff2d674a22d1e",
+      "resort_name": "Vr\u00e1tna",
+      "website_url": "http://www.vratna.sk/sk",
+      "status_page_url": "http://www.vratna.sk/sk/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "3cd692f072ced1edfcbc87b8d31d52c2ae3f5e35",
+      "resort_name": "Sappada",
+      "website_url": "https://www.nevelandia.it/",
+      "status_page_url": "https://www.nevelandia.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8a5063e32476ab3ab529dd524a0debe563e08f28",
+      "resort_name": "Skigebiet Fellhorn/Kanzelwand",
+      "website_url": "https://www.das-hoechste.de/",
+      "status_page_url": "https://www.das-hoechste.de/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c880b001fe8a065af66fca1a93ea7ce3d62e546a",
+      "resort_name": "Jakobshorn",
+      "website_url": "https://www.davosklosters.ch/",
+      "status_page_url": "https://www.davosklosters.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "bd6babe4cc380627a74b32109a008aa05e8071b2",
+      "resort_name": "Reiteralm",
+      "website_url": "https://www.reiteralm.at/de/winter/reiteralm",
+      "status_page_url": "https://www.reiteralm.at/de/winter/reiteralm/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "5c8fc1c68acad9168476178ddf7345aae3008bb8",
+      "resort_name": "Skigebiet Gro\u00dfglockner Heiligenblut",
+      "website_url": "https://www.heiligenblut.at/",
+      "status_page_url": "https://www.heiligenblut.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f1588948074c393bfde0e8fb261942602470ee69",
+      "resort_name": "Seefeld - Gschwandtkopf",
+      "website_url": "https://www.skigebiet-seefeld.at/",
+      "status_page_url": "https://www.skigebiet-seefeld.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "36d524d45f34c80c849eb87a36ee901f2fb2c542",
+      "resort_name": "Sudelfeld - Bayrischzell",
+      "website_url": "https://skizentrum-grafenherberg-sudelfeld.de/ https://www.sudelfeld.de/",
+      "status_page_url": "https://skizentrum-grafenherberg-sudelfeld.de/ https://www.sudelfeld.de/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "a92bdf9c9959ecbfd436556e0c71a630759be88e",
+      "resort_name": "Buffaure - Ciampac",
+      "website_url": "https://www.fassa.com/ https://www.fassa.it/",
+      "status_page_url": "https://www.fassa.com/ https://www.fassa.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "977c24ffa15ab2e86d9e14846911aca6149b7729",
+      "resort_name": "Sansicario",
+      "website_url": "https://www.vialattea.it",
+      "status_page_url": "https://www.vialattea.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "db5c95e86ebbda55f5c2bcd992d5855a0f9c86cb",
+      "resort_name": "Leysin",
+      "website_url": "https://leysin.ch/",
+      "status_page_url": "https://leysin.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4b61d2c49f0eead6909b79abe3df9e938a50b14e",
+      "resort_name": "Norefjell",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "6d0ca5263d711788cf560a6eb02a0ecc46ef2b1b",
+      "resort_name": "Hochoetz",
+      "website_url": "https://www.oetz.com/winter/ski-area-hochoetz/ski-area-information.html",
+      "status_page_url": "https://www.oetz.com/winter/ski-area-hochoetz/ski-area-information.html/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7322051c91f99e6553bf33c99c38c73ed0e604a6",
+      "resort_name": "Skigebiet Stuhleck - Semmering",
+      "website_url": "https://www.stuhleck.at/",
+      "status_page_url": "https://www.stuhleck.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d4daebca40119e46e0a6f0a873bf3fcbb4585fff",
+      "resort_name": "Bormio Ski",
+      "website_url": "https://www.bormioski.eu/",
+      "status_page_url": "https://www.bormioski.eu/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "e24a5a8c1b5a1b8eac6e1a327618af175e936da7",
+      "resort_name": "Vemdalsskalet",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "b397f0f5eee9f8ab94490ebf1df40b8ebe640c9a",
+      "resort_name": "Artesina",
+      "website_url": "https://www.frabosaski.it/",
+      "status_page_url": "https://www.frabosaski.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "204bd8a606de9419155c825f8ba5ecd46345e23a",
+      "resort_name": "K\u00fchtai",
+      "website_url": "https://www.kuehtai.info/en/winter/ski-area.html",
+      "status_page_url": "https://www.kuehtai.info/en/winter/ski-area.html/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "54f0403b857b338494661a2382df9502e407e954",
+      "resort_name": "Estaci\u00f3 d'esqu\u00ed Port del Comte",
+      "website_url": "https://www.portdelcomte.net/",
+      "status_page_url": "https://www.portdelcomte.net/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "3c2a7663653e63146f84189032037e795ec129f9",
+      "resort_name": "Bydalsfj\u00e4llen",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "60dcc022284937e2f1d303b44f395cd1988431c1",
+      "resort_name": "\u0417\u043e\u043b\u043e\u0442\u0430\u044f \u0414\u043e\u043b\u0438\u043d\u0430",
+      "website_url": "https://zoldol.ru/",
+      "status_page_url": "https://zoldol.ru/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ed5f3b7412cd57ef44e8d72fcc8fca867b008aaf",
+      "resort_name": "Kosza\u0142kowo",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "1bc8063b148904e54cdd1357ba34f2211ceef2b8",
+      "resort_name": "Kungsberget",
+      "website_url": "https://www.kungsberget.se/en/?nr=1",
+      "status_page_url": "https://www.kungsberget.se/en/?nr=1/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ff115e84a9724cf1a96ee759ddaf97875c8da9f1",
+      "resort_name": "Czarna G\u00f3ra",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "d08451a2fc5a6431ce49850bd6daf729558ec15e",
+      "resort_name": "Orsa Gr\u00f6nklitt",
+      "website_url": "https://www.orsagronklitt.se",
+      "status_page_url": "https://www.orsagronklitt.se/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "bd3e8d4eaa7d27f2c97f87ed6160ce3defb36d94",
+      "resort_name": "Kartalkaya",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "eb6bf1b553103624747096d88a6af02afd8a2d81",
+      "resort_name": "Rogla",
+      "website_url": "https://www.rogla.eu/",
+      "status_page_url": "https://www.rogla.eu/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1facaf3d92da6719b1c7aa95f763fbeda72222b3",
+      "resort_name": "Snowshoe Mountain",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "11f2099ea10957844765b5bea3bbb1f13fd592b7",
+      "resort_name": "Snow Valley Mountain Resort",
+      "website_url": "https://snow-valley.com",
+      "status_page_url": "https://snow-valley.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "02afb35f5d4315ae5ff1abcef85259463632463c",
+      "resort_name": "Bl\u00e1fj\u00f6ll",
+      "website_url": "https://skidasvaedi.is/",
+      "status_page_url": "https://skidasvaedi.is/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0aeb53731081edb26944a565b282d8871ade8d73",
+      "resort_name": "Holiday Valley",
+      "website_url": "https://www.holidayvalley.com/",
+      "status_page_url": "https://www.holidayvalley.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4279b250cfcc57bd1abf2ca0d8f528eca7739c68",
+      "resort_name": "Sierra-at-Tahoe Ski Resort",
+      "website_url": "https://www.sierraattahoe.com/",
+      "status_page_url": "https://www.sierraattahoe.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "fecbf1bbf84bdaf7d4efa2b040d9990e0a7c9490",
+      "resort_name": "Blue Mountain Ski Resort",
+      "website_url": "https://www.bluemountain.ca",
+      "status_page_url": "https://www.bluemountain.ca/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "02c5a8b2e7e93dd3b178428c9cb33794f8fc673a",
+      "resort_name": "Snowbasin Resort",
+      "website_url": "https://www.snowbasin.com/",
+      "status_page_url": "https://www.snowbasin.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "20792d490b04a009a6918d8d23eee21e1b8a19ab",
+      "resort_name": "Wilmot Mountain",
+      "website_url": "https://www.wilmotmountain.com/",
+      "status_page_url": "https://www.wilmotmountain.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "207edac28d0ece59b86d3282c756fa4d2774ca0a",
+      "resort_name": "Kirkwood Mountain Resort",
+      "website_url": "https://www.kirkwood.com/",
+      "status_page_url": "https://www.kirkwood.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ad0f4ca1e398fc733381875ddb05ef08c0215ae7",
+      "resort_name": "Sun Peaks Resort",
+      "website_url": "https://www.sunpeaksresort.com/",
+      "status_page_url": "https://www.sunpeaksresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "a858009848aad8498631e2f2e825f64f557363c4",
+      "resort_name": "Loon Mountain Resort",
+      "website_url": "https://www.loonmtn.com/",
+      "status_page_url": "https://www.loonmtn.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "cee3c9097159f155bdbd509eec236006f19c468f",
+      "resort_name": "Palisades Tahoe Alpine Meadows",
+      "website_url": "https://www.palisadestahoe.com/",
+      "status_page_url": "https://www.palisadestahoe.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d04af1a4f5b41f91be8f0ef321d9a4e1b98f6ccc",
+      "resort_name": "Cerro Bayo",
+      "website_url": "https://www.cerrobayo.com.ar/",
+      "status_page_url": "https://www.cerrobayo.com.ar/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f3be556bbdfb104971d932b7d6420ded885aeaf1",
+      "resort_name": "Sugadaira Kogen (\u83c5\u5e73\u9ad8\u539f\u30b9\u30ad\u30fc\u5834)",
+      "website_url": "https://sugadaira-snowresort.com/",
+      "status_page_url": "https://sugadaira-snowresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8e34404723365a14254b4ba907fba70f0fe368e4",
+      "resort_name": "Beidahu Ski Resort, \u5317\u5927\u6e56\u6ed1\u96ea\u5ea6\u5047\u533a",
+      "website_url": "http://www.beidahuski.com/",
+      "status_page_url": "http://www.beidahuski.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "18c3fba8fc39523a87ef5ae73ba37e372171062b",
+      "resort_name": "\u3060\u3044\u305b\u3093\u30db\u30ef\u30a4\u30c8\u30ea\u30be\u30fc\u30c8, Daisen White Resort",
+      "website_url": "https://www.daisen-resort.jp/",
+      "status_page_url": "https://www.daisen-resort.jp/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "650eebed3cbc4d95ec15ed68c8266794c735683d",
+      "resort_name": "Whakapapa",
+      "website_url": "https://www.whakapapa.com/",
+      "status_page_url": "https://www.whakapapa.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c70830347c781dd30d3c692a920fc0ecc6354bb0",
+      "resort_name": "Willingen",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "2cbe407409b5340a8a35266314043918b4f7526f",
+      "resort_name": "Savognin",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "43be2b7a7a7fc12ba084871981485ccd34a5424f",
+      "resort_name": "Ratschings-Jaufen",
+      "website_url": "https://www.ratschings-jaufen.it/",
+      "status_page_url": "https://www.ratschings-jaufen.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "504eff3fdb5510cb38a4f75324fa846fba9728f3",
+      "resort_name": "Gourette",
+      "website_url": "https://www.gourette.com/",
+      "status_page_url": "https://www.gourette.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2826e74d5f33a0bd943b7353dcda7e1419c36ace",
+      "resort_name": "Brigels-Waltensburg-Andiast, Brigels-Waltenburg-Andiast, Breil-Vuorz-Andiast",
+      "website_url": "https://www.brigels-bergbahnen.ch",
+      "status_page_url": "https://www.brigels-bergbahnen.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f6faf99488990e64ba15017512e03b1b8634abf8",
+      "resort_name": "Valdelinares",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "7a164e4c774d9a66c0d90f9c78b30c340c36ed0c",
+      "resort_name": "Meran 2000",
+      "website_url": "https://www.meran2000.com/",
+      "status_page_url": "https://www.meran2000.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d439a81c89522f99d9f58daedda995c9b189d301",
+      "resort_name": "Les Monts d'Olmes",
+      "website_url": "https://www.montsdolmes.ski/",
+      "status_page_url": "https://www.montsdolmes.ski/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d98cdd6d5eb28552b22f3a087019c5786531e069",
+      "resort_name": "Skigebiet Spitzingsee - Tegernsee",
+      "website_url": "https://www.alpenbahnen-spitzingsee.de/de/skifahren-snowboarden.html",
+      "status_page_url": "https://www.alpenbahnen-spitzingsee.de/de/skifahren-snowboarden.html/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "e9c0a197353bef2c6ed47d85c268582cae8ad8ea",
+      "resort_name": "Belalp",
+      "website_url": "https://www.belalp.ch/",
+      "status_page_url": "https://www.belalp.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "252f58f0495d9e6050279031fea1365c55d7163d",
+      "resort_name": "Laterns-Gapfohl",
+      "website_url": "https://www.laterns.net/",
+      "status_page_url": "https://www.laterns.net/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "5ab9e6937c6d307e489c101407d930432f918cab",
+      "resort_name": "Hauser Kaibling",
+      "website_url": "https://www.hauser-kaibling.at",
+      "status_page_url": "https://www.hauser-kaibling.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "3fbb5470d84a03e79bc9d78671e709fd115de4d4",
+      "resort_name": "Skigebiet Raurisertal",
+      "website_url": "https://www.hochalmbahnen.at/",
+      "status_page_url": "https://www.hochalmbahnen.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "fb221f44d7aaafd3e9a884c397ebe1f1059edd62",
+      "resort_name": "Pralognan-la-Vanoise",
+      "website_url": "https://www.pralognan.com",
+      "status_page_url": "https://www.pralognan.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "bc6999f9bfbf693b2408c3192e343aa26f11c81e",
+      "resort_name": "Kappl",
+      "website_url": "https://www.kappl.com/",
+      "status_page_url": "https://www.kappl.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "39061a64356927c033dcfc0a90f1e2eaa8b2e03b",
+      "resort_name": "Station de ski de Prat Peyrot",
+      "website_url": "https://www.stationaltiaigoual.com/",
+      "status_page_url": "https://www.stationaltiaigoual.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ad2faceffa44fe6c1a3149d02c89759a7145af52",
+      "resort_name": "B\u00f6dele",
+      "website_url": "https://www.boedele.info/",
+      "status_page_url": "https://www.boedele.info/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "b006b322d1e68bc5d77d0758fb19d16d76e04a37",
+      "resort_name": "Brandnertal \u2013 Brand/\u200bB\u00fcrserberg",
+      "website_url": "https://www.vorarlberg-alpenregion.at/en/brandnertal/holiday-in-winter-in-brandertal.html",
+      "status_page_url": "https://www.vorarlberg-alpenregion.at/en/brandnertal/holiday-in-winter-in-brandertal.html/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "b72528d5985a996abc5f00fe007658659df1b068",
+      "resort_name": "Sonnenkopf",
+      "website_url": "https://www.sonnenkopf.com/",
+      "status_page_url": "https://www.sonnenkopf.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4d69a850bfa3eeaf928e5d154bb6768fcfbe240e",
+      "resort_name": "Gausta skisenter",
+      "website_url": "https://www.gausta.com/en-US/gausta-skisenter/",
+      "status_page_url": "https://www.gausta.com/en-US/gausta-skisenter/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9838fb2aa78f10391ff5a3bf3e85105c0f8b73e6",
+      "resort_name": "Cortina Tofane",
+      "website_url": "https://www.impianticortina.it/",
+      "status_page_url": "https://www.impianticortina.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ce17f9c0fd4234171a27e90cb4cde8ed924a1852",
+      "resort_name": "Les Mosses",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "d7474fa2698e1aa5d7c6cbb23c616767c38b6cd9",
+      "resort_name": "Piani di Bobbio - Valtorta Skiarea",
+      "website_url": "https://www.pianidibobbio.com/",
+      "status_page_url": "https://www.pianidibobbio.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "db5585d0837836efc833b11e021ea73189afae3c",
+      "resort_name": "Voss Resort Fjellheisar",
+      "website_url": "https://vossresort.no/no/vinter/",
+      "status_page_url": "https://vossresort.no/no/vinter/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "df3db8137cdf524d85aab8156c828d106fc048e9",
+      "resort_name": "Montagnes de Lans",
+      "website_url": "https://www.lansenvercors.com",
+      "status_page_url": "https://www.lansenvercors.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2f9f669fc909285e3940dfbec154b176df562767",
+      "resort_name": "Estaci\u00f3n de Esqu\u00ed y Monta\u00f1a Alto Campoo",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "99fc72000e2914274efb60d579cb7cacb1043bc3",
+      "resort_name": "Ovindoli",
+      "website_url": "https://www.ovindolimagnola.it/",
+      "status_page_url": "https://www.ovindolimagnola.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0d8095d2249278e20f76c6919b2003b51c7d71b2",
+      "resort_name": "J\u00e4rvs\u00f6Backen",
+      "website_url": "https://www.jarvsobacken.se/english-information/",
+      "status_page_url": "https://www.jarvsobacken.se/english-information/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ea3535dd4fcab1fd0bc380f0da2a793c3d1281f4",
+      "resort_name": "Wysoki Wierch",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "f511535c529ee4710b2165d57a2370731c890ca7",
+      "resort_name": "Stowe Mountain Resort",
+      "website_url": "https://www.stowe.com",
+      "status_page_url": "https://www.stowe.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8e16b156faecf9b834835c8bbaa9a25eb51cfbd1",
+      "resort_name": "Powder Mountain Ski Resort",
+      "website_url": "https://powdermountain.com/",
+      "status_page_url": "https://powdermountain.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1d39d98c17338120b4894722b13a744046a5b42b",
+      "resort_name": "Mt Brighton",
+      "website_url": "https://www.mtbrighton.com/",
+      "status_page_url": "https://www.mtbrighton.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "53c053f1d0dfaaad0e7fe16f2582bfb37f29e02c",
+      "resort_name": "Lake Louise Ski Area",
+      "website_url": "https://www.skilouise.com/",
+      "status_page_url": "https://www.skilouise.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "cc5e09c5c2c3dd0b9b8b489a396fdea9a5d0bd1b",
+      "resort_name": "Wisp Resort",
+      "website_url": "https://www.wispresort.com/",
+      "status_page_url": "https://www.wispresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6db2d5cd2692fd5b0531d19a0296e87bbadf57a6",
+      "resort_name": "Ski Brule",
+      "website_url": "https://skibrule.com/",
+      "status_page_url": "https://skibrule.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "73b0a6b0c99f30aac2afab9c3a17193a3ef2b2d6",
+      "resort_name": "Whiteface Mountain Ski Center",
+      "website_url": "https://www.whiteface.com/",
+      "status_page_url": "https://www.whiteface.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ac37d78376b2a4bf76b05a2ed197e69e70234be6",
+      "resort_name": "Sun Valley - Bald Mountain",
+      "website_url": "https://www.sunvalley.com/",
+      "status_page_url": "https://www.sunvalley.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9cf876d5cd0060b7ebadf941c9fe695ca573f254",
+      "resort_name": "Sugar Bowl Resort",
+      "website_url": "https://www.sugarbowl.com/",
+      "status_page_url": "https://www.sugarbowl.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "a128b442f4fad1ab598431ab394b274b1e57741b",
+      "resort_name": "Nashoba Valley Ski Area",
+      "website_url": "https://www.skinashoba.com/",
+      "status_page_url": "https://www.skinashoba.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "5b1ffa98c849d075c0581f57b5a4bab21b94e468",
+      "resort_name": "Buck Hill",
+      "website_url": "https://buckhill.com/",
+      "status_page_url": "https://buckhill.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "30ef4b0ce4359afbe74c85228de87f0e5fc6a057",
+      "resort_name": "Pine Knob Ski & Snowboard Resort",
+      "website_url": "https://www.skipineknob.com/",
+      "status_page_url": "https://www.skipineknob.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "acef87c69b41f035190551a44edf709749968d72",
+      "resort_name": "Mt. Hood Meadows Ski Resort",
+      "website_url": "https://www.skihood.com/",
+      "status_page_url": "https://www.skihood.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d2f756f38522c028f224157b6bc702984acaf6ea",
+      "resort_name": "Timberline Lodge Ski Area",
+      "website_url": "https://www.timberlinelodge.com/",
+      "status_page_url": "https://www.timberlinelodge.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ae6ee1b64d24f32a1a020aa4448d29b83dd1e43f",
+      "resort_name": "Banff Sunshine Village",
+      "website_url": "https://www.skibanff.com",
+      "status_page_url": "https://www.skibanff.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "50b228e8ca327700ee050f497862495943f541dc",
+      "resort_name": "Muju",
+      "website_url": "https://www.mdysresort.com/",
+      "status_page_url": "https://www.mdysresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "007cb46a0e3b4f61b720e722ef138ae446f153af",
+      "resort_name": "\u30b5\u30c3\u30dd\u30ed\u30c6\u30a4\u30cd, Sapporo Teine",
+      "website_url": "https://sapporo-teine.com/snow/",
+      "status_page_url": "https://sapporo-teine.com/snow/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "c648e066e43b77ed2b7ed924724cff40632596bb",
+      "resort_name": "\u7adc\u738b\u30b9\u30ad\u30fc\u30d1\u30fc\u30af, Ryuoo Ski Park, Ry\u016b\u014d suk\u012b p\u0101ku",
+      "website_url": "https://www.ryuoo.com/",
+      "status_page_url": "https://www.ryuoo.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f09500d7cff4036c5241afa941f84b4e17187cea",
+      "resort_name": "\u0410\u0440\u0445\u044b\u0437, Arhyz",
+      "website_url": "https://resort-arkhyz.ru/",
+      "status_page_url": "https://resort-arkhyz.ru/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ef65534c458d0296e1cbf4c2b6df85071eeac815",
+      "resort_name": "Les Pr\u00e9vondes",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "81a8f021565bdd6457901eb52d083dc38f58d2f3",
+      "resort_name": "Kope",
+      "website_url": "https://www.pohorje-slovenija.si/zimske-aktivnosti/smucanje/smucisca/ribnica-na-pohorju",
+      "status_page_url": "https://www.pohorje-slovenija.si/zimske-aktivnosti/smucanje/smucisca/ribnica-na-pohorju/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "22c54e1e92de27ad2b47090f9b33564d0cbe8edc",
+      "resort_name": "Chabanon",
+      "website_url": "https://www.chabanon-selonnet.com/ https://www.seynelesalpes.fr/",
+      "status_page_url": "https://www.chabanon-selonnet.com/ https://www.seynelesalpes.fr/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "066c4b2d821452980329ab1a2fd4aee2d6251231",
+      "resort_name": "Ordino-Arcalis",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "0ed67f04f2e5d0f8e1b8be3507c577fcfcb60215",
+      "resort_name": "Unterb\u00e4ch - Eischoll",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "45625a91e8f6714ebecb456492ca9e39b1bc677b",
+      "resort_name": "Sulden",
+      "website_url": "https://www.ortlerskiarena.com/",
+      "status_page_url": "https://www.ortlerskiarena.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "45a940355cca76e598e2a54c273e06cd0916e04f",
+      "resort_name": "Massif des Brasses",
+      "website_url": "http://www.lesbrasses.com",
+      "status_page_url": "http://www.lesbrasses.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1871bd97633b45248e93e03d11f44d94caae83fc",
+      "resort_name": "Grindelwald First",
+      "website_url": "https://www.jungfrau.ch/de-ch/grindelwaldfirst/",
+      "status_page_url": "https://www.jungfrau.ch/de-ch/grindelwaldfirst/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2774ee9df926487819e252679b539a79fd2024a0",
+      "resort_name": "Skigebiet Almenwelt Lofer",
+      "website_url": "https://www.skialm-lofer.com/",
+      "status_page_url": "https://www.skialm-lofer.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6f191d7d668cc5585e972733711d6b72ca99b5db",
+      "resort_name": "Elsigenalp",
+      "website_url": "https://elsigen-metsch.ch/",
+      "status_page_url": "https://elsigen-metsch.ch/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "76d441ab94356152a7e13a3a67001259a0d3d3c5",
+      "resort_name": "Bonneval-sur-Arc",
+      "website_url": "https://www.bonneval-sur-arc.com/",
+      "status_page_url": "https://www.bonneval-sur-arc.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8ab6f8a4372774042033a0721b21c2fbb8df2c9c",
+      "resort_name": "La Chapelle d'Abondance",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "abd8fc58a269e575731226a78d77a13b2e38a673",
+      "resort_name": "Puy-Saint-Vincent",
+      "website_url": "https://www.puysaintvincent.com/",
+      "status_page_url": "https://www.puysaintvincent.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d6582b43907eabfba13b7f54f9c96dc569d64e62",
+      "resort_name": "Vercorin",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "f306e3eef33d4e0e5625c5db98f0421fb85f7238",
+      "resort_name": "Skimore Oslo",
+      "website_url": "http://www.tryvann.no/",
+      "status_page_url": "http://www.tryvann.no/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "5b4aba23e8c29f88cd0e89e51dea075af5bc649a",
+      "resort_name": "Val Senales-Schnalstal",
+      "website_url": "https://www.schnalstal.com/",
+      "status_page_url": "https://www.schnalstal.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "35a35b53676eda31cfdee8a367bade9189289c12",
+      "resort_name": "Straja, Straja Ski Resort, Station de ski de Straja, Sta\u021biune Straja",
+      "website_url": "https://skistraja.ro/",
+      "status_page_url": "https://skistraja.ro/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d65fe4b57a5fba26b0631bd1c39af529e7d3390c",
+      "resort_name": "Brentonico",
+      "website_url": "https://www.brentonicoski.com",
+      "status_page_url": "https://www.brentonicoski.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "a137f67c4f1458c28d7610d43cb0978105955ca8",
+      "resort_name": "Kreischberg",
+      "website_url": "https://www.kreischberg.at/",
+      "status_page_url": "https://www.kreischberg.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "6be20346a227d4c6fb8896fb6076567145f70fc6",
+      "resort_name": "Jaworzyna Krynicka",
+      "website_url": "https://www.jaworzynakrynicka.pl/",
+      "status_page_url": "https://www.jaworzynakrynicka.pl/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "bb067f58567c2ad905996df86db4aa5751255bb6",
+      "resort_name": "Bia\u0142y Jar",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "dcd36cf6725c031a123b372273fbe01e28f30fd9",
+      "resort_name": "Lac Blanc",
+      "website_url": "https://www.lac-blanc.com",
+      "status_page_url": "https://www.lac-blanc.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "78366a4ff6a737d977720302395672e848bcb031",
+      "resort_name": "Pamporovo",
+      "website_url": "https://pamporovo.me/",
+      "status_page_url": "https://pamporovo.me/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "58bb6f4890e42306a044d21ad47ac0c694a2b48f",
+      "resort_name": "Rauland skisenter",
+      "website_url": "https://visitrauland.com/rauland-skisenter/",
+      "status_page_url": "https://visitrauland.com/rauland-skisenter/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2e532d4ade009c4d23c68f5b4e1abce597d5e10d",
+      "resort_name": "Kompleks Pilsko-Jontek",
+      "website_url": "https://pilsko.org/",
+      "status_page_url": "https://pilsko.org/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "b063a6fc6907012f71f581b75275c33d562695fa",
+      "resort_name": "Skigebiet Lachtal",
+      "website_url": "https://www.lachtal.at/",
+      "status_page_url": "https://www.lachtal.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0d3468fc1bb6d02623fd1ccedc273bb22f0da9cc",
+      "resort_name": "Pietkiewicz\u00f3wka",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "31746f2e6f17f4fe5156eee7e098f0ac90915d02",
+      "resort_name": "Skeikampen Alpinsenter",
+      "website_url": "https://skeikampen.no/",
+      "status_page_url": "https://skeikampen.no/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "04d3cb206736bd06d1f038d4f41581ea046d8e99",
+      "resort_name": "",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "1d00a3f356e6ee869926e23d9a9457cdc5f9eebf",
+      "resort_name": "Font d'Urle Chaud Clapier",
+      "website_url": "https://www.lesstationsdeladrome.fr/",
+      "status_page_url": "https://www.lesstationsdeladrome.fr/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "1cded5bc5f19ff069b624735188e23016d099485",
+      "resort_name": "Vassfjellet skisenter",
+      "website_url": "https://vassfjellet.no",
+      "status_page_url": "https://vassfjellet.no/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "42fc8a8b67ad76cdc75c37d3718acd7330d8818c",
+      "resort_name": "Sirdal Skisenter",
+      "website_url": "https://sirdal-skisenter.no/",
+      "status_page_url": "https://sirdal-skisenter.no/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2c7c612457941139ab26868b5439091744c58dd5",
+      "resort_name": "Hiihtokeskus Himosvuori",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "6cabfdba2cce9ad12136c554e82e32540f996477",
+      "resort_name": "Gro\u00dfeck-Speiereck",
+      "website_url": "https://www.grosseck-speiereck.at/",
+      "status_page_url": "https://www.grosseck-speiereck.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "77853f943512ce598404dac81cdba5dcdcffe64c",
+      "resort_name": "Augustusburg",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "9da14109426dd7f9d0b65e788093967a96cfb6f1",
+      "resort_name": "Pinzolo",
+      "website_url": "https://www.pinzolo.it/",
+      "status_page_url": "https://www.pinzolo.it/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "f5332cdc7d54f27d5cfeb3d3d1bb0d1f8b4b660e",
+      "resort_name": "Spieljoch - F\u00fcgen",
+      "website_url": "https://www.spieljochbahn.at/",
+      "status_page_url": "https://www.spieljochbahn.at/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "b43df338b91f2ae86e37416ddc54e1292b69f2df",
+      "resort_name": "Ramsau am Dachstein",
+      "website_url": "https://www.ramsau.com",
+      "status_page_url": "https://www.ramsau.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "acb73a5b3ed3694f1e9ac030840cd5004f65f207",
+      "resort_name": "The Lecht",
+      "website_url": "https://www.lecht.co.uk/",
+      "status_page_url": "https://www.lecht.co.uk/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2d257adb08994f5ccc194bcb1fc74c1fc832ee4a",
+      "resort_name": "Riedbergerhorn",
+      "website_url": "https://grasgehren.de/",
+      "status_page_url": "https://grasgehren.de/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "06030b24291dac728dbfaf7ac07b9570b19bee6e",
+      "resort_name": "\u0412\u043e\u043b\u0435\u043d (Volen)",
+      "website_url": "https://www.volen.ru/",
+      "status_page_url": "https://www.volen.ru/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "d9b8354ac0b5524d68a73586104438675ed241ac",
+      "resort_name": "\u041a\u043e\u043b\u0430\u0441\u043f\u043e\u0440\u0442\u043b\u0430\u043d\u0434 (Mount Aykuayvenchorr, Kolasportland, Kirovsk)",
+      "website_url": "https://ski-kolasport.narod.ru/",
+      "status_page_url": "https://ski-kolasport.narod.ru/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "162525ff9a2a65810a602b74f338303d1bb9ea38",
+      "resort_name": "Dodge Ridge Ski Area",
+      "website_url": "https://www.dodgeridge.com/site/",
+      "status_page_url": "https://www.dodgeridge.com/site/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "4650ad257e48137cc49b378e2a14b4b16244f7d0",
+      "resort_name": "Valle Hermoso",
+      "website_url": "",
+      "status_page_url": "",
+      "platform": "",
+      "confidence": 0.0,
+      "method": "no_website"
+    },
+    {
+      "resort_id": "78bac1237b378a398d712ba2cc962ddf9d1c6479",
+      "resort_name": "Bear Mountain",
+      "website_url": "https://www.bigbearmountainresort.com/",
+      "status_page_url": "https://www.bigbearmountainresort.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9e118f4eb36fb34e987c7a3ddd7f2d976b6a7443",
+      "resort_name": "China Peak Mountain Resort",
+      "website_url": "https://www.skichinapeak.com/",
+      "status_page_url": "https://www.skichinapeak.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "ce6e3ec4d3f2bbc76901192ad2e21caacf0329a5",
+      "resort_name": "Bogus Basin",
+      "website_url": "https://bogusbasin.org/",
+      "status_page_url": "https://bogusbasin.org/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "7a889ccffcd71d1bfce9d50b10fa5c34fbd873e7",
+      "resort_name": "Bromont Montagne d'Exp\u00e9rience",
+      "website_url": "https://www.bromontmontagne.com/",
+      "status_page_url": "https://www.bromontmontagne.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "9ffde4a23b867868dab1643e79329e4cd65ea098",
+      "resort_name": "Wolf Creek Ski Area",
+      "website_url": "https://www.wolfcreekski.com/",
+      "status_page_url": "https://www.wolfcreekski.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "8a12bad9ec88beeb2953c79e1018b493cec2165d",
+      "resort_name": "Sunburst Ski Area",
+      "website_url": "https://skisunburst.com/",
+      "status_page_url": "https://skisunburst.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "2eaebe856a984bba26c83260b660d7f84884f5e3",
+      "resort_name": "Silver Star Mountain Resort",
+      "website_url": "https://www.skisilverstar.com/ https://www.sovereignlake.com/",
+      "status_page_url": "https://www.skisilverstar.com/ https://www.sovereignlake.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "01b54e4e5ba0cc28ab50515e9fb34754ba3d44d1",
+      "resort_name": "Caviahue",
+      "website_url": "https://www.caviahue.com/invierno",
+      "status_page_url": "https://www.caviahue.com/invierno/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    },
+    {
+      "resort_id": "0ce6923126ae6d29e3a17b93a5962e64adc73382",
+      "resort_name": "Ski Butternut",
+      "website_url": "https://skibutternut.com/",
+      "status_page_url": "https://skibutternut.com/en/lift-status",
+      "platform": "custom",
+      "confidence": 0.3,
+      "method": "common_pattern"
+    }
+  ]
+}
