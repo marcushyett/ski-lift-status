@@ -177,12 +177,32 @@ def extract_samples_from_json(
         # If we found matches, add as sample
         if matched_terms and isinstance(obj, dict):
             match_type = "mixed" if len(match_types) > 1 else match_types[0]
+
+            # Calculate specificity score (prefer smaller, more specific objects)
+            # Higher score = more specific = better sample
+            specificity = 0.0
+
+            # Prefer objects with @attributes (XML-to-JSON structure)
+            if "@attributes" in obj:
+                specificity += 2.0
+
+            # Prefer objects with fewer keys (more specific)
+            num_keys = len(obj)
+            if num_keys <= 5:
+                specificity += 1.0
+            elif num_keys <= 10:
+                specificity += 0.5
+
+            # Prefer deeper paths
+            path_depth = path.count('.') + path.count('[')
+            specificity += min(path_depth * 0.1, 1.0)
+
             samples.append(SampleObject(
                 content=obj,
                 path=path,
                 match_type=match_type,
                 matched_terms=list(set(matched_terms))[:10],
-                confidence=min(1.0, len(matched_terms) * 0.2),
+                confidence=min(1.0, len(matched_terms) * 0.2) + specificity,
             ))
 
         # Recurse into children
@@ -194,7 +214,10 @@ def extract_samples_from_json(
                 traverse(item, f"{path}[{i}]")
 
     traverse(data, "$")
-    return samples
+
+    # Sort by confidence (higher = more specific) and return top samples
+    samples.sort(key=lambda s: s.confidence, reverse=True)
+    return samples[:max_samples]
 
 
 class HTMLSampleParser(HTMLParser):

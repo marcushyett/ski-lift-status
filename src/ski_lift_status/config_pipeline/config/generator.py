@@ -144,28 +144,29 @@ You will be given analysis results from static tools that have identified:
 
 Your task is to generate a JSON config that can extract lift and run status data.
 
+CRITICAL: The configs will be executed with simple HTTP requests only (no browser rendering).
+- For JSON data: Use json_path extraction
+- For embedded data (URLs starting with "embedded://"): The content is already parsed JSON, use json_path
+- JavaScript extraction is executed with Node.js and receives the content as a string
+
 The config schema supports these extraction methods:
-- json_path: For JSON APIs, use JSONPath-like selectors ($.field.subfield, $.array[*].field)
-- css_selector: For HTML, use CSS selectors
-- xpath: For HTML/XML, use XPath expressions
-- javascript: For complex cases, generate safe extraction code
+- json_path: For JSON APIs and embedded JSON data. Use JSONPath selectors:
+  - $.field.subfield for nested objects
+  - $.array[*] to iterate over arrays
+  - @attributes.field for XML-style attributes in JSON
+- css_selector: For HTML pages (but remember: no browser rendering, so dynamic content won't work)
+- javascript: For complex parsing. The function receives content string and should return [{name, status}]
 
-IMPORTANT rules for JavaScript extraction code:
-1. DO NOT use fetch, XMLHttpRequest, or any network calls
-2. DO NOT use eval, Function constructor, require, or import
-3. DO NOT access process, fs, or any Node.js modules
-4. The code receives the response content as a string parameter
-5. Return an array of objects with {name, status, id?, type?} fields
-6. Keep the code simple and focused on parsing/transforming data
+IMPORTANT for embedded:// URLs (e.g., embedded://__NUXT__):
+- These contain already-parsed JSON from framework state (Nuxt.js, Next.js)
+- Use json_path extraction, NOT JavaScript
+- The data structure is already JSON, not raw HTML
 
-Status mapping should normalize to these values:
+Status mapping should normalize to:
 - Lifts: "open", "closed", "hold", "wind_hold", "scheduled", "unknown"
-- Runs: "open", "closed", "groomed", "moguls", "icy", "unknown"
+- Common source values: "O"/"A" = open, "F" = closed, "P" = hold
 
-Prefer JSON APIs over HTML scraping when available.
-Prefer simple selectors over complex JavaScript.
-
-Return a valid JSON config following this exact schema:
+Return a valid JSON config:
 {
     "resort_id": "...",
     "resort_name": "...",
@@ -176,25 +177,21 @@ Return a valid JSON config following this exact schema:
             "method": "GET",
             "headers": {},
             "content_type": "json" | "html",
-            "data_types": ["lift_static", "lift_dynamic", "run_static", "run_dynamic"],
+            "data_types": ["lift_dynamic"],
             "extraction_method": "json_path" | "css_selector" | "javascript",
-            "list_selector": "$.path.to.array",
-            "name_selector": "name_field",
-            "status_selector": "status_field",
-            "type_selector": "type_field",
-            "id_selector": "id_field",
-            "status_mapping": {"source_value": "normalized_value"},
+            "list_selector": "$.state.data.lifts[*]",
+            "name_selector": "@attributes.nom",
+            "status_selector": "@attributes.etat",
+            "type_selector": "@attributes.type",
+            "id_selector": null,
+            "status_mapping": {"O": "open", "F": "closed", "A": "open", "P": "hold"},
             "extraction_code": null
         }
-    ],
-    "lift_foreign_key": null,
-    "run_foreign_key": null,
-    "lift_mappings": [],
-    "run_mappings": []
+    ]
 }
 
-Do NOT include the mappings in your response - those will be added separately.
-Focus on getting the extraction selectors and status mapping correct."""
+Do NOT include lift_mappings or run_mappings - those will be added separately.
+Focus on getting the extraction selectors and status mapping correct based on the samples provided."""
 
 
 CONFIG_FIX_SYSTEM_PROMPT = """You are debugging a ski resort status extraction config that failed.
@@ -339,6 +336,8 @@ class ConfigGenerator:
         result = GenerationResult(success=False)
 
         # Build a compact context for the LLM (reduce token usage)
+        import re
+
         compact_context = {
             "resort_id": context.resort_id,
             "resort_name": context.resort_name,
@@ -349,17 +348,37 @@ class ConfigGenerator:
             # Only include schema structure, not full data
             "lift_schema_keys": list(context.lift_dynamic_schema.get("root", {}).get("keys", [])[:15]) if context.lift_dynamic_schema else [],
             "run_schema_keys": list(context.run_dynamic_schema.get("root", {}).get("keys", [])[:15]) if context.run_dynamic_schema else [],
-            # Limit samples to 3 and truncate each
-            "lift_samples": [
-                {k: str(v)[:100] for k, v in s.items()}
-                for s in context.lift_samples[:3]
-            ],
-            "run_samples": [
-                {k: str(v)[:100] for k, v in s.items()}
-                for s in context.run_samples[:3]
-            ],
             "lift_foreign_key": context.lift_foreign_key,
         }
+
+        # Process samples to include path info and actual content
+        lift_samples_with_paths = []
+        for s in context.lift_samples[:3]:
+            sample = {
+                "path": s.get("path", "unknown"),
+                "content": s.get("content", s)
+            }
+            lift_samples_with_paths.append(sample)
+
+        # Derive suggested list_selector from sample paths
+        lift_list_selector = None
+        if lift_samples_with_paths:
+            sample_path = lift_samples_with_paths[0].get("path", "")
+            # Convert indexed path to wildcard (e.g., $.state.data[0].lifts[0] -> $.state.data[*].lifts[*])
+            lift_list_selector = re.sub(r'\[\d+\]', '[*]', sample_path)
+
+        compact_context["lift_samples"] = lift_samples_with_paths
+        compact_context["lift_list_selector_hint"] = lift_list_selector
+
+        run_samples_with_paths = []
+        for s in context.run_samples[:3]:
+            sample = {
+                "path": s.get("path", "unknown"),
+                "content": s.get("content", s)
+            }
+            run_samples_with_paths.append(sample)
+
+        compact_context["run_samples"] = run_samples_with_paths
 
         # Build user prompt with compact context
         html_snippets_text = ""
@@ -371,6 +390,11 @@ class ConfigGenerator:
                 html_snippets_text += snippet.get('html', '')[:800]
                 html_snippets_text += "\n"
 
+        # Build selector hints text
+        selector_hint = ""
+        if compact_context.get('lift_list_selector_hint'):
+            selector_hint = f"\nSuggested list_selector for lifts: {compact_context['lift_list_selector_hint']}"
+
         user_prompt = f"""Generate an extraction config for this ski resort:
 
 Resort: {context.resort_name} (ID: {context.resort_id})
@@ -379,19 +403,21 @@ Best lift data URL: {compact_context['lift_url']}
 Best run data URL: {compact_context['run_url']}
 Lift coverage: {compact_context['lift_coverage']:.1f}%
 Run coverage: {compact_context['run_coverage']:.1f}%
+{selector_hint}
 
-Lift data schema keys: {compact_context['lift_schema_keys']}
-Run data schema keys: {compact_context['run_schema_keys']}
-
-Sample lift objects:
-{json.dumps(compact_context['lift_samples'], indent=2)}
+Sample lift objects (with their JSON paths):
+{json.dumps(compact_context['lift_samples'], indent=2)[:1500]}
 
 Sample run objects:
-{json.dumps(compact_context['run_samples'], indent=2)}
+{json.dumps(compact_context['run_samples'], indent=2)[:500]}
 
 Foreign key field: {compact_context['lift_foreign_key']}
 {html_snippets_text}
-IMPORTANT: For HTML content, use css_selector extraction method. The status text (ouvert/fermé) is typically inside a nested element.
+IMPORTANT for JSON data (embedded:// URLs or API endpoints):
+- Use json_path extraction method
+- The list_selector should use [*] wildcards to match all items
+- Look at the sample paths and use those as the list_selector (with [*] instead of [0])
+- For @attributes structure: name_selector="@attributes.nom", status_selector="@attributes.etat"
 
 Please generate a complete config that will extract lift and run status data.
 Return valid JSON only."""

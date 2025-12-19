@@ -225,19 +225,93 @@ def get_xhr_fetcher_config() -> tuple[str | None, str | None]:
     return None, None
 
 
+def _extract_nuxt_data(html: str) -> str | None:
+    """Extract and evaluate __NUXT__ data from Nuxt.js pages.
+
+    Nuxt.js stores state in a self-executing function that returns data.
+    We need to execute this with Node.js to get the actual JSON.
+    """
+    import subprocess
+    import tempfile
+    import os
+    import json
+
+    # Find the __NUXT__ script
+    scripts = re.findall(r'<script[^>]*>(.*?)</script>', html, re.DOTALL)
+    nuxt_script = None
+    for script in scripts:
+        if 'window.__NUXT__' in script or '__NUXT__' in script:
+            nuxt_script = script.strip()
+            break
+
+    if not nuxt_script:
+        return None
+
+    # Build Node.js script to evaluate and extract the data
+    # We need to create a 'window' object since Node.js doesn't have one
+    node_script = f'''
+// Create window object for browser-style code
+const window = {{}};
+
+try {{
+    // Evaluate the Nuxt script
+    {nuxt_script}
+
+    // Get the result and convert to JSON
+    const data = window.__NUXT__;
+    if (data) {{
+        console.log(JSON.stringify(data));
+    }} else {{
+        console.log('null');
+    }}
+}} catch (err) {{
+    console.error('Error:', err.message);
+    console.log('null');
+}}
+'''
+
+    try:
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.js', delete=False) as f:
+            f.write(node_script)
+            script_path = f.name
+
+        try:
+            result = subprocess.run(
+                ['node', script_path],
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
+            if result.stdout.strip() and result.stdout.strip() != 'null':
+                # Validate it's valid JSON
+                json.loads(result.stdout.strip())
+                return result.stdout.strip()
+        finally:
+            os.unlink(script_path)
+
+    except (subprocess.TimeoutExpired, json.JSONDecodeError, FileNotFoundError):
+        pass
+    except Exception:
+        pass
+
+    return None
+
+
 def _extract_embedded_json(html: str) -> list[tuple[str, str]]:
     """Extract JSON data embedded in script tags."""
     results = []
+
+    # First try to extract __NUXT__ data (Nuxt.js sites)
+    nuxt_data = _extract_nuxt_data(html)
+    if nuxt_data:
+        results.append(("__NUXT__", nuxt_data))
 
     # Pattern for script tags with JSON content
     script_patterns = [
         # JSON-LD
         r'<script[^>]*type\s*=\s*["\']application/(?:ld\+)?json["\'][^>]*>(.*?)</script>',
-        # Next.js/React data
+        # Next.js data (different from Nuxt)
         r'<script[^>]*id\s*=\s*["\']__NEXT_DATA__["\'][^>]*>(.*?)</script>',
-        r'<script[^>]*id\s*=\s*["\']__NUXT[^"\']*["\'][^>]*>(.*?)</script>',
-        # Generic JSON in script tags (careful with this one)
-        r'<script[^>]*>\s*(?:window\.|var\s+)?\w+\s*=\s*(\{[^<]{100,}?\});?\s*</script>',
     ]
 
     for i, pattern in enumerate(script_patterns):

@@ -127,6 +127,7 @@ def _extract_json_path(data: Any, path: str) -> Any:
     - $.field.subfield
     - $.array[0]
     - $.array[*].field (returns list)
+    - $.array[*].nested[*] (returns flattened list)
     """
     if not path or path == "$":
         return data
@@ -137,6 +138,7 @@ def _extract_json_path(data: Any, path: str) -> Any:
     elif path.startswith("$"):
         path = path[1:]
 
+    # Parse path into parts
     parts = []
     current = ""
     in_bracket = False
@@ -162,35 +164,44 @@ def _extract_json_path(data: Any, path: str) -> Any:
     if current:
         parts.append(current)
 
-    result = data
-    for part in parts:
-        if result is None:
+    def _extract_recursive(data: Any, parts: list[str]) -> Any:
+        """Recursively extract from data following path parts."""
+        if not parts:
+            return data
+        if data is None:
             return None
+
+        part = parts[0]
+        remaining = parts[1:]
 
         if part.startswith("[") and part.endswith("]"):
             idx_str = part[1:-1]
             if idx_str == "*":
-                # Wildcard - apply rest of path to all items
-                if isinstance(result, list):
-                    remaining_path = ".".join(parts[parts.index(part) + 1:])
-                    return [_extract_json_path(item, remaining_path) for item in result]
+                # Wildcard - apply rest of path to all items and flatten
+                if isinstance(data, list):
+                    results = []
+                    for item in data:
+                        extracted = _extract_recursive(item, remaining)
+                        if isinstance(extracted, list):
+                            results.extend(extracted)
+                        elif extracted is not None:
+                            results.append(extracted)
+                    return results
                 return None
             else:
                 try:
                     idx = int(idx_str)
-                    if isinstance(result, list) and 0 <= idx < len(result):
-                        result = result[idx]
-                    else:
-                        return None
+                    if isinstance(data, list) and 0 <= idx < len(data):
+                        return _extract_recursive(data[idx], remaining)
+                    return None
                 except ValueError:
                     return None
         else:
-            if isinstance(result, dict):
-                result = result.get(part)
-            else:
-                return None
+            if isinstance(data, dict):
+                return _extract_recursive(data.get(part), remaining)
+            return None
 
-    return result
+    return _extract_recursive(data, parts)
 
 
 def _extract_css_selector(html: str, selector: str) -> list[Any]:
@@ -380,125 +391,129 @@ def _extract_from_html_source(
     return entities
 
 
-def _safe_execute_javascript(code: str, content: str, status_mapping: dict[str, str]) -> list[dict] | None:
-    """Execute JavaScript extraction code in a restricted environment.
+def _execute_javascript(code: str, content: str) -> list[dict] | None:
+    """Execute JavaScript extraction code using Node.js.
 
-    SECURITY: This uses a whitelist approach - only specific operations allowed.
-
-    Instead of actually executing JavaScript, we analyze the code to understand
-    the extraction pattern and implement it in Python with BeautifulSoup.
-
-    The code must define a function called `extract` that takes content string
+    The extraction code should be a function that takes HTML content as a string
     and returns an array of objects with {name, status, id?, type?} fields.
-    """
-    # Check for dangerous patterns
-    dangerous = [
-        "eval(", "Function(", "require(", "import(",
-        "process", "child_process", "fs.", "http.",
-        "fetch(", "XMLHttpRequest", "WebSocket",
-        "setTimeout", "setInterval", "__proto__",
-        "constructor", "prototype",
-    ]
 
+    Args:
+        code: JavaScript extraction function code
+        content: HTML/JSON content to extract from
+
+    Returns:
+        List of extracted entities or None if execution failed
+    """
+    import subprocess
+    import tempfile
+    import os
+
+    # Check for obviously dangerous patterns (defense in depth)
+    dangerous = [
+        "require('child_process')", "require('fs')", "require('net')",
+        "require('http')", "require('https')", "process.env",
+        "process.exit", "process.kill",
+    ]
     for pattern in dangerous:
         if pattern in code:
             return None
 
+    # Build the Node.js script that will execute the extraction
+    # We use jsdom to provide DOM APIs for HTML parsing
+    wrapper_script = '''
+const { JSDOM } = require('jsdom');
+
+// Read content from stdin
+let content = '';
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', chunk => content += chunk);
+process.stdin.on('end', () => {
+    try {
+        // Create a DOM from the content
+        const dom = new JSDOM(content);
+        const document = dom.window.document;
+        const DOMParser = dom.window.DOMParser;
+
+        // The extraction function
+        const extractFn = EXTRACTION_CODE;
+
+        // Execute and get results
+        const results = extractFn(content);
+
+        // Output as JSON
+        console.log(JSON.stringify(results || []));
+    } catch (err) {
+        console.error('Extraction error:', err.message);
+        console.log('[]');
+    }
+});
+'''.replace('EXTRACTION_CODE', code)
+
     try:
-        soup = BeautifulSoup(content, "html.parser")
-        results = []
+        # Write the script to a temp file
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.js', delete=False) as f:
+            f.write(wrapper_script)
+            script_path = f.name
 
-        # Pattern 1: impianto-status pattern (cervinia.it style)
-        # JavaScript code: querySelectorAll("span[class*='impianto-status']")
-        if "impianto-status" in code:
-            status_elements = soup.select("span[class*='impianto-status']")
-            for status_el in status_elements:
-                # Get parent container
-                parent = status_el.find_parent()
-                if not parent:
-                    continue
+        try:
+            # Execute with Node.js
+            result = subprocess.run(
+                ['node', script_path],
+                input=content,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                cwd=tempfile.gettempdir(),
+            )
 
-                # Look for name in sibling or parent's children
-                name = None
-                # Try siblings first
-                for sibling in status_el.find_previous_siblings("span"):
-                    text = sibling.get_text(strip=True)
-                    if text and len(text) > 2:
-                        name = text
-                        break
+            if result.returncode != 0:
+                # Try without jsdom for simpler JSON-based extraction
+                simple_script = '''
+let content = '';
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', chunk => content += chunk);
+process.stdin.on('end', () => {
+    try {
+        const extractFn = EXTRACTION_CODE;
+        const results = extractFn(content);
+        console.log(JSON.stringify(results || []));
+    } catch (err) {
+        console.error('Extraction error:', err.message);
+        console.log('[]');
+    }
+});
+'''.replace('EXTRACTION_CODE', code)
 
-                # If not found, look in parent
-                if not name and parent:
-                    for child in parent.find_all("span"):
-                        if child != status_el:
-                            text = child.get_text(strip=True)
-                            if text and len(text) > 2:
-                                name = text
-                                break
+                with tempfile.NamedTemporaryFile(mode='w', suffix='.js', delete=False) as f2:
+                    f2.write(simple_script)
+                    simple_script_path = f2.name
 
-                # Extract status from class
-                classes = " ".join(status_el.get("class", []))
-                status = "unknown"
-                if "status-F" in classes:
-                    status = status_mapping.get("F", "closed")
-                elif "status-A" in classes or "status-O" in classes:
-                    status = status_mapping.get("A", status_mapping.get("O", "open"))
-                elif "status-P" in classes:
-                    status = status_mapping.get("P", "hold")
+                try:
+                    result = subprocess.run(
+                        ['node', simple_script_path],
+                        input=content,
+                        capture_output=True,
+                        text=True,
+                        timeout=30,
+                    )
+                finally:
+                    os.unlink(simple_script_path)
 
-                if name:
-                    results.append({"name": name, "status": status})
+            # Parse the JSON output
+            if result.stdout.strip():
+                return json.loads(result.stdout.strip())
+            return None
 
-            if results:
-                return results
+        finally:
+            os.unlink(script_path)
 
-        # Pattern 2: querySelectorAll with generic class pattern
-        # Extract selector from code like querySelectorAll("selector")
-        selector_match = re.search(r'querySelectorAll\s*\(\s*["\']([^"\']+)["\']', code)
-        if selector_match:
-            selector = selector_match.group(1)
-            elements = soup.select(selector)
-            for el in elements:
-                # Try to extract name and status
-                name = None
-                status = "unknown"
-
-                # Look for name in text content or nested elements
-                text_content = el.get_text(strip=True)
-                if text_content:
-                    # Name might be the first meaningful text
-                    parts = [p.strip() for p in text_content.split() if len(p.strip()) > 2]
-                    if parts:
-                        name = " ".join(parts[:5])  # Take first few words as name
-
-                # Status from class
-                classes = " ".join(el.get("class", []))
-                if any(x in classes.lower() for x in ["status-f", "closed", "chiuso", "ferme"]):
-                    status = "closed"
-                elif any(x in classes.lower() for x in ["status-a", "status-o", "open", "aperto", "ouvert"]):
-                    status = "open"
-
-                if name and len(name) > 2:
-                    results.append({"name": name, "status": status})
-
-            if results:
-                return results
-
-        # Pattern 3: JSON.parse in code - try to parse JSON
-        if "JSON.parse" in code:
-            try:
-                data = json.loads(content)
-                if isinstance(data, list):
-                    return data
-                if isinstance(data, dict):
-                    for key, value in data.items():
-                        if isinstance(value, list) and len(value) > 0:
-                            return value
-            except json.JSONDecodeError:
-                pass
-
+    except subprocess.TimeoutExpired:
         return None
-
+    except json.JSONDecodeError:
+        return None
+    except FileNotFoundError:
+        # Node.js not installed, fall back to None
+        return None
     except Exception:
         return None
 
@@ -581,7 +596,7 @@ class ConfigRunner:
                     entities = _extract_from_html_source(content, source, entity_type)
                 elif source.extraction_method == ExtractionMethod.JAVASCRIPT:
                     if source.extraction_code:
-                        raw_data = _safe_execute_javascript(source.extraction_code, content, source.status_mapping)
+                        raw_data = _execute_javascript(source.extraction_code, content)
                         if raw_data:
                             entities = [
                                 ExtractedEntity(
