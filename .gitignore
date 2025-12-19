@@ -57,3 +57,4 @@ debug/
 # Deep Agent work directory
 .deep_agent_work/
 
+node_modules/
