@@ -34,6 +34,9 @@ class SkiplanLift:
     status: str | None
     lift_type: str | None
     sector: str | None = None
+    # Additional fields
+    opening_time: str | None = None
+    closing_time: str | None = None
 
 
 @dataclass
@@ -44,6 +47,9 @@ class SkiplanTrail:
     status: str | None
     difficulty: str | None
     sector: str | None = None
+    # Additional fields
+    opening_time: str | None = None
+    closing_time: str | None = None
 
 
 @dataclass
@@ -267,6 +273,41 @@ def _extract_name_from_marker(marker: Tag) -> str | None:
     return name if name else None
 
 
+def _extract_opening_times_from_marker(marker: Tag) -> tuple[str | None, str | None]:
+    """Extract opening and closing times from a marker element.
+
+    The times are in .marker-content, in a .marker-title div with a clock icon.
+    Format: "HH:MM - HH:MM"
+
+    Returns:
+        Tuple of (opening_time, closing_time) or (None, None) if not found
+    """
+    content = marker.select_one(".marker-content")
+    if not content:
+        return None, None
+
+    # Find all marker-title divs in content
+    for title_div in content.select(".marker-title"):
+        if not isinstance(title_div, Tag):
+            continue
+
+        # Check if this has a clock icon
+        img = title_div.select_one("img")
+        if img:
+            src = img.get("src", "")
+            if isinstance(src, list):
+                src = src[0] if src else ""
+            if "clock" in str(src).lower():
+                # This is the time div - extract the text
+                text = title_div.get_text(strip=True)
+                # Parse format like "09:00 - 16:30"
+                time_match = re.search(r'(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})', text)
+                if time_match:
+                    return time_match.group(1), time_match.group(2)
+
+    return None, None
+
+
 def _parse_ouvertures_html(html: str) -> tuple[list[SkiplanLift], list[SkiplanTrail]]:
     """Parse the getOuvertures.php HTML response."""
     soup = BeautifulSoup(html, "lxml")
@@ -287,6 +328,7 @@ def _parse_ouvertures_html(html: str) -> tuple[list[SkiplanLift], list[SkiplanTr
 
         status = _extract_status_from_marker(marker)
         item_type, type_info = _extract_type_from_icon(marker)
+        opening_time, closing_time = _extract_opening_times_from_marker(marker)
 
         if item_type == "lift":
             lifts.append(SkiplanLift(
@@ -294,6 +336,8 @@ def _parse_ouvertures_html(html: str) -> tuple[list[SkiplanLift], list[SkiplanTr
                 status=status,
                 lift_type=type_info,
                 sector=None,
+                opening_time=opening_time,
+                closing_time=closing_time,
             ))
         elif item_type == "trail":
             trails.append(SkiplanTrail(
@@ -301,6 +345,8 @@ def _parse_ouvertures_html(html: str) -> tuple[list[SkiplanLift], list[SkiplanTr
                 status=status,
                 difficulty=type_info,
                 sector=None,
+                opening_time=opening_time,
+                closing_time=closing_time,
             ))
         else:
             # Unknown type - try to guess from name
@@ -311,6 +357,8 @@ def _parse_ouvertures_html(html: str) -> tuple[list[SkiplanLift], list[SkiplanTr
                     status=status,
                     lift_type=None,
                     sector=None,
+                    opening_time=opening_time,
+                    closing_time=closing_time,
                 ))
             else:
                 # Default to trail
@@ -319,6 +367,8 @@ def _parse_ouvertures_html(html: str) -> tuple[list[SkiplanLift], list[SkiplanTr
                     status=status,
                     difficulty=None,
                     sector=None,
+                    opening_time=opening_time,
+                    closing_time=closing_time,
                 ))
 
     # Deduplicate by name

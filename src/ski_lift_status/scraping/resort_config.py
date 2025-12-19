@@ -74,6 +74,77 @@ RESORT_CONFIGS: dict[str, ResortConfig] = {
             "resort_slug": "paradiski_hiver",
         },
     ),
+
+    # Zermatt-Cervinia - Nuxt.js platform
+    "438e8330317f2f5a597b60acb0c0a11901b9329f": ResortConfig(
+        resort_id="438e8330317f2f5a597b60acb0c0a11901b9329f",
+        resort_name="Zermatt-Cervinia",
+        platform="nuxtjs",
+        api_endpoints=[
+            "https://www.cervinia.it/en/impianti",
+        ],
+        platform_config={
+            "page_url": "https://www.cervinia.it/en/impianti",
+        },
+    ),
+
+    # Chamonix (Brévent/Flégère) - Skiplan platform
+    # Discovered from: https://www.seechamonix.com/lifts/status -> iframe to live.skiplan.com
+    "8432e3c536835ef8a690f63b62060a7993bfd964": ResortConfig(
+        resort_id="8432e3c536835ef8a690f63b62060a7993bfd964",
+        resort_name="Chamonix (Brévent/Flégère)",
+        platform="skiplan",
+        api_endpoints=[
+            "https://live.skiplan.com/moduleweb/2.0/php/getOuvertures.php?resort=chamonix_hiver_general",
+        ],
+        platform_config={
+            "resort_slug": "chamonix_hiver_general",
+        },
+    ),
+
+    # Breckenridge - Vail Resorts platform
+    # TerrainStatusFeed JavaScript object embedded in HTML
+    # Uses Liftie user agent (whitelisted by Vail/Akamai)
+    "c329b1fe669c197d615896dfd4e38d4bb039e30c": ResortConfig(
+        resort_id="c329b1fe669c197d615896dfd4e38d4bb039e30c",
+        resort_name="Breckenridge",
+        platform="vail",
+        api_endpoints=[
+            "https://www.breckenridge.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+        ],
+        platform_config={
+            "page_url": "https://www.breckenridge.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+        },
+    ),
+
+    # Les Gets-Morzine - Intermaps platform (Portes du Soleil)
+    # Discovered from: https://www.lesgets.com/en/.../live-info-slopes/ -> intermaps.com
+    "cafb6b6d5f25860a682a8b6d67efe689218618a5": ResortConfig(
+        resort_id="cafb6b6d5f25860a682a8b6d67efe689218618a5",
+        resort_name="Les Gets-Morzine (Portes du Soleil)",
+        platform="intermaps",
+        api_endpoints=[
+            "https://winter.intermaps.com/portes_du_soleil/data?lang=en",
+        ],
+        platform_config={
+            "resort_slug": "portes_du_soleil",
+        },
+    ),
+
+    # Cortina d'Ampezzo - Dolomiti Superski platform
+    # Server-rendered HTML tables at dolomitisuperski.com
+    "9a8be208c4f1832db8bf13c7102e2dcc3eef0a84": ResortConfig(
+        resort_id="9a8be208c4f1832db8bf13c7102e2dcc3eef0a84",
+        resort_name="Cortina d'Ampezzo",
+        platform="dolomitisuperski",
+        api_endpoints=[
+            "https://www.dolomitisuperski.com/en/live-info/lifts/cortina-d-ampezzo",
+        ],
+        platform_config={
+            "resort_slug": "cortina-d-ampezzo",
+            "lang": "en",
+        },
+    ),
 }
 
 
