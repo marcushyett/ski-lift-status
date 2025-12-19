@@ -104,16 +104,16 @@ RESORT_CONFIGS: dict[str, ResortConfig] = {
 
     # Breckenridge - Vail Resorts platform
     # TerrainStatusFeed JavaScript object embedded in HTML
-    # Note: Vail/Akamai may block certain IPs (cloud, CI environments)
+    # Uses Liftie user agent (whitelisted by Vail/Akamai)
     "c329b1fe669c197d615896dfd4e38d4bb039e30c": ResortConfig(
         resort_id="c329b1fe669c197d615896dfd4e38d4bb039e30c",
         resort_name="Breckenridge",
         platform="vail",
         api_endpoints=[
-            "https://www.breckenridge.com/terrain-and-lift-status",
+            "https://www.breckenridge.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
         ],
         platform_config={
-            "page_url": "https://www.breckenridge.com/terrain-and-lift-status",
+            "page_url": "https://www.breckenridge.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
         },
     ),
 

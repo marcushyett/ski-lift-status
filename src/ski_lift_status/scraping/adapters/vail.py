@@ -263,11 +263,12 @@ async def _fetch_with_curl(url: str) -> str | None:
     """
     log = logger.bind(adapter="vail")
 
+    # Use Liftie's user agent - Vail/Akamai whitelists known bots
+    # See: https://github.com/pirxpilot/liftie
     cmd = [
         "curl", "-s", "-L",
-        "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "-H", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "-H", "Accept-Language: en-US,en;q=0.9",
+        "-A", "Mozilla/5.0 (compatible; Liftie/1.0; +https://liftie.info)",
+        "-H", "Accept: */*",
         url,
     ]
 
