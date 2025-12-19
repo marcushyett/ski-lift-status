@@ -23,6 +23,7 @@ from .runner import (
     test_config_coverage,
 )
 from .generator import (
+    AnalysisContext,
     ConfigGenerator,
     GenerationResult,
     generate_config,
@@ -43,6 +44,7 @@ __all__ = [
     "run_config",
     "test_config_coverage",
     # Generator
+    "AnalysisContext",
     "ConfigGenerator",
     "GenerationResult",
     "generate_config",

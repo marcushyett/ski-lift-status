@@ -575,15 +575,15 @@ class ConfigPipelineAgent:
         final_state = await self.app.ainvoke(initial_state)
 
         # Build result
-        test_result = final_state.get("test_result", {})
+        test_result = final_state.get("test_result") or {}
 
         return PipelineResult(
             resort_id=resort_id,
             resort_name=final_state.get("resort_name", ""),
             success=final_state.get("config") is not None and final_state.get("is_complete", False),
             config=final_state.get("config"),
-            lift_coverage=test_result.get("lift_coverage_percent", 0),
-            run_coverage=test_result.get("run_coverage_percent", 0),
+            lift_coverage=test_result.get("lift_coverage_percent", 0) if test_result else 0,
+            run_coverage=test_result.get("run_coverage_percent", 0) if test_result else 0,
             errors=final_state.get("errors", []),
             debug_info={
                 "attempts": final_state.get("attempt", 0),

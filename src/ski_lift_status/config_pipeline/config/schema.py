@@ -182,12 +182,17 @@ class ConfigSchema:
                 extraction_code=s.get("extraction_code"),
             ))
 
-        lift_mappings = [
-            NameMapping(**m) for m in data.get("lift_mappings", [])
-        ]
-        run_mappings = [
-            NameMapping(**m) for m in data.get("run_mappings", [])
-        ]
+        def parse_mapping(m: dict) -> NameMapping:
+            """Parse a mapping dict handling different field names."""
+            return NameMapping(
+                source_name=m.get("source_name") or m.get("online_name", ""),
+                source_id=m.get("source_id"),
+                openskimap_id=m.get("openskimap_id", ""),
+                openskimap_name=m.get("openskimap_name", ""),
+            )
+
+        lift_mappings = [parse_mapping(m) for m in data.get("lift_mappings", [])]
+        run_mappings = [parse_mapping(m) for m in data.get("run_mappings", [])]
 
         return cls(
             resort_id=data.get("resort_id", ""),

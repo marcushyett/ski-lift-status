@@ -9,12 +9,14 @@ from .lift_matcher import (
     LiftMatchResult,
     find_lift_names_in_content,
     analyze_resources_for_lifts,
+    load_lifts_for_resort,
 )
 from .run_matcher import (
     RunMatch,
     RunMatchResult,
     find_run_names_in_content,
     analyze_resources_for_runs,
+    load_runs_for_resort,
 )
 from .status_finder import (
     StatusMatch,
@@ -58,11 +60,13 @@ __all__ = [
     "LiftMatchResult",
     "find_lift_names_in_content",
     "analyze_resources_for_lifts",
+    "load_lifts_for_resort",
     # Run matching
     "RunMatch",
     "RunMatchResult",
     "find_run_names_in_content",
     "analyze_resources_for_runs",
+    "load_runs_for_resort",
     # Status finding
     "StatusMatch",
     "StatusFinderResult",

@@ -12,8 +12,8 @@ from dataclasses import dataclass, field
 from typing import Any
 from datetime import datetime
 
-from openai import AsyncOpenAI
 import os
+import httpx
 
 from .schema import (
     ConfigSchema,
@@ -183,52 +183,55 @@ When fixing JavaScript extraction code:
 Return the complete fixed config as valid JSON."""
 
 
-def _get_openai_client() -> AsyncOpenAI:
-    """Get OpenAI client."""
-    api_key = os.environ.get("OPENAI_API_KEY")
-    if not api_key:
-        raise ValueError("OPENAI_API_KEY environment variable not set")
-    return AsyncOpenAI(api_key=api_key)
-
-
 async def _call_codex(
     system_prompt: str,
     user_prompt: str,
     temperature: float = 0.2,
 ) -> str | None:
-    """Call GPT-5.1-Codex-Max for code/config generation."""
-    client = _get_openai_client()
+    """Call LLM for config generation using OpenAI API via httpx."""
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        print("OPENAI_API_KEY environment variable not set")
+        return None
 
-    try:
-        response = await client.chat.completions.create(
-            model="gpt-5.1-codex-max",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
-            temperature=temperature,
-            max_tokens=8000,
-            response_format={"type": "json_object"},
-        )
+    # Use gpt-4o as primary model (best for complex code generation)
+    # Falls back to gpt-4o-mini if needed
+    models_to_try = ["gpt-4o", "gpt-4o-mini"]
 
-        return response.choices[0].message.content
-
-    except Exception as e:
-        # Fall back to gpt-4o-mini if codex not available
+    for model in models_to_try:
         try:
-            response = await client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                ],
-                temperature=temperature,
-                max_tokens=8000,
-                response_format={"type": "json_object"},
-            )
-            return response.choices[0].message.content
-        except Exception as e2:
-            return None
+            async with httpx.AsyncClient(timeout=120.0, verify=False) as client:
+                response = await client.post(
+                    "https://api.openai.com/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    json={
+                        "model": model,
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt},
+                        ],
+                        "temperature": temperature,
+                        "max_tokens": 8000,
+                        "response_format": {"type": "json_object"},
+                    },
+                )
+
+                if response.status_code == 200:
+                    result = response.json()
+                    return result["choices"][0]["message"]["content"]
+                else:
+                    print(f"Model {model} returned status {response.status_code}: {response.text[:200]}")
+                    continue
+
+        except Exception as e:
+            # Log error and try next model
+            print(f"Model {model} failed: {e}")
+            continue
+
+    return None
 
 
 def _parse_config_response(response: str, context: AnalysisContext) -> ConfigSchema | None:

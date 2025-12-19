@@ -166,6 +166,7 @@ def map_names_to_openskimap(
         entity_type=entity_type,
         total_online_names=len(online_names),
         total_reference_entities=len(reference_entities),
+        mapped_count=0,
     )
 
     # Build lookup structures

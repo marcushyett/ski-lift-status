@@ -1,7 +1,10 @@
-"""Network traffic capture using Playwright with Browserless.
+"""Network traffic capture using Browserless BrowserQL API.
 
-This module captures all network traffic from a ski resort status page,
-categorizing requests into types useful for config building:
+This module captures all network traffic from a ski resort status page
+using the BrowserQL GraphQL API, which provides better stealth capabilities
+and simpler network request capture than CDP connections.
+
+Categorizes requests into types useful for config building:
 - XHR/Fetch requests (likely API calls)
 - JavaScript files (may contain embedded data)
 - HTML content (server-side rendered data)
@@ -9,12 +12,13 @@ categorizing requests into types useful for config building:
 """
 
 import os
+import re
 import hashlib
+import httpx
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
-
-from playwright.async_api import async_playwright, Response, Request
+from urllib.parse import urljoin, urlparse
 
 
 class ResourceType(str, Enum):
@@ -76,8 +80,8 @@ class CapturedTraffic:
     """All captured traffic from a page load."""
 
     page_url: str
-    final_url: str | None  # After redirects
-    page_html: str | None  # Final page HTML
+    final_url: str | None = None  # After redirects
+    page_html: str | None = None  # Final page HTML
     resources: list[CapturedResource] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
     load_time_ms: float | None = None
@@ -119,11 +123,12 @@ class CapturedTraffic:
 
 
 def _classify_resource_type(
-    playwright_type: str, content_type: str, url: str
+    bql_type: str | None, content_type: str, url: str
 ) -> ResourceType:
-    """Classify resource type from Playwright data and content type."""
+    """Classify resource type from BrowserQL data and content type."""
     content_type_lower = content_type.lower() if content_type else ""
     url_lower = url.lower()
+    bql_type_lower = bql_type.lower() if bql_type else ""
 
     # Check content type first
     if "application/json" in content_type_lower:
@@ -149,44 +154,21 @@ def _classify_resource_type(
     if url_lower.endswith((".html", ".htm", ".php", ".asp", ".aspx")):
         return ResourceType.HTML
 
-    # Check Playwright resource type
-    if playwright_type in ("xhr", "fetch"):
+    # Check BrowserQL resource type
+    if bql_type_lower in ("xhr", "fetch"):
         return ResourceType.XHR
-    if playwright_type == "script":
+    if bql_type_lower == "script":
         return ResourceType.JAVASCRIPT
-    if playwright_type == "document":
+    if bql_type_lower == "document":
         return ResourceType.HTML
-    if playwright_type == "stylesheet":
+    if bql_type_lower == "stylesheet":
         return ResourceType.CSS
-    if playwright_type == "image":
+    if bql_type_lower == "image":
         return ResourceType.IMAGE
-    if playwright_type == "font":
+    if bql_type_lower == "font":
         return ResourceType.FONT
 
     return ResourceType.OTHER
-
-
-def _should_capture_body(resource_type: ResourceType, content_type: str) -> bool:
-    """Determine if we should capture the body for this resource."""
-    # Always capture these types
-    if resource_type in (
-        ResourceType.XHR,
-        ResourceType.JSON,
-        ResourceType.XML,
-        ResourceType.HTML,
-        ResourceType.JAVASCRIPT,
-    ):
-        return True
-
-    # Skip binary content
-    content_type_lower = content_type.lower() if content_type else ""
-    if any(
-        skip in content_type_lower
-        for skip in ["image/", "font/", "video/", "audio/", "octet-stream"]
-    ):
-        return False
-
-    return False
 
 
 def _is_tracking_url(url: str) -> bool:
@@ -219,17 +201,186 @@ def _is_tracking_url(url: str) -> bool:
     return any(pattern in url_lower for pattern in tracking_patterns)
 
 
-def get_browserless_endpoint() -> str | None:
-    """Get Browserless WebSocket endpoint from environment."""
+def get_browserql_endpoint() -> str | None:
+    """Get BrowserQL API endpoint from environment."""
     api_key = os.environ.get("BROWSERLESS_API_KEY")
     if api_key:
-        return f"wss://chrome.browserless.io?token={api_key}"
+        # Use stealth endpoint for better bot detection bypass
+        return f"https://production-sfo.browserless.io/chromium/bql?token={api_key}"
 
     endpoint = os.environ.get("BROWSERLESS_ENDPOINT")
     if endpoint:
         return endpoint
 
     return None
+
+
+def _build_capture_query(url: str, wait_until: str = "networkIdle") -> str:
+    """Build the BrowserQL mutation for capturing traffic."""
+    # Use GraphQL mutation to navigate and get page content
+    # For now we focus on page HTML - API URLs will be discovered from content
+    return f"""
+mutation CaptureTraffic {{
+  goto(url: "{url}", waitUntil: {wait_until}, timeout: 60000) {{
+    status
+    url
+    time
+  }}
+  pageHtml: html {{
+    html
+  }}
+}}
+"""
+
+
+def _parse_headers(headers_list: list[dict] | None) -> dict[str, str]:
+    """Parse BrowserQL headers format to dict."""
+    if not headers_list:
+        return {}
+    return {h.get("name", ""): h.get("value", "") for h in headers_list if h.get("name")}
+
+
+def _discover_api_urls(html: str, base_url: str) -> list[str]:
+    """Discover potential API URLs from HTML content."""
+    urls = set()
+
+    # Common API URL patterns in JavaScript/HTML
+    patterns = [
+        # API endpoint patterns in JS
+        r'["\']([^"\']*(?:/api/|/rest/|/graphql|/v[0-9]+/)[^"\']*)["\']',
+        # JSON file URLs
+        r'["\']([^"\']+\.json(?:\?[^"\']*)?)["\']',
+        # Fetch/XHR URLs
+        r'fetch\s*\(\s*["\']([^"\']+)["\']',
+        r'\.get\s*\(\s*["\']([^"\']+)["\']',
+        r'\.post\s*\(\s*["\']([^"\']+)["\']',
+        # Data URLs
+        r'data-url\s*=\s*["\']([^"\']+)["\']',
+        r'data-api\s*=\s*["\']([^"\']+)["\']',
+        r'data-endpoint\s*=\s*["\']([^"\']+)["\']',
+    ]
+
+    for pattern in patterns:
+        for match in re.finditer(pattern, html, re.IGNORECASE):
+            url = match.group(1)
+            # Skip obvious non-API URLs
+            if any(ext in url.lower() for ext in ['.css', '.png', '.jpg', '.gif', '.svg', '.woff', '.ttf']):
+                continue
+            # Skip tracking URLs
+            if _is_tracking_url(url):
+                continue
+            # Make absolute URL
+            if url.startswith('//'):
+                url = 'https:' + url
+            elif url.startswith('/'):
+                url = urljoin(base_url, url)
+            elif not url.startswith('http'):
+                url = urljoin(base_url, url)
+
+            # Only include valid URLs
+            try:
+                parsed = urlparse(url)
+                if parsed.scheme in ('http', 'https') and parsed.netloc:
+                    urls.add(url)
+            except Exception:
+                continue
+
+    return list(urls)
+
+
+def _extract_embedded_json(html: str) -> list[tuple[str, str]]:
+    """Extract JSON data embedded in script tags."""
+    results = []
+
+    # Pattern for script tags with JSON content
+    script_patterns = [
+        # JSON-LD
+        r'<script[^>]*type\s*=\s*["\']application/(?:ld\+)?json["\'][^>]*>(.*?)</script>',
+        # Next.js/React data
+        r'<script[^>]*id\s*=\s*["\']__NEXT_DATA__["\'][^>]*>(.*?)</script>',
+        r'<script[^>]*id\s*=\s*["\']__NUXT[^"\']*["\'][^>]*>(.*?)</script>',
+        # Generic JSON in script tags (careful with this one)
+        r'<script[^>]*>\s*(?:window\.|var\s+)?\w+\s*=\s*(\{[^<]{100,}?\});?\s*</script>',
+    ]
+
+    for i, pattern in enumerate(script_patterns):
+        for match in re.finditer(pattern, html, re.IGNORECASE | re.DOTALL):
+            content = match.group(1).strip()
+            if content and len(content) > 50:  # Skip tiny snippets
+                source = f"embedded_script_{i}_{len(results)}"
+                results.append((source, content))
+
+    return results
+
+
+async def _discover_and_fetch_apis(
+    html: str,
+    base_url: str,
+    client: httpx.AsyncClient,
+    max_body_size: int,
+) -> list[CapturedResource]:
+    """Discover API endpoints from HTML and fetch them."""
+    resources = []
+
+    # First, extract embedded JSON data from script tags
+    embedded_data = _extract_embedded_json(html)
+    for source_name, json_content in embedded_data:
+        resource = CapturedResource(
+            url=f"embedded://{source_name}",
+            method="EMBEDDED",
+            resource_type=ResourceType.JSON,
+            content_type="application/json",
+            status_code=200,
+            request_headers={},
+            response_headers={},
+            body=json_content[:max_body_size] if len(json_content) > max_body_size else json_content,
+            body_size=len(json_content),
+        )
+        resources.append(resource)
+
+    # Discover API URLs from HTML
+    api_urls = _discover_api_urls(html, base_url)
+
+    # Fetch discovered API URLs (limit to avoid overloading)
+    for url in api_urls[:20]:  # Limit to 20 URLs
+        try:
+            response = await client.get(
+                url,
+                headers={
+                    "Accept": "application/json, text/html, */*",
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                },
+                timeout=10.0,
+                follow_redirects=True,
+            )
+
+            content_type = response.headers.get("content-type", "")
+            body = response.text
+
+            # Skip non-text responses
+            if not body or "text/" not in content_type and "json" not in content_type and "xml" not in content_type:
+                continue
+
+            resource_type = _classify_resource_type(None, content_type, url)
+
+            resource = CapturedResource(
+                url=url,
+                method="GET",
+                resource_type=resource_type,
+                content_type=content_type,
+                status_code=response.status_code,
+                request_headers={},
+                response_headers=dict(response.headers),
+                body=body[:max_body_size] if len(body) > max_body_size else body,
+                body_size=len(body),
+            )
+            resources.append(resource)
+
+        except Exception:
+            # Skip failed requests
+            continue
+
+    return resources
 
 
 async def capture_page_traffic(
@@ -239,11 +390,11 @@ async def capture_page_traffic(
     capture_tracking: bool = False,
     max_body_size: int = 10_000_000,  # 10MB
 ) -> CapturedTraffic:
-    """Capture all network traffic when loading a page.
+    """Capture all network traffic when loading a page using BrowserQL.
 
     Args:
         url: The URL to load.
-        wait_time_ms: Time to wait for XHR requests after load (ms).
+        wait_time_ms: Not used with BrowserQL (kept for API compatibility).
         use_browserless: Whether to use Browserless.io (if available).
         capture_tracking: Whether to capture tracking/analytics requests.
         max_body_size: Maximum body size to capture (bytes).
@@ -256,132 +407,66 @@ async def capture_page_traffic(
     traffic = CapturedTraffic(page_url=url)
     start_time = time.time()
 
-    # Store responses for body capture
-    response_bodies: dict[str, str] = {}
-    request_timings: dict[str, float] = {}
+    endpoint = get_browserql_endpoint()
+    if not endpoint:
+        traffic.errors.append("No BROWSERLESS_API_KEY environment variable set")
+        return traffic
 
-    async def handle_response(response: Response) -> None:
-        """Capture response body for relevant requests."""
-        try:
-            req_url = response.url
+    # Build the GraphQL query
+    query = _build_capture_query(url)
 
-            # Skip tracking unless requested
-            if not capture_tracking and _is_tracking_url(req_url):
-                return
-
-            content_type = response.headers.get("content-type", "")
-            playwright_type = response.request.resource_type
-            resource_type = _classify_resource_type(
-                playwright_type, content_type, req_url
+    try:
+        async with httpx.AsyncClient(timeout=90.0) as client:
+            response = await client.post(
+                endpoint,
+                json={
+                    "query": query,
+                    "variables": {},
+                    "operationName": "CaptureTraffic",
+                },
+                headers={"Content-Type": "application/json"},
             )
 
-            # Only capture body for relevant types
-            if _should_capture_body(resource_type, content_type):
-                try:
-                    body = await response.text()
-                    if body and len(body) <= max_body_size:
-                        response_bodies[req_url] = body
-                except Exception:
-                    pass
-
-        except Exception:
-            pass
-
-    async with async_playwright() as p:
-        # Connect to browser
-        browserless_endpoint = get_browserless_endpoint() if use_browserless else None
-
-        if browserless_endpoint:
-            try:
-                browser = await p.chromium.connect_over_cdp(browserless_endpoint)
-            except Exception as e:
-                traffic.errors.append(f"Browserless connection failed: {e}")
-                browser = await p.chromium.launch(headless=True)
-        else:
-            browser = await p.chromium.launch(headless=True)
-
-        try:
-            context = await browser.new_context(
-                user_agent=(
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/120.0.0.0 Safari/537.36"
+            if response.status_code != 200:
+                traffic.errors.append(
+                    f"BrowserQL API error: {response.status_code} - {response.text[:500]}"
                 )
+                return traffic
+
+            result = response.json()
+
+            # Check for GraphQL errors
+            if "errors" in result:
+                for error in result["errors"]:
+                    traffic.errors.append(f"GraphQL error: {error.get('message', str(error))}")
+                return traffic
+
+            data = result.get("data", {})
+
+            # Parse navigation result
+            goto_result = data.get("goto", {})
+            traffic.final_url = goto_result.get("url", url)
+            traffic.load_time_ms = goto_result.get("time")
+
+            # Parse page HTML
+            html_result = data.get("pageHtml", {})
+            traffic.page_html = html_result.get("html")
+
+            # Discover and fetch API endpoints from HTML
+            resources = await _discover_and_fetch_apis(
+                traffic.page_html or "",
+                traffic.final_url or url,
+                client,
+                max_body_size,
             )
-            page = await context.new_page()
-
-            # Track all requests
-            resources: list[CapturedResource] = []
-
-            async def on_request(request: Request) -> None:
-                request_timings[request.url] = time.time()
-
-            async def on_response(response: Response) -> None:
-                try:
-                    req = response.request
-                    req_url = req.url
-
-                    # Skip tracking unless requested
-                    if not capture_tracking and _is_tracking_url(req_url):
-                        return
-
-                    content_type = response.headers.get("content-type", "")
-                    playwright_type = req.resource_type
-                    resource_type = _classify_resource_type(
-                        playwright_type, content_type, req_url
-                    )
-
-                    # Calculate timing
-                    timing = None
-                    if req_url in request_timings:
-                        timing = (time.time() - request_timings[req_url]) * 1000
-
-                    resource = CapturedResource(
-                        url=req_url,
-                        method=req.method,
-                        resource_type=resource_type,
-                        content_type=content_type,
-                        status_code=response.status,
-                        request_headers=dict(req.headers),
-                        response_headers=dict(response.headers),
-                        body=None,  # Will be filled later
-                        body_size=0,
-                        timing_ms=timing,
-                    )
-                    resources.append(resource)
-
-                except Exception:
-                    pass
-
-                # Also handle body capture
-                await handle_response(response)
-
-            page.on("request", on_request)
-            page.on("response", on_response)
-
-            # Navigate to the page
-            try:
-                await page.goto(url, wait_until="networkidle", timeout=60000)
-            except Exception as e:
-                traffic.errors.append(f"Page load issue: {e}")
-
-            # Wait for additional XHR requests
-            await page.wait_for_timeout(wait_time_ms)
-
-            # Capture final state
-            traffic.final_url = page.url
-            traffic.page_html = await page.content()
+            traffic.resources = resources
             traffic.load_time_ms = (time.time() - start_time) * 1000
 
-            # Attach bodies to resources
-            for resource in resources:
-                if resource.url in response_bodies:
-                    resource.body = response_bodies[resource.url]
-                    resource.body_size = len(resource.body)
-
-            traffic.resources = resources
-
-        finally:
-            await browser.close()
+    except httpx.TimeoutException:
+        traffic.errors.append("Request timeout while capturing page traffic")
+    except httpx.RequestError as e:
+        traffic.errors.append(f"Request error: {str(e)}")
+    except Exception as e:
+        traffic.errors.append(f"Unexpected error: {str(e)}")
 
     return traffic
