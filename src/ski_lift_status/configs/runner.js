@@ -522,6 +522,566 @@ async function extractSerfaus(config) {
 }
 
 /**
+ * Extract using Ski Arlberg pattern (Lech/Zürs, St. Anton)
+ * Uses table with aria-label for status
+ */
+async function extractSkiarlberg(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Try multiple table selectors
+  const selectors = [
+    '#facility-lifts .table-responsive .table-fixed tbody tr',
+    '.facility-table tbody tr',
+    'table tbody tr'
+  ];
+
+  for (const selector of selectors) {
+    const rows = doc.querySelectorAll(selector);
+    if (rows.length > 0) {
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 2) {
+          // Get name from second column
+          const name = cells[1]?.textContent?.trim();
+          // Get status from first column's aria-label or class
+          const statusEl = cells[0]?.querySelector('[aria-label]') || cells[0];
+          const ariaLabel = statusEl?.getAttribute('aria-label')?.toLowerCase() || '';
+          const className = statusEl?.className?.toLowerCase() || '';
+
+          let status = 'closed';
+          if (ariaLabel.includes('open') || ariaLabel.includes('geöffnet') ||
+              className.includes('open') || className.includes('green')) {
+            status = 'open';
+          } else if (ariaLabel.includes('scheduled') || ariaLabel.includes('geplant')) {
+            status = 'scheduled';
+          }
+
+          if (name && name.length > 0) {
+            lifts.push({ name, status });
+          }
+        }
+      });
+      break;
+    }
+  }
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Ischgl pattern
+ */
+async function extractIschgl(config) {
+  return await extractSkiarlberg(config);  // Same pattern
+}
+
+/**
+ * Extract using Sölden pattern
+ */
+async function extractSoelden(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Look for lift status elements
+  const items = doc.querySelectorAll('[class*="facility-item"], [class*="lift-item"], .status-item');
+
+  items.forEach(item => {
+    const nameEl = item.querySelector('[class*="name"], .title, h3, h4');
+    const statusEl = item.querySelector('[class*="status"], [class*="state"]');
+
+    const name = nameEl?.textContent?.trim();
+    const statusText = statusEl?.textContent?.toLowerCase() || statusEl?.className?.toLowerCase() || '';
+
+    let status = 'closed';
+    if (statusText.includes('open') || statusText.includes('geöffnet')) {
+      status = 'open';
+    }
+
+    if (name) {
+      lifts.push({ name, status });
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using SkiStar pattern (Åre, Trysil, etc.)
+ * Note: SkiStar uses a React SPA - needs browser rendering for full data
+ */
+async function extractSkistar(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Try to find any embedded data
+  const scripts = doc.querySelectorAll('script');
+  for (const script of scripts) {
+    const text = script.textContent || '';
+    if (text.includes('lifts') || text.includes('facilities')) {
+      // Try to extract JSON data
+      const jsonMatch = text.match(/\{[^{}]*"lifts"[^{}]*\}/);
+      if (jsonMatch) {
+        try {
+          const data = JSON.parse(jsonMatch[0]);
+          if (data.lifts) {
+            data.lifts.forEach(lift => {
+              lifts.push({
+                name: lift.name || lift.title,
+                status: normalizeStatus(lift.status || lift.state)
+              });
+            });
+          }
+        } catch (e) {}
+      }
+    }
+  }
+
+  if (lifts.length === 0) {
+    return { lifts: [], runs: [], note: 'SkiStar uses React SPA - browser rendering required' };
+  }
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Laax pattern (live.laax.com)
+ */
+async function extractLaax(config) {
+  // Laax uses a separate API at live.laax.com
+  const apiUrl = 'https://live.laax.com/api/lifts';
+  try {
+    const data = await fetch(apiUrl);
+    const json = JSON.parse(data);
+
+    const lifts = [];
+    if (Array.isArray(json)) {
+      json.forEach(lift => {
+        lifts.push({
+          name: lift.name || lift.title,
+          status: normalizeStatus(lift.status || lift.state)
+        });
+      });
+    }
+
+    return { lifts, runs: [] };
+  } catch (e) {
+    // Fallback to HTML parsing
+    const html = await fetch(config.url);
+    const dom = new JSDOM(html);
+    const doc = dom.window.document;
+
+    const lifts = [];
+    const rows = doc.querySelectorAll('.lift-item, .facility-row, tr[data-lift]');
+
+    rows.forEach(row => {
+      const nameEl = row.querySelector('.name, .title, td:nth-child(1)');
+      const statusEl = row.querySelector('.status, .state, td:nth-child(2)');
+
+      const name = nameEl?.textContent?.trim();
+      const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+      let status = 'closed';
+      if (statusText.includes('open') || statusText.includes('offen')) {
+        status = 'open';
+      }
+
+      if (name) {
+        lifts.push({ name, status });
+      }
+    });
+
+    return { lifts, runs: [] };
+  }
+}
+
+/**
+ * Extract using Livigno pattern
+ */
+async function extractLivigno(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Livigno uses a table/list format
+  const rows = doc.querySelectorAll('.lift-row, .impianto, table tbody tr, [class*="lift-item"]');
+
+  rows.forEach(row => {
+    const nameEl = row.querySelector('.name, .lift-name, td:nth-child(1), .title');
+    const statusEl = row.querySelector('.status, .stato, td:nth-child(2), [class*="status"]');
+
+    const name = nameEl?.textContent?.trim();
+    const statusClass = statusEl?.className?.toLowerCase() || '';
+    const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+    let status = 'closed';
+    if (statusClass.includes('open') || statusClass.includes('aperto') ||
+        statusText.includes('open') || statusText.includes('aperto')) {
+      status = 'open';
+    }
+
+    if (name) {
+      lifts.push({ name, status });
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Perisher pattern (Australia)
+ */
+async function extractPerisher(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Try multiple selectors
+  const rows = doc.querySelectorAll('.lift-status-row, .terrain-row, table tbody tr, [class*="lift"]');
+
+  rows.forEach(row => {
+    const nameEl = row.querySelector('.name, .lift-name, td:first-child');
+    const statusEl = row.querySelector('.status, [class*="status"], td:last-child');
+
+    const name = nameEl?.textContent?.trim();
+    const statusClass = statusEl?.className?.toLowerCase() || '';
+    const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+    let status = 'closed';
+    if (statusClass.includes('open') || statusText.includes('open')) {
+      status = 'open';
+    }
+
+    if (name) {
+      lifts.push({ name, status });
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Baqueira pattern (Spain)
+ */
+async function extractBaqueira(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Baqueira uses table format
+  const rows = doc.querySelectorAll('table tbody tr, .remonte-row, [class*="lift"]');
+
+  rows.forEach(row => {
+    const nameEl = row.querySelector('td:nth-child(1), .name');
+    const statusEl = row.querySelector('td:nth-child(2), .status, [class*="estado"]');
+
+    const name = nameEl?.textContent?.trim();
+    const statusClass = statusEl?.className?.toLowerCase() || '';
+    const statusText = statusEl?.textContent?.toLowerCase() || '';
+    const statusImg = statusEl?.querySelector('img')?.getAttribute('src') || '';
+
+    let status = 'closed';
+    if (statusClass.includes('open') || statusClass.includes('abierto') ||
+        statusText.includes('abierto') || statusImg.includes('green') || statusImg.includes('open')) {
+      status = 'open';
+    }
+
+    if (name) {
+      lifts.push({ name, status });
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Big Sky pattern
+ */
+async function extractBigsky(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Try to find embedded JSON data first
+  const scripts = doc.querySelectorAll('script');
+  for (const script of scripts) {
+    const text = script.textContent || '';
+    if (text.includes('liftStatus') || text.includes('terrainStatus')) {
+      const jsonMatch = text.match(/\{[\s\S]*"lifts?"[\s\S]*\}/);
+      if (jsonMatch) {
+        try {
+          const data = JSON.parse(jsonMatch[0]);
+          const liftData = data.lifts || data.liftStatus || [];
+          liftData.forEach(lift => {
+            lifts.push({
+              name: lift.name || lift.liftName,
+              status: normalizeStatus(lift.status)
+            });
+          });
+        } catch (e) {}
+      }
+    }
+  }
+
+  if (lifts.length === 0) {
+    // Fallback to table parsing
+    const rows = doc.querySelectorAll('.lift-row, table tbody tr');
+    rows.forEach(row => {
+      const nameEl = row.querySelector('.name, td:first-child');
+      const statusEl = row.querySelector('.status, td:last-child');
+
+      const name = nameEl?.textContent?.trim();
+      const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+      let status = 'closed';
+      if (statusText.includes('open')) {
+        status = 'open';
+      }
+
+      if (name) {
+        lifts.push({ name, status });
+      }
+    });
+  }
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using St. Moritz pattern
+ */
+async function extractStmoritz(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // St. Moritz uses a table format
+  const rows = doc.querySelectorAll('table tbody tr, .lift-row, [class*="bergbahn"]');
+
+  rows.forEach(row => {
+    const nameEl = row.querySelector('td:nth-child(1), .name, .title');
+    const statusEl = row.querySelector('td:nth-child(2), .status, [class*="status"]');
+
+    const name = nameEl?.textContent?.trim();
+    const statusClass = statusEl?.className?.toLowerCase() || '';
+    const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+    let status = 'closed';
+    if (statusClass.includes('open') || statusClass.includes('offen') ||
+        statusText.includes('open') || statusText.includes('offen') || statusText.includes('geöffnet')) {
+      status = 'open';
+    }
+
+    if (name) {
+      lifts.push({ name, status });
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Deer Valley pattern
+ */
+async function extractDeervalley(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Try to find embedded data
+  const scripts = doc.querySelectorAll('script');
+  for (const script of scripts) {
+    const text = script.textContent || '';
+    if (text.includes('chairlift') || text.includes('lift')) {
+      // Look for structured data
+      const jsonMatch = text.match(/\{[\s\S]*"lifts?"[\s\S]*\}/);
+      if (jsonMatch) {
+        try {
+          const data = JSON.parse(jsonMatch[0]);
+          const liftData = data.lifts || [];
+          liftData.forEach(lift => {
+            lifts.push({
+              name: lift.name,
+              status: normalizeStatus(lift.status)
+            });
+          });
+        } catch (e) {}
+      }
+    }
+  }
+
+  if (lifts.length === 0) {
+    // Fallback to HTML parsing
+    const rows = doc.querySelectorAll('.lift-row, .chairlift, table tbody tr');
+    rows.forEach(row => {
+      const nameEl = row.querySelector('.name, .title, td:first-child');
+      const statusEl = row.querySelector('.status, td:last-child');
+
+      const name = nameEl?.textContent?.trim();
+      const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+      let status = 'closed';
+      if (statusText.includes('open')) {
+        status = 'open';
+      }
+
+      if (name) {
+        lifts.push({ name, status });
+      }
+    });
+  }
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using See* network pattern (seelift)
+ * Note: See* sites use React SPA - needs browser rendering
+ */
+async function extractSeelift(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Try to find any embedded JSON data
+  const scripts = doc.querySelectorAll('script');
+  for (const script of scripts) {
+    const text = script.textContent || '';
+    if (text.includes('__NEXT_DATA__') || text.includes('lifts')) {
+      const jsonMatch = text.match(/\{[\s\S]*"lifts?"[\s\S]*\}/);
+      if (jsonMatch) {
+        try {
+          const data = JSON.parse(jsonMatch[0]);
+          if (data.lifts) {
+            data.lifts.forEach(lift => {
+              lifts.push({
+                name: lift.name,
+                status: normalizeStatus(lift.status)
+              });
+            });
+          }
+        } catch (e) {}
+      }
+    }
+  }
+
+  if (lifts.length === 0) {
+    return { lifts: [], runs: [], note: 'See* network uses React SPA - browser rendering required' };
+  }
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Generic extraction - tries multiple strategies
+ */
+async function extractGeneric(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Strategy 1: Look for embedded JSON data
+  const scripts = doc.querySelectorAll('script');
+  for (const script of scripts) {
+    const text = script.textContent || '';
+    // Check for common data patterns
+    if (text.includes('lifts') || text.includes('facilities') || text.includes('status')) {
+      const patterns = [
+        /"lifts"\s*:\s*\[([\s\S]*?)\]/,
+        /"facilities"\s*:\s*\[([\s\S]*?)\]/,
+        /liftStatus\s*=\s*(\{[\s\S]*?\})/
+      ];
+
+      for (const pattern of patterns) {
+        const match = text.match(pattern);
+        if (match) {
+          try {
+            const data = JSON.parse(`[${match[1]}]`);
+            data.forEach(item => {
+              if (item.name || item.title) {
+                lifts.push({
+                  name: item.name || item.title,
+                  status: normalizeStatus(item.status || item.state)
+                });
+              }
+            });
+          } catch (e) {}
+        }
+      }
+    }
+  }
+
+  // Strategy 2: Try common table selectors
+  if (lifts.length === 0) {
+    const tableSelectors = [
+      'table tbody tr',
+      '.lift-row',
+      '.facility-row',
+      '[class*="lift-item"]',
+      '[class*="status-row"]'
+    ];
+
+    for (const selector of tableSelectors) {
+      const rows = doc.querySelectorAll(selector);
+      if (rows.length > 0) {
+        rows.forEach(row => {
+          const cells = row.querySelectorAll('td');
+          if (cells.length >= 2) {
+            const name = cells[0]?.textContent?.trim() || cells[1]?.textContent?.trim();
+            const statusCell = cells[cells.length - 1];
+            const statusClass = statusCell?.className?.toLowerCase() || '';
+            const statusText = statusCell?.textContent?.toLowerCase() || '';
+
+            let status = 'closed';
+            if (statusClass.includes('open') || statusClass.includes('green') ||
+                statusText.includes('open') || statusText.includes('offen') ||
+                statusText.includes('ouvert') || statusText.includes('aperto')) {
+              status = 'open';
+            }
+
+            if (name && name.length > 1 && name.length < 100) {
+              lifts.push({ name, status });
+            }
+          }
+        });
+        break;
+      }
+    }
+  }
+
+  if (lifts.length === 0) {
+    return { lifts: [], runs: [], note: 'No lift data found - may require browser rendering or custom extractor' };
+  }
+
+  return { lifts, runs: [] };
+}
+
+/**
  * Main extraction function
  */
 async function extractResort(resortId) {
@@ -552,8 +1112,33 @@ async function extractResort(resortId) {
         return await extractKitzski(resort);
       case 'serfaus':
         return await extractSerfaus(resort);
+      case 'skiarlberg':
+        return await extractSkiarlberg(resort);
+      case 'ischgl':
+        return await extractIschgl(resort);
+      case 'soelden':
+        return await extractSoelden(resort);
+      case 'skistar':
+        return await extractSkistar(resort);
+      case 'laax':
+        return await extractLaax(resort);
+      case 'livigno':
+        return await extractLivigno(resort);
+      case 'perisher':
+        return await extractPerisher(resort);
+      case 'baqueira':
+        return await extractBaqueira(resort);
+      case 'bigsky':
+        return await extractBigsky(resort);
+      case 'stmoritz':
+        return await extractStmoritz(resort);
+      case 'deervalley':
+        return await extractDeervalley(resort);
+      case 'seelift':
+        return await extractSeelift(resort);
       case 'custom':
-        return { lifts: [], runs: [], note: 'Custom extraction required - site-specific implementation needed' };
+        // Try generic extraction for custom resorts
+        return await extractGeneric(resort);
       default:
         return { error: `Unknown platform: ${resort.platform}` };
     }
