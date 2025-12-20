@@ -11,6 +11,7 @@ lxml>=5.0.0
 
 # Schema analysis and data extraction
 jsonpath-ng>=1.6.0
+rapidfuzz>=3.0.0
 
 # LLM integration
 openai>=1.0.0
@@ -21,6 +22,9 @@ langgraph>=0.2.0
 # Logging and observability
 structlog>=24.0.0
 langsmith>=0.1.0
+
+# Status page discovery
+# (serper.dev API - uses httpx already included)
 
 # Testing
 pytest>=8.0.0
