@@ -60,10 +60,11 @@
       "id": "alpe-dhuez",
       "name": "Alpe d'Huez Grand Domaine",
       "openskimap_id": "721dd142d0af653027c7569e1bd0799586bdefa1",
-      "platform": "seelift",
-      "url": "https://www.seealpedhuez.com/lifts/status",
+      "platform": "lumiplan",
+      "url": "https://www.alpedhuez.com/en/winter/open-lifts-and-slopes/",
       "liftieId": null,
-      "notes": "See* network site - uses Lumiplan status images"
+      "notes": "See* network site - uses Lumiplan status images",
+      "lumiplanMapId": "alpe-dhuez-grand-domaine"
     },
     {
       "id": "alpine-valley-resort",
@@ -3103,7 +3104,8 @@
       "url": "https://www.tignes.net",
       "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=tignes&region=alpes&pays=france&lang=en",
       "liftieId": "tignes",
-      "notes": "Uses Lumiplan bulletin"
+      "notes": "Uses Lumiplan bulletin",
+      "lumiplanMapId": "Tignes_ValdIsere"
     },
     {
       "id": "timberline-lodge-ski-area",
@@ -3188,7 +3190,8 @@
       "url": "https://www.valthorens.com",
       "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=valthorens&region=alpes&pays=france&lang=en",
       "liftieId": null,
-      "notes": "Uses Lumiplan bulletin"
+      "notes": "Uses Lumiplan bulletin",
+      "lumiplanMapId": "bd632c91-6957-494d-95a8-6a72eb87e341"
     },
     {
       "id": "valle-nevado",
