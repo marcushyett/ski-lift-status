@@ -1,0 +1,10 @@
+{
+  "id": "megeve",
+  "name": "Megève",
+  "openskimap_id": "97a14cedc5b0e781e9bd9857df1426b9376c7462",
+  "platform": "lumiplan",
+  "url": "https://forfait.megeve.com",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=megeve&region=alpes&pays=france&lang=en",
+  "liftieId": "megeve",
+  "notes": "Uses Lumiplan bulletin"
+}

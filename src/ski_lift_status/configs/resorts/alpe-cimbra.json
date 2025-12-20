@@ -1,0 +1,9 @@
+{
+  "id": "alpe-cimbra",
+  "name": "Alpe Cimbra",
+  "openskimap_id": "ef817c42b82422721b05028c6d58ce10f8a2190c",
+  "platform": "folgaria",
+  "url": "https://www.alpecimbra.it/en/alpe-cimbra-ski-area/alpe-cimbra-ski-area/",
+  "website": "https://www.alpecimbra.it/",
+  "notes": "TODO: Italian resort - Uses Mowi Snow mobile app. Need to discover API endpoint."
+}

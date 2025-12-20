@@ -14,6 +14,18 @@ The `runner.js` file performs all resort data extraction using **direct HTTP req
 - Direct HTTP is faster and more reliable than browser automation
 - Configs are easier to maintain and debug with clean API endpoints
 
+## CRITICAL RULE: Never Give Up on a Resort
+
+**There is no such thing as "requires JavaScript rendering".** Every JavaScript-heavy page loads its data from an API - you just need to discover it.
+
+When a resort page appears to require JavaScript:
+1. **ALWAYS use the XHR Fetcher `/analyze` endpoint** to discover the underlying APIs
+2. **Extract the JSON API URL** from the detected APIs
+3. **Configure the resort** to call that API directly
+4. **NEVER mark a resort as "requiresBrowserRendering"** or give up
+
+Every modern ski resort website loads lift/run data from a backend API. The XHR Fetcher tool intercepts these API calls and reveals them. Use it!
+
 ## XHR Fetcher Tool (For Discovery/Debugging Only)
 
 **IMPORTANT**: The XHR Fetcher is a development tool for discovering API endpoints. It should NOT be used in runner.js - it's only for building configs and debugging sites.
@@ -85,7 +97,8 @@ Response: `lifts[].popup.title`, `lifts[].status` ("open"/"closed"), `slopes[].p
 ## Project Structure
 
 - `src/ski_lift_status/configs/runner.js` - Main extraction logic
-- `src/ski_lift_status/configs/resorts.json` - Resort configuration
+- `src/ski_lift_status/configs/resorts/` - Individual resort config files (one JSON per resort)
+- `src/ski_lift_status/configs/resorts/index.js` - Loads all resort configs dynamically
 - `data/lifts.csv` - OpenSkiMap lift reference data
 - `data/runs.csv` - OpenSkiMap run reference data
 

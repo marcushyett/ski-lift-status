@@ -1,0 +1,10 @@
+{
+  "id": "meribel",
+  "name": "Méribel - 3 Vallées",
+  "openskimap_id": "68b126bc3175516c9263aed7635d14e37ff360dc",
+  "platform": "lumiplan",
+  "url": "https://meribel.net",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=alpina-mottaret&region=alpes&pays=france&lang=en",
+  "liftieId": "meribel",
+  "notes": "Uses Lumiplan bulletin"
+}

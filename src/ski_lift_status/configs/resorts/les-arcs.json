@@ -1,0 +1,10 @@
+{
+  "id": "les-arcs",
+  "name": "Les Arcs",
+  "openskimap_id": "dec537b602584db89d89ab114a619f1ae356398e",
+  "platform": "lumiplan",
+  "url": "https://www.lesarcs.com/en/practical-info/mountain-info/live.html",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=les-arcs&region=alpes&pays=france&lang=en",
+  "liftieId": "lesarcs",
+  "notes": "Uses Lumiplan bulletin (Paradiski)"
+}

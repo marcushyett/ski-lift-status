@@ -1,0 +1,9 @@
+{
+  "id": "parsenn-davos-klosters",
+  "name": "Parsenn (Davos Klosters)",
+  "openskimap_id": "403c8d67ddd348bfa3f7d02c6c21163479964926",
+  "platform": "davos",
+  "url": "https://www.davosklostersmountains.ch/en/mountains/winter/live-info/current-operating-infos",
+  "website": "https://www.davosklostersmountains.ch/",
+  "notes": "TODO: Swiss resort - Vue.js SPA. Need to discover undocumented API endpoint."
+}

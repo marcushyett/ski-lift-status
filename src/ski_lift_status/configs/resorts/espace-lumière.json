@@ -1,0 +1,10 @@
+{
+  "id": "espace-lumière",
+  "name": "Espace Lumière",
+  "openskimap_id": "e7c4c03bd7f9a3d907ff566775cfba1823bcf2ae",
+  "platform": "lumiplan",
+  "url": "https://en.valdallos.com/ouverture-des-pistes.html",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=espacelumiere&region=alpes&pays=france&lang=en",
+  "website": "https://www.praloup.com/",
+  "notes": "TODO: Lumiplan bulletin returns empty data. Need to discover actual data source."
+}

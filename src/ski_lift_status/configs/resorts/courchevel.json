@@ -1,0 +1,10 @@
+{
+  "id": "courchevel",
+  "name": "Courchevel - 3 Vallées",
+  "openskimap_id": "68b126bc3175516c9263aed7635d14e37ff360dc",
+  "platform": "lumiplan",
+  "url": "https://courchevel.com",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=courchevel&region=alpes&pays=france&lang=en",
+  "liftieId": "courchevel",
+  "notes": "Uses Lumiplan bulletin"
+}

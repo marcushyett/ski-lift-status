@@ -1,0 +1,10 @@
+{
+  "id": "big-sky-resort",
+  "name": "Big Sky Resort",
+  "openskimap_id": "00fb2c5ba89284e0b4e3708d04d549905f260cf3",
+  "platform": "bigsky",
+  "url": "https://bigskyresort.com/the-mountain/conditions",
+  "dataUrl": "https://www.bigskyresort.com/api/reportpal?resortName=bs&useReportPal=true",
+  "website": "https://bigskyresort.com",
+  "notes": "Uses ReportPal JSON API for lift and trail status"
+}

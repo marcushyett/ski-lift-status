@@ -1,0 +1,10 @@
+{
+  "id": "val-disere",
+  "name": "Val d'Isère",
+  "openskimap_id": "6ed5f25f0eb3e366ee2e0e667d998c0bf551225f",
+  "platform": "lumiplan",
+  "url": "https://valdisere.com",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=val-d-isere&region=alpes&pays=france&lang=en",
+  "liftieId": "valdisere",
+  "notes": "Uses Lumiplan bulletin (same domain as Tignes)"
+}

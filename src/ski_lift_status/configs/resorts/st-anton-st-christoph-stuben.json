@@ -1,0 +1,9 @@
+{
+  "id": "st-anton-st-christoph-stuben",
+  "name": "St. Anton / St. Christoph / Stuben",
+  "openskimap_id": "66e672470add74c3e6a2bd8d4c1bb07cc4721728",
+  "platform": "skiarlberg",
+  "url": "https://www.skiarlberg.at/en/st-anton/live-info/cable-cars-lifts",
+  "website": "https://www.stantonamarlberg.com/",
+  "notes": "Uses Ski Arlberg table format with aria-label status"
+}
