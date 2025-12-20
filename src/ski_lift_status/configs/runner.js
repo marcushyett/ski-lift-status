@@ -188,6 +188,7 @@ function getNestedValue(obj, path) {
 
 /**
  * Extract using Lumiplan bulletin
+ * Supports both old format (prl_group) and new format (POI_info)
  */
 async function extractLumiplan(config) {
   const dataUrl = config.dataUrl;
@@ -200,76 +201,99 @@ async function extractLumiplan(config) {
   const lifts = [];
   const runs = [];
 
-  // Status code mapping for Lumiplan
-  const statusMap = {
-    'O': 'open',      // Open
-    'F': 'closed',    // Fermé (Closed)
-    'H': 'closed',    // Hors service (Out of service)
-    'P': 'scheduled', // Prévu (Planned)
-    'A': 'open'       // Available
-  };
+  // Lift type patterns (for classification)
+  const liftTypes = [
+    'CHAIRLIFT', 'DETACHABLE_CHAIRLIFT', 'GONDOLA', 'FUNITEL', 'TRAM',
+    'SURFACE_LIFT', 'MAGIC_CARPET', 'ROPE_TOW', 'CABLE_CAR',
+    // Old format codes
+    'TC', 'TB', 'TSD', 'TSDB', 'TS', 'TK', 'TR', 'FUN', 'TPH', 'DMC', 'TM'
+  ];
 
-  // Lift type codes (from img_type src)
-  const liftTypeCodes = ['TC', 'TB', 'TSD', 'TSDB', 'TS', 'TK', 'TR', 'FUN', 'TPH', 'DMC', 'TM'];
+  // Run/trail type patterns
+  const runTypes = [
+    'DOWNHILL_SKIING', 'CROSS_COUNTRY', 'SLEDDING', 'SNOWSHOE',
+    'SKI_TOURING', 'BOARDERCROSS', 'SNOWPARK', 'FUN_ZONE'
+  ];
 
-  // Current Lumiplan format: .prl_group with title attribute containing name
-  const groups = doc.querySelectorAll('.prl_group[title]');
-  groups.forEach(group => {
-    const name = group.getAttribute('title')?.trim().replace(/\.$/, ''); // Remove trailing dot
-    const typeImg = group.querySelector('img.img_type');
-    const statusImg = group.querySelector('img.image_status') ||
-                      group.parentElement?.querySelector('img.image_status');
-
-    if (!name) return;
-
-    // Get status from image src: image/etats/X.svg
-    let status = 'closed';
-    const statusSrc = statusImg?.getAttribute('src') || '';
-    const statusMatch = statusSrc.match(/etats\/([A-Z])\.svg$/i);
-    if (statusMatch) {
-      status = statusMap[statusMatch[1].toUpperCase()] || 'closed';
+  // Parse status from image src
+  function parseStatus(src) {
+    if (!src) return 'closed';
+    // New format: lp_runway_trail_opened.svg, lp_runway_trail_scheduled.svg, lp_runway_trail_closed.svg
+    if (src.includes('_opened') || src.includes('_open')) return 'open';
+    if (src.includes('_scheduled')) return 'scheduled';
+    if (src.includes('_closed')) return 'closed';
+    // Old format: etats/O.svg, etats/F.svg, etats/H.svg, etats/P.svg
+    const match = src.match(/etats\/([A-Z])\.svg$/i);
+    if (match) {
+      const code = match[1].toUpperCase();
+      if (code === 'O' || code === 'A') return 'open';
+      if (code === 'P') return 'scheduled';
     }
+    return 'closed';
+  }
 
-    // Determine if lift based on type image
-    const typeSrc = typeImg?.getAttribute('src') || '';
-    const isLift = liftTypeCodes.some(code => typeSrc.includes(`/${code}.svg`) || typeSrc.includes(`/${code}B.svg`));
+  // Classify item as lift or run based on type image
+  function isLiftType(typeSrc) {
+    if (!typeSrc) return true; // Default to lift if unknown
+    return liftTypes.some(t => typeSrc.toUpperCase().includes(t));
+  }
 
-    if (isLift || typeSrc.includes('type/')) {
-      lifts.push({ name, status });
-    } else {
-      runs.push({ name, status });
-    }
-  });
+  function isRunType(typeSrc) {
+    if (!typeSrc) return false;
+    return runTypes.some(t => typeSrc.toUpperCase().includes(t));
+  }
 
-  // Fallback: try POI_info format (older Lumiplan)
-  if (lifts.length === 0 && runs.length === 0) {
-    const items = doc.querySelectorAll('.POI_info');
-    items.forEach(item => {
-      const nameEl = item.querySelector('span.nom');
-      const statusImg = item.querySelector('img.img_status[src*="etats"]');
+  // Try NEW format first: POI_info (La Plagne, etc.)
+  const poiItems = doc.querySelectorAll('.POI_info');
+  if (poiItems.length > 0) {
+    poiItems.forEach(item => {
+      const nameEl = item.querySelector('.nom, span.nom');
       const typeImg = item.querySelector('img.img_type');
+      // Get the last img_status (the opening status, not damage status)
+      const statusImgs = item.querySelectorAll('img.img_status');
+      const statusImg = statusImgs[statusImgs.length - 1];
 
-      if (nameEl) {
-        const name = nameEl.textContent.trim().replace(/\.$/, '');
-        const src = statusImg?.getAttribute('src') || '';
-        const typeSrc = typeImg?.getAttribute('src') || '';
+      const name = nameEl?.textContent?.trim().replace(/\.$/, '');
+      if (!name) return;
 
-        let status = 'closed';
-        if (src.includes('_open') || src.includes('/O.')) status = 'open';
-        else if (src.includes('_scheduled') || src.includes('/P.')) status = 'scheduled';
+      const typeSrc = typeImg?.getAttribute('src') || '';
+      const statusSrc = statusImg?.getAttribute('src') || '';
+      const status = parseStatus(statusSrc);
 
-        const isLift = typeSrc.includes('CHAIRLIFT') || typeSrc.includes('GONDOLA') ||
-                       typeSrc.includes('CABLE') || typeSrc.includes('DRAG') ||
-                       typeSrc.includes('FUNICULAR') || typeSrc.includes('LIFT') ||
-                       liftTypeCodes.some(code => typeSrc.includes(code));
+      // Skip non-ski items (restaurants, pedestrian paths, etc.)
+      if (typeSrc.includes('RESTAURANT') || typeSrc.includes('PEDESTRIAN') ||
+          typeSrc.includes('AEROLIVE') || typeSrc.includes('UNDEF')) {
+        return;
+      }
 
-        if (name) {
-          if (isLift) {
-            lifts.push({ name, status });
-          } else {
-            runs.push({ name, status });
-          }
-        }
+      if (isRunType(typeSrc)) {
+        runs.push({ name, status });
+      } else if (isLiftType(typeSrc)) {
+        lifts.push({ name, status });
+      }
+    });
+  }
+
+  // Try OLD format: prl_group (Trois Vallées, etc.)
+  if (lifts.length === 0 && runs.length === 0) {
+    const groups = doc.querySelectorAll('.prl_group[title]');
+    groups.forEach(group => {
+      const name = group.getAttribute('title')?.trim().replace(/\.$/, '');
+      const typeImg = group.querySelector('img.img_type');
+      const statusImg = group.querySelector('img.image_status') ||
+                        group.parentElement?.querySelector('img.image_status');
+
+      if (!name) return;
+
+      const typeSrc = typeImg?.getAttribute('src') || '';
+      const statusSrc = statusImg?.getAttribute('src') || '';
+      const status = parseStatus(statusSrc);
+
+      // Old format mostly has lifts, but check for run types
+      if (isRunType(typeSrc)) {
+        runs.push({ name, status });
+      } else {
+        lifts.push({ name, status });
       }
     });
   }
