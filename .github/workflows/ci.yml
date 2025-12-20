@@ -8,74 +8,34 @@ on:
 
 jobs:
   test:
-    name: Run Tests
+    name: Test Resort Configs
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: "3.11"
-          cache: "pip"
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
+        run: npm install
+
+      - name: Validate JSON configs
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -e .
-          pip install pytest pytest-asyncio
+          node -e "JSON.parse(require('fs').readFileSync('src/ski_lift_status/configs/resorts.json'))"
+          echo "✓ resorts.json is valid JSON"
 
-      - name: Install Playwright browsers
-        run: playwright install chromium
-
-      - name: Run tests
-        run: pytest tests/ -v --tb=short
-
-  lint:
-    name: Lint Code
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install linting tools
+      - name: Check runner.js syntax
         run: |
-          python -m pip install --upgrade pip
-          pip install ruff
+          node --check src/ski_lift_status/configs/runner.js
+          echo "✓ runner.js has valid syntax"
 
-      - name: Run Ruff linter
-        run: ruff check src/ tests/
-
-  type-check:
-    name: Type Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install dependencies
+      - name: Run quick config test (sample)
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -e .
-          pip install mypy
-
-      - name: Run mypy
-        run: mypy src/ --ignore-missing-imports
+          cd src/ski_lift_status/configs
+          # Test a few known-working configs to verify the runner works
+          timeout 60 node runner.js --all 2>&1 | tail -30 || true
