@@ -72,10 +72,10 @@
       "id": "avoriaz",
       "name": "Avoriaz",
       "openskimap_id": "7cac2b19d023f887e458c354be9caf833b6aed6d",
-      "platform": "lumiplan",
+      "platform": "skiplanxml",
       "url": "https://www.avoriaz.com",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=morzine---avoriaz---les-gets&region=alpes&pays=france&lang=en",
-      "notes": "Uses Lumiplan bulletin (Portes du Soleil domain)"
+      "dataUrl": "https://backoffice.avoriaz.com/wp-json/api/avoriaz/get_digisnow",
+      "notes": "Uses SKIPLAN XML API via digisnow (Portes du Soleil domain)"
     },
     {
       "id": "big-sky-resort",
@@ -241,11 +241,11 @@
       "id": "les-gets-morzine",
       "name": "Les Gets-Morzine",
       "openskimap_id": "cafb6b6d5f25860a682a8b6d67efe689218618a5",
-      "platform": "lumiplan",
+      "platform": "intermaps",
       "url": "https://www.lesgets.com/en/discover-the-resort/ski-winter-sports/live-info-slopes/",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=morzine---avoriaz---les-gets&region=alpes&pays=france&lang=en",
+      "dataUrl": "https://winter.intermaps.com/portes_du_soleil/data?lang=en",
       "liftieId": "morzine",
-      "notes": "Uses Lumiplan bulletin (Portes du Soleil domain)"
+      "notes": "Uses Intermaps API (Portes du Soleil domain)"
     },
     {
       "id": "les-sybelles",
@@ -311,9 +311,9 @@
       "name": "Parsenn (Davos Klosters)",
       "openskimap_id": "403c8d67ddd348bfa3f7d02c6c21163479964926",
       "platform": "davos",
-      "url": "https://www.parsenn.com/en/mountains/winter/live-info/current-operating-infos",
+      "url": "https://www.davosklostersmountains.ch/en/mountains/winter/live-info/current-operating-infos",
       "website": "https://www.davosklostersmountains.ch/",
-      "notes": "Swiss resort - uses davosklostersmountains.ch API"
+      "notes": "Swiss resort - uses davosklostersmountains.ch domain"
     },
     {
       "id": "perisher",

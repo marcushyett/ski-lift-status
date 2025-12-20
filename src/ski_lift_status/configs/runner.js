@@ -394,6 +394,39 @@ async function extractLumiplanHtml(config) {
 }
 
 /**
+ * Extract using SKIPLAN XML API
+ * Used by some French resorts (Avoriaz, etc.) that expose SKIPLAN data
+ */
+async function extractSkiplanXml(config) {
+  const dataUrl = config.dataUrl;
+  if (!dataUrl) return { error: 'No dataUrl specified for SKIPLAN XML' };
+
+  const xml = await fetch(dataUrl);
+
+  // Parse the XML response
+  const lifts = [];
+  const runs = [];
+
+  // Extract REMONTEE (lifts) - attributes may be escaped with \
+  const liftMatches = xml.matchAll(/<REMONTEE\s+nom=\\?"([^"\\]+)\\?"\s+etat=\\?"([^"\\]+)\\?"/g);
+  for (const match of liftMatches) {
+    const name = match[1].replace(/&apos;/g, "'").replace(/&amp;/g, '&');
+    const status = match[2] === 'O' ? 'open' : match[2] === 'P' ? 'scheduled' : 'closed';
+    lifts.push({ name, status });
+  }
+
+  // Extract PISTE (runs) - attributes may be escaped with \
+  const runMatches = xml.matchAll(/<PISTE\s+nom=\\?"([^"\\]+)\\?"\s+etat=\\?"([^"\\]+)\\?"/g);
+  for (const match of runMatches) {
+    const name = match[1].replace(/&apos;/g, "'").replace(/&amp;/g, '&');
+    const status = match[2] === 'O' ? 'open' : match[2] === 'P' ? 'scheduled' : 'closed';
+    runs.push({ name, status });
+  }
+
+  return { lifts, runs };
+}
+
+/**
  * Extract using Nuxt.js embedded data
  */
 async function extractNuxt(config) {
@@ -772,10 +805,101 @@ async function extractSkiarlberg(config) {
 }
 
 /**
- * Extract using Ischgl pattern
+ * Extract using Ischgl pattern - uses Intermaps JSON API
  */
 async function extractIschgl(config) {
-  return await extractSkiarlberg(config);  // Same pattern
+  // Use Intermaps JSON API (similar to Sölden)
+  const dataUrl = config.dataUrl || 'https://winter.intermaps.com/silvretta_arena/data?lang=en';
+
+  try {
+    const json = await fetch(dataUrl);
+    const data = JSON.parse(json);
+
+    const lifts = [];
+    const runs = [];
+
+    // Process lifts
+    if (data.lifts && Array.isArray(data.lifts)) {
+      data.lifts.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
+
+        if (name) {
+          lifts.push({ name, status });
+        }
+      });
+    }
+
+    // Process slopes/runs
+    if (data.slopes && Array.isArray(data.slopes)) {
+      data.slopes.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
+
+        if (name) {
+          runs.push({ name, status });
+        }
+      });
+    }
+
+    return { lifts, runs };
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+/**
+ * Generic Intermaps JSON API extractor
+ * Used by Sölden, Saalbach, Portes du Soleil, and other Austrian/European resorts
+ * API endpoint format: https://winter.intermaps.com/{resort_id}/data?lang=en
+ */
+async function extractIntermaps(config) {
+  const dataUrl = config.dataUrl;
+  if (!dataUrl) return { error: 'No dataUrl specified for Intermaps' };
+
+  try {
+    const json = await fetch(dataUrl);
+    const data = JSON.parse(json);
+
+    const lifts = [];
+    const runs = [];
+
+    // Process lifts - handle "in_preparation" as scheduled
+    if (data.lifts && Array.isArray(data.lifts)) {
+      data.lifts.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       (statusText === 'in_preparation' || statusText === 'scheduled') ? 'scheduled' : 'closed';
+
+        if (name) {
+          lifts.push({ name, status });
+        }
+      });
+    }
+
+    // Process slopes/runs
+    if (data.slopes && Array.isArray(data.slopes)) {
+      data.slopes.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       (statusText === 'in_preparation' || statusText === 'scheduled') ? 'scheduled' : 'closed';
+
+        if (name) {
+          runs.push({ name, status });
+        }
+      });
+    }
+
+    return { lifts, runs };
+  } catch (e) {
+    return { error: e.message };
+  }
 }
 
 /**
@@ -913,52 +1037,47 @@ async function extractSkistar(config) {
 
 /**
  * Extract using Laax pattern (live.laax.com)
+ * Parses server-side rendered HTML with 'widget lift' divs
  */
 async function extractLaax(config) {
-  // Laax uses a separate API at live.laax.com
-  const apiUrl = 'https://live.laax.com/api/lifts';
+  // Laax uses server-rendered HTML at live.laax.com/de/anlagen
+  const pageUrl = config.dataUrl || 'https://live.laax.com/de/anlagen';
+
   try {
-    const data = await fetch(apiUrl);
-    const json = JSON.parse(data);
-
-    const lifts = [];
-    if (Array.isArray(json)) {
-      json.forEach(lift => {
-        lifts.push({
-          name: lift.name || lift.title,
-          status: normalizeStatus(lift.status || lift.state)
-        });
-      });
-    }
-
-    return { lifts, runs: [] };
-  } catch (e) {
-    // Fallback to HTML parsing
-    const html = await fetch(config.url);
+    const html = await fetch(pageUrl);
     const dom = new JSDOM(html);
     const doc = dom.window.document;
 
     const lifts = [];
-    const rows = doc.querySelectorAll('.lift-item, .facility-row, tr[data-lift]');
 
-    rows.forEach(row => {
-      const nameEl = row.querySelector('.name, .title, td:nth-child(1)');
-      const statusEl = row.querySelector('.status, .state, td:nth-child(2)');
+    // Find all lift widgets: <div class="widget lift">
+    const liftWidgets = doc.querySelectorAll('.widget.lift');
 
+    liftWidgets.forEach(widget => {
+      // Get lift name from the h3 element
+      const nameEl = widget.querySelector('.h3, h3');
       const name = nameEl?.textContent?.trim();
-      const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+      if (!name) return;
+
+      // Get status from the indicator div class
+      // Classes: indicator open, indicator closed, indicator in-preparation
+      const indicator = widget.querySelector('.indicator');
+      const indicatorClass = indicator?.className?.toLowerCase() || '';
 
       let status = 'closed';
-      if (statusText.includes('open') || statusText.includes('offen')) {
+      if (indicatorClass.includes('open')) {
         status = 'open';
+      } else if (indicatorClass.includes('in-preparation')) {
+        status = 'scheduled';
       }
 
-      if (name) {
-        lifts.push({ name, status });
-      }
+      lifts.push({ name, status });
     });
 
     return { lifts, runs: [] };
+  } catch (e) {
+    return { error: e.message };
   }
 }
 
@@ -1252,63 +1371,51 @@ async function extractSeelift(config) {
 
 /**
  * Extract using Saalbach/Skicircus pattern
- * Uses Bootstrap table with lift categories
+ * Uses Intermaps JSON API (same as Sölden, Ischgl)
  */
 async function extractSaalbach(config) {
-  const html = await fetch(config.url);
-  const dom = new JSDOM(html);
-  const doc = dom.window.document;
+  // Use Intermaps JSON API
+  const dataUrl = config.dataUrl || 'https://winter.intermaps.com/saalbach_hinterglemm_leogang_fieberbrunn/data?lang=en';
 
-  const lifts = [];
+  try {
+    const json = await fetch(dataUrl);
+    const data = JSON.parse(json);
 
-  // Parse lift items with identifier pattern (e.g., "A1Schattberg X-press I")
-  const rows = doc.querySelectorAll('tr, .lift-row, [class*="lift"]');
+    const lifts = [];
+    const runs = [];
 
-  rows.forEach(row => {
-    const text = row.textContent?.trim() || '';
-    // Match pattern: identifier + lift name
-    const match = text.match(/^([A-Z]\d+)(.+)$/);
-    if (match) {
-      const name = match[2].trim();
-      // Check if row has status indicator
-      const statusClass = row.className?.toLowerCase() || '';
-      const statusEl = row.querySelector('[class*="status"], [class*="state"]');
-      const statusText = statusEl?.textContent?.toLowerCase() || statusClass;
-
-      let status = 'closed';
-      if (statusText.includes('open') || statusClass.includes('operating')) {
-        status = 'open';
-      }
-
-      if (name) {
-        lifts.push({ name, status });
-      }
-    }
-  });
-
-  // Fallback: try generic table parsing
-  if (lifts.length === 0) {
-    const tableRows = doc.querySelectorAll('table tbody tr');
-    tableRows.forEach(row => {
-      const cells = row.querySelectorAll('td');
-      if (cells.length >= 2) {
-        const name = cells[1]?.textContent?.trim();
-        const statusCell = cells[0];
-        const statusClass = statusCell?.className?.toLowerCase() || '';
-
-        let status = 'closed';
-        if (statusClass.includes('open') || statusClass.includes('green')) {
-          status = 'open';
-        }
+    // Process lifts
+    if (data.lifts && Array.isArray(data.lifts)) {
+      data.lifts.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
 
         if (name) {
           lifts.push({ name, status });
         }
-      }
-    });
-  }
+      });
+    }
 
-  return { lifts, runs: [] };
+    // Process slopes/runs
+    if (data.slopes && Array.isArray(data.slopes)) {
+      data.slopes.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
+
+        if (name) {
+          runs.push({ name, status });
+        }
+      });
+    }
+
+    return { lifts, runs };
+  } catch (e) {
+    return { error: e.message };
+  }
 }
 
 /**
@@ -1893,6 +2000,8 @@ async function extractResort(resortId) {
     switch (resort.platform) {
       case 'lumiplan':
         return await extractLumiplan(resort);
+      case 'skiplanxml':
+        return await extractSkiplanXml(resort);
       case 'nuxt':
         return await extractNuxt(resort);
       case 'dolomiti':
@@ -1915,6 +2024,8 @@ async function extractResort(resortId) {
         return await extractIschgl(resort);
       case 'soelden':
         return await extractSoelden(resort);
+      case 'intermaps':
+        return await extractIntermaps(resort);
       case 'skistar':
         return await extractSkistar(resort);
       case 'laax':
@@ -2091,6 +2202,21 @@ if (require.main === module) {
       const successful = Object.values(results).filter(r => !r.error && !r.note);
       console.log(`Successful: ${successful.length}/${Object.keys(results).length}`);
 
+      // Check for insufficient data (≤2 lifts AND ≤2 runs)
+      const insufficientData = Object.entries(results).filter(([id, r]) => {
+        if (r.error || r.note) return false;
+        const liftCount = r.lifts?.length || 0;
+        const runCount = r.runs?.length || 0;
+        return liftCount <= 2 && runCount <= 2;
+      });
+
+      if (insufficientData.length > 0) {
+        console.log(`\n⚠️  Resorts with insufficient data (≤2 lifts AND ≤2 runs): ${insufficientData.length}`);
+        insufficientData.forEach(([id, r]) => {
+          console.log(`  - ${r.name}: ${r.lifts?.length || 0} lifts, ${r.runs?.length || 0} runs`);
+        });
+      }
+
       console.log('\nBy platform:');
       const byPlatform = {};
       Object.values(results).forEach(r => {
@@ -2101,6 +2227,12 @@ if (require.main === module) {
       Object.entries(byPlatform).forEach(([p, s]) => {
         console.log(`  ${p}: ${s.success}/${s.total}`);
       });
+
+      // Exit with error code if there are insufficient data resorts
+      if (insufficientData.length > 0) {
+        console.log('\n❌ FAILED: Some resorts have insufficient data');
+        process.exit(1);
+      }
     });
   } else if (arg && arg !== '--map') {
     const fn = withMapping ? extractAndMap : extractResort;
