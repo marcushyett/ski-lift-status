@@ -200,57 +200,76 @@ async function extractLumiplan(config) {
   const lifts = [];
   const runs = [];
 
-  // New Lumiplan format uses POI_info elements
-  const items = doc.querySelectorAll('.POI_info');
-  items.forEach(item => {
-    const nameEl = item.querySelector('span.nom');
-    const statusImg = item.querySelector('img.img_status[src*="etats"]');
-    const typeImg = item.querySelector('img.img_type');
+  // Status code mapping for Lumiplan
+  const statusMap = {
+    'O': 'open',      // Open
+    'F': 'closed',    // Fermé (Closed)
+    'H': 'closed',    // Hors service (Out of service)
+    'P': 'scheduled', // Prévu (Planned)
+    'A': 'open'       // Available
+  };
 
-    if (nameEl) {
-      const name = nameEl.textContent.trim().replace(/\.$/, ''); // Remove trailing dot
-      const src = statusImg?.getAttribute('src') || '';
-      const typeSrc = typeImg?.getAttribute('src') || '';
+  // Lift type codes (from img_type src)
+  const liftTypeCodes = ['TC', 'TB', 'TSD', 'TSDB', 'TS', 'TK', 'TR', 'FUN', 'TPH', 'DMC', 'TM'];
 
-      // Parse status from image filename (e.g., lp_runway_trail_open.svg, lp_runway_trail_scheduled.svg)
-      let status = 'closed';
-      if (src.includes('_open')) status = 'open';
-      else if (src.includes('_scheduled')) status = 'scheduled';
-      else if (src.includes('_closed')) status = 'closed';
+  // Current Lumiplan format: .prl_group with title attribute containing name
+  const groups = doc.querySelectorAll('.prl_group[title]');
+  groups.forEach(group => {
+    const name = group.getAttribute('title')?.trim().replace(/\.$/, ''); // Remove trailing dot
+    const typeImg = group.querySelector('img.img_type');
+    const statusImg = group.querySelector('img.image_status') ||
+                      group.parentElement?.querySelector('img.image_status');
 
-      // Determine if lift or run based on type image
-      const isLift = typeSrc.includes('CHAIRLIFT') || typeSrc.includes('GONDOLA') ||
-                     typeSrc.includes('CABLE') || typeSrc.includes('DRAG') ||
-                     typeSrc.includes('FUNICULAR') || typeSrc.includes('LIFT');
+    if (!name) return;
 
-      if (name) {
-        if (isLift) {
-          lifts.push({ name, status });
-        } else {
-          runs.push({ name, status });
-        }
-      }
+    // Get status from image src: image/etats/X.svg
+    let status = 'closed';
+    const statusSrc = statusImg?.getAttribute('src') || '';
+    const statusMatch = statusSrc.match(/etats\/([A-Z])\.svg$/i);
+    if (statusMatch) {
+      status = statusMap[statusMatch[1].toUpperCase()] || 'closed';
+    }
+
+    // Determine if lift based on type image
+    const typeSrc = typeImg?.getAttribute('src') || '';
+    const isLift = liftTypeCodes.some(code => typeSrc.includes(`/${code}.svg`) || typeSrc.includes(`/${code}B.svg`));
+
+    if (isLift || typeSrc.includes('type/')) {
+      lifts.push({ name, status });
+    } else {
+      runs.push({ name, status });
     }
   });
 
-  // Fallback: try old prl_group format
+  // Fallback: try POI_info format (older Lumiplan)
   if (lifts.length === 0 && runs.length === 0) {
-    const groups = doc.querySelectorAll('.prl_group');
-    groups.forEach(group => {
-      const nameEl = group.querySelector('.prl_nm');
-      const statusEl = group.querySelector('img[src*=".svg"]');
+    const items = doc.querySelectorAll('.POI_info');
+    items.forEach(item => {
+      const nameEl = item.querySelector('span.nom');
+      const statusImg = item.querySelector('img.img_status[src*="etats"]');
+      const typeImg = item.querySelector('img.img_type');
 
-      if (nameEl && statusEl) {
-        const name = nameEl.textContent.trim();
-        const src = statusEl.getAttribute('src') || '';
-        const statusMatch = src.match(/([OFP])\.svg$/);
-        const status = statusMatch ? {
-          'O': 'open',
-          'P': 'scheduled',
-          'F': 'closed'
-        }[statusMatch[1]] || 'closed' : 'closed';
+      if (nameEl) {
+        const name = nameEl.textContent.trim().replace(/\.$/, '');
+        const src = statusImg?.getAttribute('src') || '';
+        const typeSrc = typeImg?.getAttribute('src') || '';
 
-        lifts.push({ name, status });
+        let status = 'closed';
+        if (src.includes('_open') || src.includes('/O.')) status = 'open';
+        else if (src.includes('_scheduled') || src.includes('/P.')) status = 'scheduled';
+
+        const isLift = typeSrc.includes('CHAIRLIFT') || typeSrc.includes('GONDOLA') ||
+                       typeSrc.includes('CABLE') || typeSrc.includes('DRAG') ||
+                       typeSrc.includes('FUNICULAR') || typeSrc.includes('LIFT') ||
+                       liftTypeCodes.some(code => typeSrc.includes(code));
+
+        if (name) {
+          if (isLift) {
+            lifts.push({ name, status });
+          } else {
+            runs.push({ name, status });
+          }
+        }
       }
     });
   }
@@ -1117,7 +1136,7 @@ async function extractResort(resortId) {
     return { error: `Resort not found: ${resortId}` };
   }
 
-  console.log(`Extracting: ${resort.name} (${resort.platform})`);
+  // Logging moved to runAll() for batched output
 
   try {
     switch (resort.platform) {
@@ -1175,35 +1194,13 @@ async function extractResort(resortId) {
 }
 
 /**
- * Run a batch of resorts in parallel
- */
-async function runBatch(batch, startIndex, total) {
-  const results = await Promise.all(
-    batch.map(async (resort, i) => {
-      const index = startIndex + i + 1;
-      const startTime = Date.now();
-      const result = await extractResort(resort.id);
-      const duration = Date.now() - startTime;
-
-      return {
-        resort,
-        result,
-        index,
-        duration
-      };
-    })
-  );
-
-  return results;
-}
-
-/**
  * Run all resorts and generate report with parallel execution
  */
 async function runAll() {
   const results = {};
   const total = resorts.length;
   const startTime = Date.now();
+  let completed = 0;
 
   console.log(`Starting parallel extraction of ${total} resorts (concurrency: ${CONCURRENCY_LIMIT})\n`);
 
@@ -1215,10 +1212,28 @@ async function runAll() {
 
     console.log(`\n--- Batch ${batchNum}/${totalBatches} (resorts ${i + 1}-${Math.min(i + CONCURRENCY_LIMIT, total)}) ---`);
 
-    const batchResults = await runBatch(batch, i, total);
+    // Print "starting" messages immediately (unbatched) so user sees activity
+    for (const resort of batch) {
+      process.stdout.write(`  → Testing ${resort.name}...\n`);
+    }
 
-    // Process results and print grouped logs
-    for (const { resort, result, index, duration } of batchResults) {
+    // Run batch in parallel and collect results
+    const batchResults = await Promise.all(
+      batch.map(async (resort, batchIndex) => {
+        const resortStartTime = Date.now();
+        try {
+          const result = await extractResort(resort.id);
+          return { resort, result, duration: Date.now() - resortStartTime };
+        } catch (e) {
+          return { resort, result: { error: e.message }, duration: Date.now() - resortStartTime };
+        }
+      })
+    );
+
+    // Print grouped results after batch completes
+    console.log('');  // Blank line before results
+    for (const { resort, result, duration } of batchResults) {
+      completed++;
       results[resort.id] = {
         name: resort.name,
         platform: resort.platform,
@@ -1232,7 +1247,7 @@ async function runAll() {
           ? `⚠️  ${result.note}`
           : `✓ Lifts: ${result.lifts?.length || 0}, Runs: ${result.runs?.length || 0}`;
 
-      console.log(`[${index}/${total}] ${resort.name} (${duration}ms) - ${status}`);
+      console.log(`  [${completed}/${total}] ${resort.name} (${duration}ms) - ${status}`);
     }
   }
 
