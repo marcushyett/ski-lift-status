@@ -176,7 +176,7 @@
       "openskimap_id": "9cb83fdd2a49011eec76e3d1bbc2af8f582888a9",
       "platform": "lumiplan",
       "url": "https://www.laclusaz.com/en/ski/alpine-skiing/",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=laclusaz&region=alpes&pays=france&lang=en",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=clusaz&region=alpes&pays=france&lang=en",
       "liftieId": null,
       "notes": "Uses Lumiplan bulletin"
     },
@@ -294,7 +294,7 @@
       "openskimap_id": "68b126bc3175516c9263aed7635d14e37ff360dc",
       "platform": "lumiplan",
       "url": "https://meribel.net",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=meribel&region=alpes&pays=france&lang=en",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=alpina-mottaret&region=alpes&pays=france&lang=en",
       "liftieId": "meribel",
       "notes": "Uses Lumiplan bulletin"
     },
@@ -437,7 +437,7 @@
       "openskimap_id": "6ed5f25f0eb3e366ee2e0e667d998c0bf551225f",
       "platform": "lumiplan",
       "url": "https://valdisere.com",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=valdisere&region=alpes&pays=france&lang=en",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=val-d-isere&region=alpes&pays=france&lang=en",
       "liftieId": "valdisere",
       "notes": "Uses Lumiplan bulletin (same domain as Tignes)"
     },
