@@ -751,8 +751,9 @@
       "platform": "lumiplan",
       "url": "https://www.espacediamant.com",
       "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=espacediamant&region=alpes&pays=france&lang=en",
+      "lumiplanMapId": "09110215-8a54-42cd-991a-1c534bfb5115",
       "liftieId": null,
-      "notes": "Uses Lumiplan bulletin"
+      "notes": "Uses Lumiplan JSON API"
     },
     {
       "id": "espace-liberté",
@@ -1614,8 +1615,9 @@
       "platform": "lumiplan",
       "url": "https://www.sybelles.ski/en/skiing-in-les-sybelles/slopes-and-lifts-open/",
       "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=sybelles&region=alpes&pays=france&lang=en",
+      "lumiplanMapId": "7a6ed0ee-a613-476a-b9b3-25444e075f16",
       "liftieId": null,
-      "notes": "Uses Lumiplan bulletin"
+      "notes": "Uses Lumiplan JSON API"
     },
     {
       "id": "les-trois-vallees",
@@ -1624,8 +1626,9 @@
       "platform": "lumiplan",
       "url": "https://www.les3vallees.com/fr/live/ouverture-des-pistes-et-remontees",
       "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=3vallees&region=alpes&pays=france&lang=en",
+      "lumiplanMapId": "bd632c91-6957-494d-95a8-6a72eb87e341",
       "liftieId": null,
-      "notes": "Uses Lumiplan - combines Courchevel, Méribel, Val Thorens"
+      "notes": "Uses Lumiplan JSON API - combines Courchevel, Méribel, Val Thorens"
     },
     {
       "id": "levin-hiihtokeskus-levi-ski-resort",

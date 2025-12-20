@@ -58,10 +58,14 @@ function getProxyAgent(targetUrl) {
   return new HttpsProxyAgent(proxyUrl);
 }
 
+// Concurrency settings for parallel execution
+const CONCURRENCY_LIMIT = 20;  // Number of parallel requests
+const REQUEST_TIMEOUT_MS = 15000;  // 15 second timeout per request
+
 /**
- * Fetch URL content
+ * Fetch URL content with timeout
  */
-async function fetch(url) {
+async function fetch(url, timeoutMs = REQUEST_TIMEOUT_MS) {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith('https') ? https : http;
     const agent = getProxyAgent(url);
@@ -70,23 +74,30 @@ async function fetch(url) {
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; SkiLiftStatus/1.0)',
         'Accept': 'text/html,application/json'
-      }
+      },
+      timeout: timeoutMs
     };
 
     if (agent) {
       options.agent = agent;
     }
 
-    protocol.get(url, options, (res) => {
+    const req = protocol.get(url, options, (res) => {
       // Handle redirects
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        return fetch(res.headers.location).then(resolve).catch(reject);
+        return fetch(res.headers.location, timeoutMs).then(resolve).catch(reject);
       }
 
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => resolve(data));
-    }).on('error', reject);
+    });
+
+    req.on('error', reject);
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error(`Request timed out after ${timeoutMs}ms`));
+    });
   });
 }
 
@@ -176,9 +187,88 @@ function getNestedValue(obj, path) {
 }
 
 /**
- * Extract using Lumiplan bulletin
+ * Extract using Lumiplan JSON API (preferred) or HTML bulletin (fallback)
+ * JSON API provides both lifts AND runs with accurate status
+ * HTML bulletin may only have lifts for older format pages
  */
 async function extractLumiplan(config) {
+  // If we have a lumiplanMapId, use the JSON API (preferred)
+  if (config.lumiplanMapId) {
+    return await extractLumiplanJson(config);
+  }
+
+  // Otherwise fall back to HTML parsing
+  return await extractLumiplanHtml(config);
+}
+
+/**
+ * Extract using Lumiplan JSON API
+ * Endpoints: /staticPoiData (names, types) and /dynamicPoiData (status)
+ */
+async function extractLumiplanJson(config) {
+  const baseUrl = 'https://lumiplay.link/interactive-map-services/public/map';
+  const mapId = config.lumiplanMapId;
+
+  // Fetch static and dynamic data in parallel
+  const [staticJson, dynamicJson] = await Promise.all([
+    fetch(`${baseUrl}/${mapId}/staticPoiData?lang=en`),
+    fetch(`${baseUrl}/${mapId}/dynamicPoiData?lang=en`)
+  ]);
+
+  let staticData, dynamicData;
+  try {
+    staticData = JSON.parse(staticJson);
+    dynamicData = JSON.parse(dynamicJson);
+  } catch (e) {
+    return { error: 'Failed to parse Lumiplan JSON API response' };
+  }
+
+  // Build status map from dynamic data (id -> openingStatus)
+  const statusMap = {};
+  for (const item of dynamicData.items || []) {
+    statusMap[item.id] = item.openingStatus;
+  }
+
+  // Normalize Lumiplan status to our format
+  function normalizeApiStatus(apiStatus) {
+    switch (apiStatus) {
+      case 'OPEN': return 'open';
+      case 'FORECAST': return 'scheduled';
+      case 'DELAYED': return 'scheduled';
+      default: return 'closed'; // CLOSED, OUT_OF_PERIOD, etc.
+    }
+  }
+
+  const lifts = [];
+  const runs = [];
+
+  // Process static items
+  for (const item of staticData.items || []) {
+    const data = item.data || {};
+    const name = data.name;
+    const type = data.type;
+    const id = data.id;
+
+    if (!name || !type) continue;
+
+    const apiStatus = statusMap[id] || 'UNKNOWN';
+    const status = normalizeApiStatus(apiStatus);
+
+    if (type === 'LIFT') {
+      lifts.push({ name, status, liftType: data.liftType });
+    } else if (type === 'TRAIL') {
+      runs.push({ name, status, trailType: data.trailType, level: data.trailLevel });
+    }
+  }
+
+  return { lifts, runs };
+}
+
+/**
+ * Extract using Lumiplan HTML bulletin (fallback for resorts without JSON API)
+ * Supports both old format (prl_group) and new format (POI_info)
+ */
+async function extractLumiplanHtml(config) {
   const dataUrl = config.dataUrl;
   if (!dataUrl) return { error: 'No dataUrl specified' };
 
@@ -189,56 +279,98 @@ async function extractLumiplan(config) {
   const lifts = [];
   const runs = [];
 
-  // New Lumiplan format uses POI_info elements
-  const items = doc.querySelectorAll('.POI_info');
-  items.forEach(item => {
-    const nameEl = item.querySelector('span.nom');
-    const statusImg = item.querySelector('img.img_status[src*="etats"]');
-    const typeImg = item.querySelector('img.img_type');
+  // Lift type patterns (for classification)
+  const liftTypes = [
+    'CHAIRLIFT', 'DETACHABLE_CHAIRLIFT', 'GONDOLA', 'FUNITEL', 'TRAM',
+    'SURFACE_LIFT', 'MAGIC_CARPET', 'ROPE_TOW', 'CABLE_CAR',
+    // Old format codes
+    'TC', 'TB', 'TSD', 'TSDB', 'TS', 'TK', 'TR', 'FUN', 'TPH', 'DMC', 'TM'
+  ];
 
-    if (nameEl) {
-      const name = nameEl.textContent.trim().replace(/\.$/, ''); // Remove trailing dot
-      const src = statusImg?.getAttribute('src') || '';
-      const typeSrc = typeImg?.getAttribute('src') || '';
+  // Run/trail type patterns
+  const runTypes = [
+    'DOWNHILL_SKIING', 'CROSS_COUNTRY', 'SLEDDING', 'SNOWSHOE',
+    'SKI_TOURING', 'BOARDERCROSS', 'SNOWPARK', 'FUN_ZONE'
+  ];
 
-      // Parse status from image filename (e.g., lp_runway_trail_open.svg, lp_runway_trail_scheduled.svg)
-      let status = 'closed';
-      if (src.includes('_open')) status = 'open';
-      else if (src.includes('_scheduled')) status = 'scheduled';
-      else if (src.includes('_closed')) status = 'closed';
-
-      // Determine if lift or run based on type image
-      const isLift = typeSrc.includes('CHAIRLIFT') || typeSrc.includes('GONDOLA') ||
-                     typeSrc.includes('CABLE') || typeSrc.includes('DRAG') ||
-                     typeSrc.includes('FUNICULAR') || typeSrc.includes('LIFT');
-
-      if (name) {
-        if (isLift) {
-          lifts.push({ name, status });
-        } else {
-          runs.push({ name, status });
-        }
-      }
+  // Parse status from image src
+  function parseStatus(src) {
+    if (!src) return 'closed';
+    // New format: lp_runway_trail_opened.svg, lp_runway_trail_scheduled.svg, lp_runway_trail_closed.svg
+    if (src.includes('_opened') || src.includes('_open')) return 'open';
+    if (src.includes('_scheduled')) return 'scheduled';
+    if (src.includes('_closed')) return 'closed';
+    // Old format: etats/O.svg, etats/F.svg, etats/H.svg, etats/P.svg
+    const match = src.match(/etats\/([A-Z])\.svg$/i);
+    if (match) {
+      const code = match[1].toUpperCase();
+      if (code === 'O' || code === 'A') return 'open';
+      if (code === 'P') return 'scheduled';
     }
-  });
+    return 'closed';
+  }
 
-  // Fallback: try old prl_group format
+  // Classify item as lift or run based on type image
+  function isLiftType(typeSrc) {
+    if (!typeSrc) return true; // Default to lift if unknown
+    return liftTypes.some(t => typeSrc.toUpperCase().includes(t));
+  }
+
+  function isRunType(typeSrc) {
+    if (!typeSrc) return false;
+    return runTypes.some(t => typeSrc.toUpperCase().includes(t));
+  }
+
+  // Try NEW format first: POI_info (La Plagne, etc.)
+  const poiItems = doc.querySelectorAll('.POI_info');
+  if (poiItems.length > 0) {
+    poiItems.forEach(item => {
+      const nameEl = item.querySelector('.nom, span.nom');
+      const typeImg = item.querySelector('img.img_type');
+      // Get the last img_status (the opening status, not damage status)
+      const statusImgs = item.querySelectorAll('img.img_status');
+      const statusImg = statusImgs[statusImgs.length - 1];
+
+      const name = nameEl?.textContent?.trim().replace(/\.$/, '');
+      if (!name) return;
+
+      const typeSrc = typeImg?.getAttribute('src') || '';
+      const statusSrc = statusImg?.getAttribute('src') || '';
+      const status = parseStatus(statusSrc);
+
+      // Skip non-ski items (restaurants, pedestrian paths, etc.)
+      if (typeSrc.includes('RESTAURANT') || typeSrc.includes('PEDESTRIAN') ||
+          typeSrc.includes('AEROLIVE') || typeSrc.includes('UNDEF')) {
+        return;
+      }
+
+      if (isRunType(typeSrc)) {
+        runs.push({ name, status });
+      } else if (isLiftType(typeSrc)) {
+        lifts.push({ name, status });
+      }
+    });
+  }
+
+  // Try OLD format: prl_group (Trois Vallées bulletin - lifts only)
   if (lifts.length === 0 && runs.length === 0) {
-    const groups = doc.querySelectorAll('.prl_group');
+    const groups = doc.querySelectorAll('.prl_group[title]');
     groups.forEach(group => {
-      const nameEl = group.querySelector('.prl_nm');
-      const statusEl = group.querySelector('img[src*=".svg"]');
+      const name = group.getAttribute('title')?.trim().replace(/\.$/, '');
+      const typeImg = group.querySelector('img.img_type');
+      const statusImg = group.querySelector('img.image_status') ||
+                        group.parentElement?.querySelector('img.image_status');
 
-      if (nameEl && statusEl) {
-        const name = nameEl.textContent.trim();
-        const src = statusEl.getAttribute('src') || '';
-        const statusMatch = src.match(/([OFP])\.svg$/);
-        const status = statusMatch ? {
-          'O': 'open',
-          'P': 'scheduled',
-          'F': 'closed'
-        }[statusMatch[1]] || 'closed' : 'closed';
+      if (!name) return;
 
+      const typeSrc = typeImg?.getAttribute('src') || '';
+      const statusSrc = statusImg?.getAttribute('src') || '';
+      const status = parseStatus(statusSrc);
+
+      // Old format mostly has lifts, but check for run types
+      if (isRunType(typeSrc)) {
+        runs.push({ name, status });
+      } else {
         lifts.push({ name, status });
       }
     });
@@ -1106,7 +1238,7 @@ async function extractResort(resortId) {
     return { error: `Resort not found: ${resortId}` };
   }
 
-  console.log(`Extracting: ${resort.name} (${resort.platform})`);
+  // Logging moved to runAll() for batched output
 
   try {
     switch (resort.platform) {
@@ -1164,29 +1296,65 @@ async function extractResort(resortId) {
 }
 
 /**
- * Run all resorts and generate report
+ * Run all resorts and generate report with parallel execution
  */
 async function runAll() {
   const results = {};
+  const total = resorts.length;
+  const startTime = Date.now();
+  let completed = 0;
 
-  for (const resort of resorts) {
-    console.log(`\n[${resorts.indexOf(resort) + 1}/${resorts.length}] ${resort.name}...`);
-    const result = await extractResort(resort.id);
-    results[resort.id] = {
-      name: resort.name,
-      platform: resort.platform,
-      openskimap_id: resort.openskimap_id,
-      ...result
-    };
+  console.log(`Starting parallel extraction of ${total} resorts (concurrency: ${CONCURRENCY_LIMIT})\n`);
 
-    if (result.error) {
-      console.log(`  ❌ Error: ${result.error}`);
-    } else if (result.note) {
-      console.log(`  ⚠️  ${result.note}`);
-    } else {
-      console.log(`  ✓ Lifts: ${result.lifts?.length || 0}, Runs: ${result.runs?.length || 0}`);
+  // Process in batches for controlled concurrency
+  for (let i = 0; i < resorts.length; i += CONCURRENCY_LIMIT) {
+    const batch = resorts.slice(i, i + CONCURRENCY_LIMIT);
+    const batchNum = Math.floor(i / CONCURRENCY_LIMIT) + 1;
+    const totalBatches = Math.ceil(resorts.length / CONCURRENCY_LIMIT);
+
+    console.log(`\n--- Batch ${batchNum}/${totalBatches} (resorts ${i + 1}-${Math.min(i + CONCURRENCY_LIMIT, total)}) ---`);
+
+    // Print "starting" messages immediately (unbatched) so user sees activity
+    for (const resort of batch) {
+      process.stdout.write(`  → Testing ${resort.name}...\n`);
+    }
+
+    // Run batch in parallel and collect results
+    const batchResults = await Promise.all(
+      batch.map(async (resort, batchIndex) => {
+        const resortStartTime = Date.now();
+        try {
+          const result = await extractResort(resort.id);
+          return { resort, result, duration: Date.now() - resortStartTime };
+        } catch (e) {
+          return { resort, result: { error: e.message }, duration: Date.now() - resortStartTime };
+        }
+      })
+    );
+
+    // Print grouped results after batch completes
+    console.log('');  // Blank line before results
+    for (const { resort, result, duration } of batchResults) {
+      completed++;
+      results[resort.id] = {
+        name: resort.name,
+        platform: resort.platform,
+        openskimap_id: resort.openskimap_id,
+        ...result
+      };
+
+      const status = result.error
+        ? `❌ Error: ${result.error}`
+        : result.note
+          ? `⚠️  ${result.note}`
+          : `✓ Lifts: ${result.lifts?.length || 0}, Runs: ${result.runs?.length || 0}`;
+
+      console.log(`  [${completed}/${total}] ${resort.name} (${duration}ms) - ${status}`);
     }
   }
+
+  const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+  console.log(`\nCompleted in ${totalTime}s`);
 
   return results;
 }

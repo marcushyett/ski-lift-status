@@ -15,6 +15,7 @@ jobs:
   test-configs:
     name: Test Resort Configurations
     runs-on: ubuntu-latest
+    timeout-minutes: 30  # Limit total job time
     permissions:
       contents: write
 
