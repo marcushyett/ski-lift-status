@@ -987,52 +987,47 @@ async function extractSkistar(config) {
 
 /**
  * Extract using Laax pattern (live.laax.com)
+ * Parses server-side rendered HTML with 'widget lift' divs
  */
 async function extractLaax(config) {
-  // Laax uses a separate API at live.laax.com
-  const apiUrl = 'https://live.laax.com/api/lifts';
+  // Laax uses server-rendered HTML at live.laax.com/de/anlagen
+  const pageUrl = config.dataUrl || 'https://live.laax.com/de/anlagen';
+
   try {
-    const data = await fetch(apiUrl);
-    const json = JSON.parse(data);
-
-    const lifts = [];
-    if (Array.isArray(json)) {
-      json.forEach(lift => {
-        lifts.push({
-          name: lift.name || lift.title,
-          status: normalizeStatus(lift.status || lift.state)
-        });
-      });
-    }
-
-    return { lifts, runs: [] };
-  } catch (e) {
-    // Fallback to HTML parsing
-    const html = await fetch(config.url);
+    const html = await fetch(pageUrl);
     const dom = new JSDOM(html);
     const doc = dom.window.document;
 
     const lifts = [];
-    const rows = doc.querySelectorAll('.lift-item, .facility-row, tr[data-lift]');
 
-    rows.forEach(row => {
-      const nameEl = row.querySelector('.name, .title, td:nth-child(1)');
-      const statusEl = row.querySelector('.status, .state, td:nth-child(2)');
+    // Find all lift widgets: <div class="widget lift">
+    const liftWidgets = doc.querySelectorAll('.widget.lift');
 
+    liftWidgets.forEach(widget => {
+      // Get lift name from the h3 element
+      const nameEl = widget.querySelector('.h3, h3');
       const name = nameEl?.textContent?.trim();
-      const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+      if (!name) return;
+
+      // Get status from the indicator div class
+      // Classes: indicator open, indicator closed, indicator in-preparation
+      const indicator = widget.querySelector('.indicator');
+      const indicatorClass = indicator?.className?.toLowerCase() || '';
 
       let status = 'closed';
-      if (statusText.includes('open') || statusText.includes('offen')) {
+      if (indicatorClass.includes('open')) {
         status = 'open';
+      } else if (indicatorClass.includes('in-preparation')) {
+        status = 'scheduled';
       }
 
-      if (name) {
-        lifts.push({ name, status });
-      }
+      lifts.push({ name, status });
     });
 
     return { lifts, runs: [] };
+  } catch (e) {
+    return { error: e.message };
   }
 }
 
