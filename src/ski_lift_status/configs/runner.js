@@ -587,56 +587,109 @@ async function extractInfosnow(config) {
  * Extract using SkiWelt pattern (data-state attribute)
  */
 async function extractSkiwelt(config) {
-  const html = await fetch(config.url);
-  const dom = new JSDOM(html);
-  const doc = dom.window.document;
+  // Use Micado JSON API (discovered via xhr-fetcher)
+  const dataUrl = config.dataUrl || 'https://www.skiwelt.at/webapi/micadoweb?api=Micado.Ski.Web/Micado.Ski.Web.IO.Api.FacilityApi/List.api&client=https%3A%2F%2Fsgm.skiwelt.at&lang=en&region=skiwelt&season=winter&typeIDs=1';
 
-  const lifts = [];
-  const rows = doc.querySelectorAll('div.wrapper > div.row, [data-state]');
+  try {
+    const json = await fetch(dataUrl);
+    const data = JSON.parse(json);
 
-  rows.forEach(row => {
-    const state = row.getAttribute('data-state');
-    const nameEl = row.querySelector('.name, .title') || row.children[2];
-    const name = nameEl?.textContent?.trim();
+    const lifts = [];
 
-    if (name && state !== null) {
-      lifts.push({
-        name,
-        status: state === '1' ? 'open' : 'closed'
+    if (data.items && Array.isArray(data.items)) {
+      data.items.forEach(item => {
+        const name = item.title;
+        const state = (item.state || '').toLowerCase();
+        const status = state === 'opened' || state === 'open' ? 'open' :
+                       state === 'scheduled' ? 'scheduled' : 'closed';
+
+        if (name) {
+          lifts.push({ name, status });
+        }
       });
     }
-  });
 
-  return { lifts, runs: [] };
+    return { lifts, runs: [] };
+  } catch (e) {
+    // Fallback to HTML parsing
+    const html = await fetch(config.url);
+    const dom = new JSDOM(html);
+    const doc = dom.window.document;
+
+    const lifts = [];
+    const rows = doc.querySelectorAll('div.wrapper > div.row, [data-state]');
+
+    rows.forEach(row => {
+      const state = row.getAttribute('data-state');
+      const nameEl = row.querySelector('.name, .title') || row.children[2];
+      const name = nameEl?.textContent?.trim();
+
+      if (name && state !== null) {
+        lifts.push({
+          name,
+          status: state === '1' ? 'open' : 'closed'
+        });
+      }
+    });
+
+    return { lifts, runs: [] };
+  }
 }
 
 /**
- * Extract using Kitzbühel pattern
+ * Extract using Kitzbühel pattern - uses Micado JSON API
  */
 async function extractKitzski(config) {
-  const html = await fetch(config.url);
-  const dom = new JSDOM(html);
-  const doc = dom.window.document;
+  // Use Micado JSON API (discovered via xhr-fetcher)
+  const dataUrl = config.dataUrl || 'https://www.kitzski.at/webapi/micadoweb?api=SkigebieteManager/Micado.SkigebieteManager.Plugin.FacilityApi/ListFacilities.api&extensions=o&client=https%3A%2F%2Fsgm.kitzski.at&lang=en&region=kitzski&season=winter&type=lift';
 
-  const states = ['?', 'open', 'closed'];
-  const lifts = [];
-  const items = doc.querySelectorAll('.lifts li[data-locationid] > a, .lift-item, [data-locationid]');
+  try {
+    const json = await fetch(dataUrl);
+    const data = JSON.parse(json);
 
-  items.forEach(item => {
-    const statusEl = item.querySelector('[class*="status"]') || item.children[0];
-    const statusClass = statusEl?.className || '';
-    const statusMatch = statusClass.match(/(\d)$/);
-    const status = statusMatch ? states[parseInt(statusMatch[1], 10)] || 'closed' : 'closed';
+    const lifts = [];
+    const runs = [];
 
-    const nameEl = item.querySelector('.name, .title') || item.children[1];
-    const name = nameEl?.textContent?.trim();
+    // Lifts are in facilities array
+    if (data.facilities && Array.isArray(data.facilities)) {
+      data.facilities.forEach(item => {
+        const name = item.title;
+        // status: 1=open, 0=closed
+        const status = item.status === 1 ? 'open' : 'closed';
 
-    if (name) {
-      lifts.push({ name, status });
+        if (name) {
+          lifts.push({ name, status });
+        }
+      });
     }
-  });
 
-  return { lifts, runs: [] };
+    return { lifts, runs };
+  } catch (e) {
+    // Fallback to HTML parsing
+    const html = await fetch(config.url);
+    const dom = new JSDOM(html);
+    const doc = dom.window.document;
+
+    const states = ['?', 'open', 'closed'];
+    const lifts = [];
+    const items = doc.querySelectorAll('.lifts li[data-locationid] > a, .lift-item, [data-locationid]');
+
+    items.forEach(item => {
+      const statusEl = item.querySelector('[class*="status"]') || item.children[0];
+      const statusClass = statusEl?.className || '';
+      const statusMatch = statusClass.match(/(\d)$/);
+      const status = statusMatch ? states[parseInt(statusMatch[1], 10)] || 'closed' : 'closed';
+
+      const nameEl = item.querySelector('.name, .title') || item.children[1];
+      const name = nameEl?.textContent?.trim();
+
+      if (name) {
+        lifts.push({ name, status });
+      }
+    });
+
+    return { lifts, runs: [] };
+  }
 }
 
 /**
@@ -726,36 +779,76 @@ async function extractIschgl(config) {
 }
 
 /**
- * Extract using Sölden pattern
+ * Extract using Sölden pattern - uses Intermaps JSON API
  */
 async function extractSoelden(config) {
-  const html = await fetch(config.url);
-  const dom = new JSDOM(html);
-  const doc = dom.window.document;
+  // Use Intermaps JSON API (discovered via xhr-fetcher)
+  const dataUrl = config.dataUrl || 'https://winter.intermaps.com/soelden/data?lang=en';
 
-  const lifts = [];
+  try {
+    const json = await fetch(dataUrl);
+    const data = JSON.parse(json);
 
-  // Look for lift status elements
-  const items = doc.querySelectorAll('[class*="facility-item"], [class*="lift-item"], .status-item');
+    const lifts = [];
+    const runs = [];
 
-  items.forEach(item => {
-    const nameEl = item.querySelector('[class*="name"], .title, h3, h4');
-    const statusEl = item.querySelector('[class*="status"], [class*="state"]');
+    // Process lifts
+    if (data.lifts && Array.isArray(data.lifts)) {
+      data.lifts.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
 
-    const name = nameEl?.textContent?.trim();
-    const statusText = statusEl?.textContent?.toLowerCase() || statusEl?.className?.toLowerCase() || '';
-
-    let status = 'closed';
-    if (statusText.includes('open') || statusText.includes('geöffnet')) {
-      status = 'open';
+        if (name) {
+          lifts.push({ name, status });
+        }
+      });
     }
 
-    if (name) {
-      lifts.push({ name, status });
-    }
-  });
+    // Process slopes/runs
+    if (data.slopes && Array.isArray(data.slopes)) {
+      data.slopes.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
 
-  return { lifts, runs: [] };
+        if (name) {
+          runs.push({ name, status });
+        }
+      });
+    }
+
+    return { lifts, runs };
+  } catch (e) {
+    // Fallback to HTML parsing
+    const html = await fetch(config.url);
+    const dom = new JSDOM(html);
+    const doc = dom.window.document;
+
+    const lifts = [];
+    const items = doc.querySelectorAll('[class*="facility-item"], [class*="lift-item"], .status-item');
+
+    items.forEach(item => {
+      const nameEl = item.querySelector('[class*="name"], .title, h3, h4');
+      const statusEl = item.querySelector('[class*="status"], [class*="state"]');
+
+      const name = nameEl?.textContent?.trim();
+      const statusText = statusEl?.textContent?.toLowerCase() || statusEl?.className?.toLowerCase() || '';
+
+      let status = 'closed';
+      if (statusText.includes('open') || statusText.includes('geöffnet')) {
+        status = 'open';
+      }
+
+      if (name) {
+        lifts.push({ name, status });
+      }
+    });
+
+    return { lifts, runs: [] };
+  }
 }
 
 /**
@@ -1336,35 +1429,75 @@ async function extractGrandvalira(config) {
  * Extract using Mayrhofen pattern
  */
 async function extractMayrhofen(config) {
-  const html = await fetch(config.url);
-  const dom = new JSDOM(html);
-  const doc = dom.window.document;
+  // Use Intermaps JSON API (discovered via xhr-fetcher - same as Sölden)
+  const dataUrl = config.dataUrl || 'https://winter.intermaps.com/mayrhofen/data?lang=en';
 
-  const lifts = [];
+  try {
+    const json = await fetch(dataUrl);
+    const data = JSON.parse(json);
 
-  // Look for lift status table or list
-  const rows = doc.querySelectorAll('table tbody tr, .lift-row, [class*="bergbahn"]');
+    const lifts = [];
+    const runs = [];
 
-  rows.forEach(row => {
-    const nameEl = row.querySelector('td:nth-child(1), .name, .title');
-    const statusEl = row.querySelector('td:nth-child(2), .status, [class*="status"]');
+    // Process lifts
+    if (data.lifts && Array.isArray(data.lifts)) {
+      data.lifts.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
 
-    const name = nameEl?.textContent?.trim();
-    const statusClass = statusEl?.className?.toLowerCase() || '';
-    const statusText = statusEl?.textContent?.toLowerCase() || '';
-
-    let status = 'closed';
-    if (statusClass.includes('open') || statusClass.includes('green') ||
-        statusText.includes('open') || statusText.includes('geöffnet') || statusText.includes('in betrieb')) {
-      status = 'open';
+        if (name) {
+          lifts.push({ name, status });
+        }
+      });
     }
 
-    if (name) {
-      lifts.push({ name, status });
-    }
-  });
+    // Process slopes/runs
+    if (data.slopes && Array.isArray(data.slopes)) {
+      data.slopes.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
 
-  return { lifts, runs: [] };
+        if (name) {
+          runs.push({ name, status });
+        }
+      });
+    }
+
+    return { lifts, runs };
+  } catch (e) {
+    // Fallback to HTML parsing
+    const html = await fetch(config.url);
+    const dom = new JSDOM(html);
+    const doc = dom.window.document;
+
+    const lifts = [];
+    const rows = doc.querySelectorAll('table tbody tr, .lift-row, [class*="bergbahn"]');
+
+    rows.forEach(row => {
+      const nameEl = row.querySelector('td:nth-child(1), .name, .title');
+      const statusEl = row.querySelector('td:nth-child(2), .status, [class*="status"]');
+
+      const name = nameEl?.textContent?.trim();
+      const statusClass = statusEl?.className?.toLowerCase() || '';
+      const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+      let status = 'closed';
+      if (statusClass.includes('open') || statusClass.includes('green') ||
+          statusText.includes('open') || statusText.includes('geöffnet') || statusText.includes('in betrieb')) {
+        status = 'open';
+      }
+
+      if (name) {
+        lifts.push({ name, status });
+      }
+    });
+
+    return { lifts, runs: [] };
+  }
 }
 
 /**
