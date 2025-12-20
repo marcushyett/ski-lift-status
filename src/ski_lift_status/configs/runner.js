@@ -1321,63 +1321,51 @@ async function extractSeelift(config) {
 
 /**
  * Extract using Saalbach/Skicircus pattern
- * Uses Bootstrap table with lift categories
+ * Uses Intermaps JSON API (same as Sölden, Ischgl)
  */
 async function extractSaalbach(config) {
-  const html = await fetch(config.url);
-  const dom = new JSDOM(html);
-  const doc = dom.window.document;
+  // Use Intermaps JSON API
+  const dataUrl = config.dataUrl || 'https://winter.intermaps.com/saalbach_hinterglemm_leogang_fieberbrunn/data?lang=en';
 
-  const lifts = [];
+  try {
+    const json = await fetch(dataUrl);
+    const data = JSON.parse(json);
 
-  // Parse lift items with identifier pattern (e.g., "A1Schattberg X-press I")
-  const rows = doc.querySelectorAll('tr, .lift-row, [class*="lift"]');
+    const lifts = [];
+    const runs = [];
 
-  rows.forEach(row => {
-    const text = row.textContent?.trim() || '';
-    // Match pattern: identifier + lift name
-    const match = text.match(/^([A-Z]\d+)(.+)$/);
-    if (match) {
-      const name = match[2].trim();
-      // Check if row has status indicator
-      const statusClass = row.className?.toLowerCase() || '';
-      const statusEl = row.querySelector('[class*="status"], [class*="state"]');
-      const statusText = statusEl?.textContent?.toLowerCase() || statusClass;
-
-      let status = 'closed';
-      if (statusText.includes('open') || statusClass.includes('operating')) {
-        status = 'open';
-      }
-
-      if (name) {
-        lifts.push({ name, status });
-      }
-    }
-  });
-
-  // Fallback: try generic table parsing
-  if (lifts.length === 0) {
-    const tableRows = doc.querySelectorAll('table tbody tr');
-    tableRows.forEach(row => {
-      const cells = row.querySelectorAll('td');
-      if (cells.length >= 2) {
-        const name = cells[1]?.textContent?.trim();
-        const statusCell = cells[0];
-        const statusClass = statusCell?.className?.toLowerCase() || '';
-
-        let status = 'closed';
-        if (statusClass.includes('open') || statusClass.includes('green')) {
-          status = 'open';
-        }
+    // Process lifts
+    if (data.lifts && Array.isArray(data.lifts)) {
+      data.lifts.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
 
         if (name) {
           lifts.push({ name, status });
         }
-      }
-    });
-  }
+      });
+    }
 
-  return { lifts, runs: [] };
+    // Process slopes/runs
+    if (data.slopes && Array.isArray(data.slopes)) {
+      data.slopes.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
+
+        if (name) {
+          runs.push({ name, status });
+        }
+      });
+    }
+
+    return { lifts, runs };
+  } catch (e) {
+    return { error: e.message };
+  }
 }
 
 /**
