@@ -5,5 +5,5 @@
   "platform": "davos",
   "url": "https://www.davosklostersmountains.ch/en/mountains/winter/live-info/current-operating-infos",
   "website": "https://www.davosklostersmountains.ch/",
-  "notes": "TODO: Swiss resort - Vue.js SPA. Need to discover undocumented API endpoint."
+  "notes": "TODO: Vue.js SPA - use XHR Fetcher /analyze with extended timeout. Look for GraphQL or REST /api/anlagen, /api/facilities endpoints. May use same platform as Arosa."
 }

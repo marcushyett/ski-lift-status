@@ -6,5 +6,5 @@
   "url": "https://www.serre-chevalier.com/en/schedules-mechanical-lifts",
   "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=serrechevalier&region=alpes&pays=france&lang=en",
   "website": "https://www.serre-chevalier.com/",
-  "notes": "TODO: Uses ingenie.fr instead of Lumiplan. Need to discover actual data source."
+  "notes": "TODO: Uses ingenie.fr instead of Lumiplan - use XHR Fetcher /analyze. Look for ski.ingenie.fr API calls or iframe embeds. May need custom ingenie.fr extractor."
 }

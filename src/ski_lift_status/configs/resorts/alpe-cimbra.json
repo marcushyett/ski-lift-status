@@ -5,5 +5,5 @@
   "platform": "folgaria",
   "url": "https://www.alpecimbra.it/en/alpe-cimbra-ski-area/alpe-cimbra-ski-area/",
   "website": "https://www.alpecimbra.it/",
-  "notes": "TODO: Italian resort - Uses Mowi Snow mobile app. Need to discover API endpoint."
+  "notes": "TODO: Uses Mowi Snow mobile app - use XHR Fetcher /analyze. Look for app.mowiski.com API calls or iframe embeds. Check for alternate Dolomiti Superski integration."
 }
