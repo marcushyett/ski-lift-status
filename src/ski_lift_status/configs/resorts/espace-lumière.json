@@ -6,6 +6,5 @@
   "url": "https://en.valdallos.com/ouverture-des-pistes.html",
   "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=espacelumiere&region=alpes&pays=france&lang=en",
   "website": "https://www.praloup.com/",
-  "requiresBrowserRendering": true,
-  "notes": "Lumiplan bulletin returns empty data. Pra Loup/Val d'Allos may use different data source."
+  "notes": "TODO: Lumiplan bulletin returns empty data. Need to discover actual data source."
 }

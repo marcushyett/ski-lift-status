@@ -5,6 +5,5 @@
   "platform": "arosa",
   "url": "https://arosalenzerheide.swiss/en/Arosa/Up-to-date/Winter-sports-report",
   "website": "https://arosalenzerheide.swiss/",
-  "requiresBrowserRendering": true,
-  "notes": "Swiss resort - Vue.js SPA with data loaded via AJAX. Requires browser rendering."
+  "notes": "TODO: Swiss resort - Vue.js SPA. Need to discover AJAX API endpoint."
 }

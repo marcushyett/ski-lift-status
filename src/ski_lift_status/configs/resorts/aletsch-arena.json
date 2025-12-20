@@ -5,6 +5,5 @@
   "platform": "aletsch",
   "url": "https://www.aletscharena.ch/en/here-now/live/status-report/status-report-winter",
   "website": "https://www.aletscharena.ch/",
-  "requiresBrowserRendering": true,
-  "notes": "Swiss resort - TYPO3 CMS with JavaScript-rendered tables. Requires browser rendering which is not currently supported."
+  "notes": "TODO: Swiss resort - TYPO3 CMS. Need to discover API endpoint or implement HTML parser."
 }

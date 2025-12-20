@@ -5,6 +5,5 @@
   "platform": "stmoritz",
   "url": "https://www.stmoritz.com/en/live/cable-cars-slopes",
   "website": "https://www.mountains.ch/",
-  "requiresBrowserRendering": true,
-  "notes": "Swiss resort (St. Moritz) - TYPO3 CMS with JavaScript loading. Requires browser rendering."
+  "notes": "TODO: Swiss resort (St. Moritz) - TYPO3 CMS. Need to discover API endpoint."
 }

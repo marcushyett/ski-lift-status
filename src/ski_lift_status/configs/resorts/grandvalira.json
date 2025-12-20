@@ -5,6 +5,5 @@
   "platform": "grandvalira",
   "url": "https://www.grandvalira.com/en/resort/open-slopes",
   "website": "https://www.grandvalira.com/",
-  "requiresBrowserRendering": true,
-  "notes": "Andorran resort - Drupal CMS with embedded JSON state. Requires JavaScript rendering."
+  "notes": "TODO: Andorran resort - Drupal CMS with embedded JSON. Need to discover API or parse embedded JSON."
 }

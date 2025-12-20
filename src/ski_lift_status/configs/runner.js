@@ -1188,58 +1188,43 @@ async function extractBaqueira(config) {
 }
 
 /**
- * Extract using Big Sky pattern
+ * Extract using Big Sky ReportPal JSON API
+ * API: https://www.bigskyresort.com/api/reportpal?resortName=bs&useReportPal=true
  */
 async function extractBigsky(config) {
-  const html = await fetch(config.url);
-  const dom = new JSDOM(html);
-  const doc = dom.window.document;
+  // Use the ReportPal JSON API
+  const apiUrl = config.dataUrl || 'https://www.bigskyresort.com/api/reportpal?resortName=bs&useReportPal=true';
+  const response = await fetch(apiUrl);
+  const data = JSON.parse(response);
 
   const lifts = [];
+  const runs = [];
 
-  // Try to find embedded JSON data first
-  const scripts = doc.querySelectorAll('script');
-  for (const script of scripts) {
-    const text = script.textContent || '';
-    if (text.includes('liftStatus') || text.includes('terrainStatus')) {
-      const jsonMatch = text.match(/\{[\s\S]*"lifts?"[\s\S]*\}/);
-      if (jsonMatch) {
-        try {
-          const data = JSON.parse(jsonMatch[0]);
-          const liftData = data.lifts || data.liftStatus || [];
-          liftData.forEach(lift => {
-            lifts.push({
-              name: lift.name || lift.liftName,
-              status: normalizeStatus(lift.status)
-            });
-          });
-        } catch (e) {}
-      }
+  // Extract lifts from facilities.areas.area[].lifts.lift[]
+  const facilities = data.facilities || {};
+  const areas = facilities.areas?.area || [];
+
+  for (const area of areas) {
+    const areaLifts = area.lifts?.lift || [];
+    for (const lift of areaLifts) {
+      lifts.push({
+        name: lift.name,
+        status: normalizeStatus(lift.status)
+      });
+    }
+
+    // Extract trails/runs from facilities.areas.area[].trails.trail[]
+    const areaTrails = area.trails?.trail || [];
+    for (const trail of areaTrails) {
+      runs.push({
+        name: trail.name,
+        status: normalizeStatus(trail.status),
+        difficulty: trail.difficulty
+      });
     }
   }
 
-  if (lifts.length === 0) {
-    // Fallback to table parsing
-    const rows = doc.querySelectorAll('.lift-row, table tbody tr');
-    rows.forEach(row => {
-      const nameEl = row.querySelector('.name, td:first-child');
-      const statusEl = row.querySelector('.status, td:last-child');
-
-      const name = nameEl?.textContent?.trim();
-      const statusText = statusEl?.textContent?.toLowerCase() || '';
-
-      let status = 'closed';
-      if (statusText.includes('open')) {
-        status = 'open';
-      }
-
-      if (name) {
-        lifts.push({ name, status });
-      }
-    });
-  }
-
-  return { lifts, runs: [] };
+  return { lifts, runs };
 }
 
 /**

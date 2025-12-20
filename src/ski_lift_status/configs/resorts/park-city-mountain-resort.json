@@ -5,6 +5,5 @@
   "platform": "vail",
   "url": "https://www.parkcitymountain.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
   "website": "https://parkcitymountain.com",
-  "requiresBrowserRendering": true,
-  "notes": "Vail/Epic resort - WAF blocks automated requests. Try Epic mobile app API."
+  "notes": "TODO: Vail/Epic resort - WAF blocks automated requests. Need to discover Epic mobile app API."
 }

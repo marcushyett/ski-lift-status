@@ -5,6 +5,5 @@
   "platform": "davos",
   "url": "https://www.davosklostersmountains.ch/en/mountains/winter/live-info/current-operating-infos",
   "website": "https://www.davosklostersmountains.ch/",
-  "requiresBrowserRendering": true,
-  "notes": "Swiss resort - Vue.js SPA with custom undocumented API. Requires browser rendering."
+  "notes": "TODO: Swiss resort - Vue.js SPA. Need to discover undocumented API endpoint."
 }
