@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "updated": "2025-12-20",
-  "total_resorts": 53,
+  "total_resorts": 52,
   "platforms": {},
   "resorts": [
     {
@@ -38,9 +38,9 @@
       "openskimap_id": "721dd142d0af653027c7569e1bd0799586bdefa1",
       "platform": "lumiplan",
       "url": "https://www.alpedhuez.com/en/winter/open-lifts-and-slopes/",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=alpe-d-huez&region=alpes&pays=france&lang=en",
       "liftieId": null,
-      "notes": "See* network site - uses Lumiplan status images",
-      "lumiplanMapId": "alpe-dhuez-grand-domaine"
+      "notes": "Uses Lumiplan bulletin"
     },
     {
       "id": "alta-badia",
@@ -74,8 +74,8 @@
       "openskimap_id": "7cac2b19d023f887e458c354be9caf833b6aed6d",
       "platform": "lumiplan",
       "url": "https://www.avoriaz.com",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=avoriaz&region=alpes&pays=france&lang=en",
-      "notes": "Uses Lumiplan bulletin"
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=morzine---avoriaz---les-gets&region=alpes&pays=france&lang=en",
+      "notes": "Uses Lumiplan bulletin (Portes du Soleil domain)"
     },
     {
       "id": "big-sky-resort",
@@ -127,19 +127,21 @@
       "id": "espace-lumière",
       "name": "Espace Lumière",
       "openskimap_id": "e7c4c03bd7f9a3d907ff566775cfba1823bcf2ae",
-      "platform": "skiplan",
+      "platform": "lumiplan",
       "url": "https://en.valdallos.com/ouverture-des-pistes.html",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=espacelumiere&region=alpes&pays=france&lang=en",
       "website": "https://www.praloup.com/",
-      "notes": "Val d'Allos uses SkiPlan by Ingenie"
+      "notes": "Uses Lumiplan bulletin (Pra Loup/Val d'Allos)"
     },
     {
       "id": "forêt-blanche-varsrisoul",
       "name": "Forêt Blanche : Vars/Risoul",
       "openskimap_id": "9d0b2c5e0fcac9deba9c727a834cac4b43a5d2c9",
-      "platform": "vars",
+      "platform": "lumiplan",
       "url": "https://www.vars.com/winter/on-site-activities/skiing-and-snowboarding/the-ski-area/snow-bulletin/",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=vars&region=alpes&pays=france&lang=en",
       "website": "https://www.vars.com/hiver/",
-      "notes": "Vars/Risoul snow bulletin"
+      "notes": "Uses Lumiplan bulletin (Vars/Risoul)"
     },
     {
       "id": "gletscher-skigebiet-zugspitze-ski-resort-zugspitze",
@@ -174,7 +176,7 @@
       "openskimap_id": "9cb83fdd2a49011eec76e3d1bbc2af8f582888a9",
       "platform": "lumiplan",
       "url": "https://www.laclusaz.com/en/ski/alpine-skiing/",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=laclusaz&region=alpes&pays=france&lang=en",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=clusaz&region=alpes&pays=france&lang=en",
       "liftieId": null,
       "notes": "Uses Lumiplan bulletin"
     },
@@ -202,9 +204,9 @@
       "openskimap_id": "f5fcc0e543cfb0e4d50280c286081c27d975697f",
       "platform": "lumiplan",
       "url": "https://skipass.valmorel.com/en/",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=legranddomaine&region=alpes&pays=france&lang=en",
       "website": "https://www.legranddomaine.fr/",
-      "lumiplanMapId": "valmorel",
-      "notes": "Le Grand Domaine - try Lumiplan integration"
+      "notes": "Uses Lumiplan bulletin"
     },
     {
       "id": "le-grand-massif",
@@ -241,9 +243,9 @@
       "openskimap_id": "cafb6b6d5f25860a682a8b6d67efe689218618a5",
       "platform": "lumiplan",
       "url": "https://www.lesgets.com/en/discover-the-resort/ski-winter-sports/live-info-slopes/",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=lesgets&region=alpes&pays=france&lang=en",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=morzine---avoriaz---les-gets&region=alpes&pays=france&lang=en",
       "liftieId": "morzine",
-      "notes": "Uses Lumiplan bulletin"
+      "notes": "Uses Lumiplan bulletin (Portes du Soleil domain)"
     },
     {
       "id": "les-sybelles",
@@ -292,7 +294,7 @@
       "openskimap_id": "68b126bc3175516c9263aed7635d14e37ff360dc",
       "platform": "lumiplan",
       "url": "https://meribel.net",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=meribel&region=alpes&pays=france&lang=en",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=alpina-mottaret&region=alpes&pays=france&lang=en",
       "liftieId": "meribel",
       "notes": "Uses Lumiplan bulletin"
     },
@@ -309,17 +311,18 @@
       "name": "Parsenn (Davos Klosters)",
       "openskimap_id": "403c8d67ddd348bfa3f7d02c6c21163479964926",
       "platform": "davos",
-      "url": "https://www.davos.ch/en/discover/mountains/winter-sports-report/lifts-and-piste-report",
+      "url": "https://www.parsenn.com/en/mountains/winter/live-info/current-operating-infos",
       "website": "https://www.davosklostersmountains.ch/",
-      "notes": "Vue.js SPA - fetches data via API"
+      "notes": "Swiss resort - uses davosklostersmountains.ch API"
     },
     {
       "id": "perisher",
       "name": "Perisher",
       "openskimap_id": "3885048f9cb77cae837d23131d2f8fb78d06f807",
       "platform": "perisher",
-      "url": "https://www.perisher.com.au/conditions/lifts-and-terrain",
-      "website": "https://www.charlottepass.com.au/ https://www.perisher.com.au/"
+      "url": "https://www.perisher.com.au/reports-cams/reports/lift-report",
+      "website": "https://www.perisher.com.au/",
+      "notes": "Australian resort - off-season May-September"
     },
     {
       "id": "serfaus-fiss-ladis",
@@ -332,22 +335,13 @@
     },
     {
       "id": "serre-chevalier",
-      "name": "Serre Chevalier",
+      "name": "Serre-Chevalier",
       "openskimap_id": "39136d396c46f03d9e84227cd2bccbdf60c55efd",
       "platform": "lumiplan",
       "url": "https://www.serre-chevalier.com/en/schedules-mechanical-lifts",
       "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=serrechevalier&region=alpes&pays=france&lang=en",
-      "liftieId": null,
+      "website": "https://www.serre-chevalier.com/",
       "notes": "Uses Lumiplan bulletin"
-    },
-    {
-      "id": "serre-chevalier",
-      "name": "Serre-Chevalier",
-      "openskimap_id": "94cb050e1e20e04e822c14216840885aea2eafcc",
-      "platform": "lumiplan",
-      "url": "https://www.serre-chevalier.com/en/schedules-mechanical-lifts",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=serrechevalier&region=alpes&pays=france&lang=en",
-      "website": "https://www.serre-chevalier.com/"
     },
     {
       "id": "silvretta-arena-ischglsamnaun",
@@ -371,9 +365,9 @@
       "name": "Skicircus Saalbach-Hinterglemm Leogang Fieberbrunn",
       "openskimap_id": "5b78e5652d097c7679cef7128ee1b57ff09fb86e",
       "platform": "saalbach",
-      "url": "https://www.fieberbrunn.com/liftoperation",
-      "liftieId": null,
-      "notes": "Skicircus uses Bootstrap table with lift categories"
+      "url": "https://www.saalbach.com/en/winter/skiarea/lifts-slopes",
+      "liftieId": "saalbach-hinterglemm",
+      "notes": "Austrian Skicircus resort"
     },
     {
       "id": "cerna-hora-pec",
@@ -427,8 +421,7 @@
       "url": "https://www.tignes.net",
       "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=tignes&region=alpes&pays=france&lang=en",
       "liftieId": "tignes",
-      "notes": "Uses Lumiplan bulletin",
-      "lumiplanMapId": "Tignes_ValdIsere"
+      "notes": "Uses Lumiplan bulletin"
     },
     {
       "id": "trysil",
@@ -444,7 +437,7 @@
       "openskimap_id": "6ed5f25f0eb3e366ee2e0e667d998c0bf551225f",
       "platform": "lumiplan",
       "url": "https://valdisere.com",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=valdisere&region=alpes&pays=france&lang=en",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=val-d-isere&region=alpes&pays=france&lang=en",
       "liftieId": "valdisere",
       "notes": "Uses Lumiplan bulletin (same domain as Tignes)"
     },

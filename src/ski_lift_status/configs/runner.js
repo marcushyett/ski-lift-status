@@ -290,7 +290,15 @@ async function extractLumiplanHtml(config) {
   // Run/trail type patterns
   const runTypes = [
     'DOWNHILL_SKIING', 'CROSS_COUNTRY', 'SLEDDING', 'SNOWSHOE',
-    'SKI_TOURING', 'BOARDERCROSS', 'SNOWPARK', 'FUN_ZONE'
+    'SKI_TOURING', 'BOARDERCROSS', 'SNOWPARK', 'FUN_ZONE',
+    // Old format codes: DH=Downhill, XC=Cross-country, VE=Enduro, A=Alpine, F=Nordic
+    // Suffixes: V=Green, B=Blue, R=Red, N=Black, J=Yellow
+    'DH-V', 'DH-B', 'DH-R', 'DH-N', 'DH-J',
+    'XC-V', 'XC-B', 'XC-R', 'XC-N',
+    'VE-V', 'VE-B', 'VE-R', 'VE-N',
+    'A-V', 'A-B', 'A-R', 'A-N',
+    'F-V', 'F-B', 'F-R', 'F-N',
+    '/DH', '/XC', '/VE', '/A-', '/F-'  // Partial matches for type images
   ];
 
   // Parse status from image src
@@ -318,7 +326,13 @@ async function extractLumiplanHtml(config) {
 
   function isRunType(typeSrc) {
     if (!typeSrc) return false;
-    return runTypes.some(t => typeSrc.toUpperCase().includes(t));
+    const upper = typeSrc.toUpperCase();
+    // Check for explicit run patterns
+    if (runTypes.some(t => upper.includes(t.toUpperCase()))) return true;
+    // Also check for skiing/trail indicators
+    if (upper.includes('PISTE') || upper.includes('TRAIL') || upper.includes('SKIING') ||
+        upper.includes('RUNWAY') || upper.includes('SLOPE')) return true;
+    return false;
   }
 
   // Try NEW format first: POI_info (La Plagne, etc.)
