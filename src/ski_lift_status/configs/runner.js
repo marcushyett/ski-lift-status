@@ -394,6 +394,39 @@ async function extractLumiplanHtml(config) {
 }
 
 /**
+ * Extract using SKIPLAN XML API
+ * Used by some French resorts (Avoriaz, etc.) that expose SKIPLAN data
+ */
+async function extractSkiplanXml(config) {
+  const dataUrl = config.dataUrl;
+  if (!dataUrl) return { error: 'No dataUrl specified for SKIPLAN XML' };
+
+  const xml = await fetch(dataUrl);
+
+  // Parse the XML response
+  const lifts = [];
+  const runs = [];
+
+  // Extract REMONTEE (lifts) - attributes may be escaped with \
+  const liftMatches = xml.matchAll(/<REMONTEE\s+nom=\\?"([^"\\]+)\\?"\s+etat=\\?"([^"\\]+)\\?"/g);
+  for (const match of liftMatches) {
+    const name = match[1].replace(/&apos;/g, "'").replace(/&amp;/g, '&');
+    const status = match[2] === 'O' ? 'open' : match[2] === 'P' ? 'scheduled' : 'closed';
+    lifts.push({ name, status });
+  }
+
+  // Extract PISTE (runs) - attributes may be escaped with \
+  const runMatches = xml.matchAll(/<PISTE\s+nom=\\?"([^"\\]+)\\?"\s+etat=\\?"([^"\\]+)\\?"/g);
+  for (const match of runMatches) {
+    const name = match[1].replace(/&apos;/g, "'").replace(/&amp;/g, '&');
+    const status = match[2] === 'O' ? 'open' : match[2] === 'P' ? 'scheduled' : 'closed';
+    runs.push({ name, status });
+  }
+
+  return { lifts, runs };
+}
+
+/**
  * Extract using Nuxt.js embedded data
  */
 async function extractNuxt(config) {
@@ -772,10 +805,51 @@ async function extractSkiarlberg(config) {
 }
 
 /**
- * Extract using Ischgl pattern
+ * Extract using Ischgl pattern - uses Intermaps JSON API
  */
 async function extractIschgl(config) {
-  return await extractSkiarlberg(config);  // Same pattern
+  // Use Intermaps JSON API (similar to Sölden)
+  const dataUrl = config.dataUrl || 'https://winter.intermaps.com/silvretta_arena/data?lang=en';
+
+  try {
+    const json = await fetch(dataUrl);
+    const data = JSON.parse(json);
+
+    const lifts = [];
+    const runs = [];
+
+    // Process lifts
+    if (data.lifts && Array.isArray(data.lifts)) {
+      data.lifts.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
+
+        if (name) {
+          lifts.push({ name, status });
+        }
+      });
+    }
+
+    // Process slopes/runs
+    if (data.slopes && Array.isArray(data.slopes)) {
+      data.slopes.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       statusText === 'scheduled' ? 'scheduled' : 'closed';
+
+        if (name) {
+          runs.push({ name, status });
+        }
+      });
+    }
+
+    return { lifts, runs };
+  } catch (e) {
+    return { error: e.message };
+  }
 }
 
 /**
@@ -1893,6 +1967,8 @@ async function extractResort(resortId) {
     switch (resort.platform) {
       case 'lumiplan':
         return await extractLumiplan(resort);
+      case 'skiplanxml':
+        return await extractSkiplanXml(resort);
       case 'nuxt':
         return await extractNuxt(resort);
       case 'dolomiti':
@@ -2091,6 +2167,21 @@ if (require.main === module) {
       const successful = Object.values(results).filter(r => !r.error && !r.note);
       console.log(`Successful: ${successful.length}/${Object.keys(results).length}`);
 
+      // Check for insufficient data (≤2 lifts AND ≤2 runs)
+      const insufficientData = Object.entries(results).filter(([id, r]) => {
+        if (r.error || r.note) return false;
+        const liftCount = r.lifts?.length || 0;
+        const runCount = r.runs?.length || 0;
+        return liftCount <= 2 && runCount <= 2;
+      });
+
+      if (insufficientData.length > 0) {
+        console.log(`\n⚠️  Resorts with insufficient data (≤2 lifts AND ≤2 runs): ${insufficientData.length}`);
+        insufficientData.forEach(([id, r]) => {
+          console.log(`  - ${r.name}: ${r.lifts?.length || 0} lifts, ${r.runs?.length || 0} runs`);
+        });
+      }
+
       console.log('\nBy platform:');
       const byPlatform = {};
       Object.values(results).forEach(r => {
@@ -2101,6 +2192,12 @@ if (require.main === module) {
       Object.entries(byPlatform).forEach(([p, s]) => {
         console.log(`  ${p}: ${s.success}/${s.total}`);
       });
+
+      // Exit with error code if there are insufficient data resorts
+      if (insufficientData.length > 0) {
+        console.log('\n❌ FAILED: Some resorts have insufficient data');
+        process.exit(1);
+      }
     });
   } else if (arg && arg !== '--map') {
     const fn = withMapping ? extractAndMap : extractResort;
