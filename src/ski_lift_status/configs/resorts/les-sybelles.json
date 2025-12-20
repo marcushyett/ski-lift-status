@@ -1,0 +1,11 @@
+{
+  "id": "les-sybelles",
+  "name": "Les Sybelles",
+  "openskimap_id": "775634f8f5f5b0724ecd27d82909b2008d58f7d5",
+  "platform": "lumiplan",
+  "url": "https://www.sybelles.ski/en/skiing-in-les-sybelles/slopes-and-lifts-open/",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=sybelles&region=alpes&pays=france&lang=en",
+  "lumiplanMapId": "7a6ed0ee-a613-476a-b9b3-25444e075f16",
+  "liftieId": null,
+  "notes": "Uses Lumiplan JSON API"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "tignes",
+  "name": "Tignes",
+  "openskimap_id": "6ed5f25f0eb3e366ee2e0e667d998c0bf551225f",
+  "platform": "lumiplan",
+  "url": "https://www.tignes.net",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=tignes&region=alpes&pays=france&lang=en",
+  "liftieId": "tignes",
+  "notes": "Uses Lumiplan bulletin"
+}

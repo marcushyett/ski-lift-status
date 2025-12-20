@@ -1,0 +1,10 @@
+{
+  "id": "la-clusaz",
+  "name": "La Clusaz",
+  "openskimap_id": "9cb83fdd2a49011eec76e3d1bbc2af8f582888a9",
+  "platform": "lumiplan",
+  "url": "https://www.laclusaz.com/en/ski/alpine-skiing/",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=clusaz&region=alpes&pays=france&lang=en",
+  "liftieId": null,
+  "notes": "Uses Lumiplan bulletin"
+}

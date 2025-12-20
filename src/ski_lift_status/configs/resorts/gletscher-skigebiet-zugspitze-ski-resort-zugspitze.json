@@ -1,0 +1,9 @@
+{
+  "id": "gletscher-skigebiet-zugspitze-ski-resort-zugspitze",
+  "name": "Gletscher-Skigebiet Zugspitze, Ski resort Zugspitze",
+  "openskimap_id": "9e8a091097aeb5af7c87b5f53922e3db043a9849",
+  "platform": "zugspitze",
+  "url": "https://zugspitze.de/en/Service-information/Facilities",
+  "website": "https://zugspitze.de/de/winter/skigebiet/zugspitze",
+  "notes": "German resort with React-based structured list"
+}

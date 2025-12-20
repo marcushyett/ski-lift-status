@@ -1,0 +1,10 @@
+{
+  "id": "arosa-lenzerheide",
+  "name": "Arosa Lenzerheide",
+  "openskimap_id": "4ae9b0cba5454d6f0921bf413c33a267f1d63cca",
+  "platform": "arosa",
+  "url": "https://arosalenzerheide.swiss/en/Arosa/Up-to-date/Winter-sports-report",
+  "website": "https://arosalenzerheide.swiss/",
+  "requiresBrowserRendering": true,
+  "notes": "Swiss resort - Vue.js SPA with data loaded via AJAX. Requires browser rendering."
+}

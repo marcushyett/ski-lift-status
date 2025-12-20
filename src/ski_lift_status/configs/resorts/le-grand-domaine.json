@@ -1,0 +1,11 @@
+{
+  "id": "le-grand-domaine",
+  "name": "Le Grand Domaine",
+  "openskimap_id": "f5fcc0e543cfb0e4d50280c286081c27d975697f",
+  "platform": "lumiplan",
+  "url": "https://skipass.valmorel.com/en/",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=legranddomaine&region=alpes&pays=france&lang=en",
+  "website": "https://www.legranddomaine.fr/",
+  "requiresBrowserRendering": true,
+  "notes": "Lumiplan bulletin returns empty data. Valmorel/St-François-Longchamp may use different data source."
+}

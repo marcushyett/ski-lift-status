@@ -1,0 +1,10 @@
+{
+  "id": "aletsch-arena",
+  "name": "Aletsch Arena",
+  "openskimap_id": "d264be37a4fd40a4de858be7fee0a5c077cb1068",
+  "platform": "aletsch",
+  "url": "https://www.aletscharena.ch/en/here-now/live/status-report/status-report-winter",
+  "website": "https://www.aletscharena.ch/",
+  "requiresBrowserRendering": true,
+  "notes": "Swiss resort - TYPO3 CMS with JavaScript-rendered tables. Requires browser rendering which is not currently supported."
+}

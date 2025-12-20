@@ -26,8 +26,14 @@ jobs:
 
       - name: Validate JSON configs
         run: |
-          node -e "JSON.parse(require('fs').readFileSync('src/ski_lift_status/configs/resorts.json'))"
-          echo "✓ resorts.json is valid JSON"
+          # Validate all individual resort config files
+          for f in src/ski_lift_status/configs/resorts/*.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$f'))"
+          done
+          echo "✓ All resort config JSON files are valid"
+
+          # Test that the index loader works
+          node -e "const c = require('./src/ski_lift_status/configs/resorts/index.js'); console.log('Loaded', c.resorts.length, 'resorts')"
 
       - name: Check runner.js syntax
         run: |

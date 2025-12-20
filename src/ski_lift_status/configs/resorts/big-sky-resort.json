@@ -1,0 +1,10 @@
+{
+  "id": "big-sky-resort",
+  "name": "Big Sky Resort",
+  "openskimap_id": "00fb2c5ba89284e0b4e3708d04d549905f260cf3",
+  "platform": "bigsky",
+  "url": "https://bigskyresort.com/the-mountain/conditions",
+  "website": "https://bigskyresort.com",
+  "requiresBrowserRendering": true,
+  "notes": "US resort - JavaScript SPA with custom API. Requires browser rendering."
+}

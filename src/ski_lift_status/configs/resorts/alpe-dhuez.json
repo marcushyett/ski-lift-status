@@ -1,0 +1,10 @@
+{
+  "id": "alpe-dhuez",
+  "name": "Alpe d'Huez Grand Domaine",
+  "openskimap_id": "721dd142d0af653027c7569e1bd0799586bdefa1",
+  "platform": "lumiplan",
+  "url": "https://www.alpedhuez.com/en/winter/open-lifts-and-slopes/",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=alpe-d-huez&region=alpes&pays=france&lang=en",
+  "liftieId": null,
+  "notes": "Uses Lumiplan bulletin"
+}

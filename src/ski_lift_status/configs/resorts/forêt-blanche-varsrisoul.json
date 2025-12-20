@@ -1,0 +1,10 @@
+{
+  "id": "forêt-blanche-varsrisoul",
+  "name": "Forêt Blanche : Vars/Risoul",
+  "openskimap_id": "9d0b2c5e0fcac9deba9c727a834cac4b43a5d2c9",
+  "platform": "lumiplan",
+  "url": "https://www.vars.com/winter/on-site-activities/skiing-and-snowboarding/the-ski-area/snow-bulletin/",
+  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=vars&region=alpes&pays=france&lang=en",
+  "website": "https://www.vars.com/hiver/",
+  "notes": "Uses Lumiplan bulletin (Vars/Risoul)"
+}

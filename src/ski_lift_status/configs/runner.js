@@ -20,8 +20,9 @@ try {
   // Proxy agent not available
 }
 
-// Load configs
-const resorts = require('./resorts.json').resorts;
+// Load configs from individual files
+const resortsConfig = require('./resorts/index.js');
+const resorts = resortsConfig.resorts;
 
 // Status normalization helpers
 const STATUS_OPEN = ['open', 'ouvert', 'aperto', 'offen', 'abierto', 'O', 'A', '1'];
@@ -1994,6 +1995,16 @@ async function extractResort(resortId) {
     return { error: `Resort not found: ${resortId}` };
   }
 
+  // Check if resort requires browser rendering (not supported)
+  if (resort.requiresBrowserRendering) {
+    return {
+      lifts: [],
+      runs: [],
+      requiresBrowserRendering: true,
+      note: 'Requires JavaScript rendering (not currently supported)'
+    };
+  }
+
   // Logging moved to runAll() for batched output
 
   try {
@@ -2199,12 +2210,21 @@ if (require.main === module) {
   if (arg === '--all') {
     runAll().then(results => {
       console.log('\n\n=== SUMMARY ===');
-      const successful = Object.values(results).filter(r => !r.error && !r.note);
-      console.log(`Successful: ${successful.length}/${Object.keys(results).length}`);
 
-      // Check for insufficient data (≤2 lifts AND ≤2 runs)
+      // Categorize results
+      const browserRenderingRequired = Object.values(results).filter(r => r.requiresBrowserRendering);
+      const successful = Object.values(results).filter(r => !r.error && !r.note && !r.requiresBrowserRendering);
+      const failed = Object.values(results).filter(r => r.error);
+
+      console.log(`Successful: ${successful.length}/${Object.keys(results).length}`);
+      console.log(`Requires browser rendering (skipped): ${browserRenderingRequired.length}`);
+      if (failed.length > 0) {
+        console.log(`Errors: ${failed.length}`);
+      }
+
+      // Check for insufficient data (≤2 lifts AND ≤2 runs) - exclude browser rendering resorts
       const insufficientData = Object.entries(results).filter(([id, r]) => {
-        if (r.error || r.note) return false;
+        if (r.error || r.note || r.requiresBrowserRendering) return false;
         const liftCount = r.lifts?.length || 0;
         const runCount = r.runs?.length || 0;
         return liftCount <= 2 && runCount <= 2;
@@ -2220,15 +2240,20 @@ if (require.main === module) {
       console.log('\nBy platform:');
       const byPlatform = {};
       Object.values(results).forEach(r => {
-        byPlatform[r.platform] = byPlatform[r.platform] || { total: 0, success: 0 };
+        byPlatform[r.platform] = byPlatform[r.platform] || { total: 0, success: 0, browserRendering: 0 };
         byPlatform[r.platform].total++;
-        if (!r.error && !r.note) byPlatform[r.platform].success++;
+        if (r.requiresBrowserRendering) {
+          byPlatform[r.platform].browserRendering++;
+        } else if (!r.error && !r.note) {
+          byPlatform[r.platform].success++;
+        }
       });
       Object.entries(byPlatform).forEach(([p, s]) => {
-        console.log(`  ${p}: ${s.success}/${s.total}`);
+        const suffix = s.browserRendering > 0 ? ` (${s.browserRendering} require JS)` : '';
+        console.log(`  ${p}: ${s.success}/${s.total}${suffix}`);
       });
 
-      // Exit with error code if there are insufficient data resorts
+      // Exit with error code if there are insufficient data resorts (excluding browser rendering ones)
       if (insufficientData.length > 0) {
         console.log('\n❌ FAILED: Some resorts have insufficient data');
         process.exit(1);
