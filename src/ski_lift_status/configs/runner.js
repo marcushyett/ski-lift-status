@@ -1144,6 +1144,508 @@ async function extractSeelift(config) {
 }
 
 /**
+ * Extract using Saalbach/Skicircus pattern
+ * Uses Bootstrap table with lift categories
+ */
+async function extractSaalbach(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Parse lift items with identifier pattern (e.g., "A1Schattberg X-press I")
+  const rows = doc.querySelectorAll('tr, .lift-row, [class*="lift"]');
+
+  rows.forEach(row => {
+    const text = row.textContent?.trim() || '';
+    // Match pattern: identifier + lift name
+    const match = text.match(/^([A-Z]\d+)(.+)$/);
+    if (match) {
+      const name = match[2].trim();
+      // Check if row has status indicator
+      const statusClass = row.className?.toLowerCase() || '';
+      const statusEl = row.querySelector('[class*="status"], [class*="state"]');
+      const statusText = statusEl?.textContent?.toLowerCase() || statusClass;
+
+      let status = 'closed';
+      if (statusText.includes('open') || statusClass.includes('operating')) {
+        status = 'open';
+      }
+
+      if (name) {
+        lifts.push({ name, status });
+      }
+    }
+  });
+
+  // Fallback: try generic table parsing
+  if (lifts.length === 0) {
+    const tableRows = doc.querySelectorAll('table tbody tr');
+    tableRows.forEach(row => {
+      const cells = row.querySelectorAll('td');
+      if (cells.length >= 2) {
+        const name = cells[1]?.textContent?.trim();
+        const statusCell = cells[0];
+        const statusClass = statusCell?.className?.toLowerCase() || '';
+
+        let status = 'closed';
+        if (statusClass.includes('open') || statusClass.includes('green')) {
+          status = 'open';
+        }
+
+        if (name) {
+          lifts.push({ name, status });
+        }
+      }
+    });
+  }
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Davos pattern (Vue.js SPA with API)
+ */
+async function extractDavos(config) {
+  // Davos uses a Vue.js SPA that fetches data from an API
+  // Try to find the API endpoint or parse pre-rendered content
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Look for data in script tags
+  const scripts = doc.querySelectorAll('script');
+  for (const script of scripts) {
+    const text = script.textContent || '';
+    if (text.includes('lifts') || text.includes('anlagen')) {
+      try {
+        const jsonMatch = text.match(/\{[\s\S]*"lifts?"[\s\S]*\}/);
+        if (jsonMatch) {
+          const data = JSON.parse(jsonMatch[0]);
+          (data.lifts || []).forEach(lift => {
+            lifts.push({
+              name: lift.name || lift.title,
+              status: normalizeStatus(lift.status)
+            });
+          });
+        }
+      } catch (e) {}
+    }
+  }
+
+  // Fallback to HTML parsing
+  if (lifts.length === 0) {
+    const items = doc.querySelectorAll('.lift-item, [class*="anlage"], tr');
+    items.forEach(item => {
+      const nameEl = item.querySelector('.name, .title, td:nth-child(1)');
+      const statusEl = item.querySelector('.status, td:nth-child(2)');
+
+      const name = nameEl?.textContent?.trim();
+      const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+      let status = 'closed';
+      if (statusText.includes('open') || statusText.includes('offen') || statusText.includes('in betrieb')) {
+        status = 'open';
+      }
+
+      if (name) {
+        lifts.push({ name, status });
+      }
+    });
+  }
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using GrandValira pattern (Drupal with embedded JSON)
+ */
+async function extractGrandvalira(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // GrandValira embeds data in Drupal's ajaxPageState or similar
+  const scripts = doc.querySelectorAll('script');
+  for (const script of scripts) {
+    const text = script.textContent || '';
+    if (text.includes('facilities') || text.includes('lifts')) {
+      try {
+        const matches = text.match(/\{[\s\S]*?\}/g) || [];
+        for (const match of matches) {
+          try {
+            const data = JSON.parse(match);
+            if (data.facilities || data.lifts) {
+              (data.facilities || data.lifts || []).forEach(item => {
+                lifts.push({
+                  name: item.name || item.title,
+                  status: normalizeStatus(item.status || item.state)
+                });
+              });
+            }
+          } catch (e) {}
+        }
+      } catch (e) {}
+    }
+  }
+
+  // Fallback to HTML parsing - look for sectors with lifts
+  if (lifts.length === 0) {
+    const items = doc.querySelectorAll('[class*="sector"] li, [class*="lift"], .facility-item');
+    items.forEach(item => {
+      const nameEl = item.querySelector('h3, .name, strong');
+      const statusClass = item.className?.toLowerCase() || '';
+      const statusText = item.textContent?.toLowerCase() || '';
+
+      const name = nameEl?.textContent?.trim();
+
+      let status = 'closed';
+      if (statusClass.includes('open') || statusText.includes('opened') || statusText.includes('enabled')) {
+        status = 'open';
+      }
+
+      if (name) {
+        lifts.push({ name, status });
+      }
+    });
+  }
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Mayrhofen pattern
+ */
+async function extractMayrhofen(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Look for lift status table or list
+  const rows = doc.querySelectorAll('table tbody tr, .lift-row, [class*="bergbahn"]');
+
+  rows.forEach(row => {
+    const nameEl = row.querySelector('td:nth-child(1), .name, .title');
+    const statusEl = row.querySelector('td:nth-child(2), .status, [class*="status"]');
+
+    const name = nameEl?.textContent?.trim();
+    const statusClass = statusEl?.className?.toLowerCase() || '';
+    const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+    let status = 'closed';
+    if (statusClass.includes('open') || statusClass.includes('green') ||
+        statusText.includes('open') || statusText.includes('geöffnet') || statusText.includes('in betrieb')) {
+      status = 'open';
+    }
+
+    if (name) {
+      lifts.push({ name, status });
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Czech Skiresort.cz pattern
+ */
+async function extractSkiresortcz(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Czech site uses table with lift info
+  const rows = doc.querySelectorAll('table tr');
+
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length >= 2) {
+      const name = cells[1]?.textContent?.trim();
+      const statusCell = cells[0];
+      const statusImg = statusCell?.querySelector('img');
+      const statusSrc = statusImg?.getAttribute('src') || '';
+
+      let status = 'closed';
+      if (statusSrc.includes('green') || statusSrc.includes('open')) {
+        status = 'open';
+      }
+
+      if (name) {
+        lifts.push({ name, status });
+      }
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Zugspitze pattern (React-based structured list)
+ */
+async function extractZugspitze(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Look for facility items with status badges
+  const items = doc.querySelectorAll('[class*="facility"], [class*="lift"], .status-item, li');
+
+  items.forEach(item => {
+    const text = item.textContent || '';
+
+    // Pattern: "Cable car Zugspitze" with status nearby
+    if (text.includes('cable car') || text.includes('lift') || text.includes('Bahn') || text.includes('Sessellift')) {
+      const nameMatch = text.match(/(cable car|lift|bahn|Sessellift)[^–\n]*/i);
+      if (nameMatch) {
+        const name = nameMatch[0].trim();
+        const statusText = text.toLowerCase();
+
+        let status = 'closed';
+        if (statusText.includes('open') || statusText.includes('geöffnet') || !statusText.includes('closed')) {
+          // Check for explicit closed indicators
+          if (!statusText.includes('closed') && !statusText.includes('geschlossen')) {
+            status = 'open';
+          }
+        }
+
+        if (name && name.length > 3) {
+          lifts.push({ name, status });
+        }
+      }
+    }
+  });
+
+  // Fallback to table parsing
+  if (lifts.length === 0) {
+    const rows = doc.querySelectorAll('table tbody tr');
+    rows.forEach(row => {
+      const cells = row.querySelectorAll('td');
+      if (cells.length >= 2) {
+        const name = cells[0]?.textContent?.trim();
+        const statusCell = cells[cells.length - 1];
+        const statusText = statusCell?.textContent?.toLowerCase() || '';
+
+        let status = 'closed';
+        if (statusText.includes('open') || statusText.includes('geöffnet')) {
+          status = 'open';
+        }
+
+        if (name) {
+          lifts.push({ name, status });
+        }
+      }
+    });
+  }
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Snow Space Salzburg pattern
+ */
+async function extractSnowspace(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Snow Space uses icons for lift types and status indicators
+  const items = doc.querySelectorAll('.lift-item, [class*="lift-status"], tr');
+
+  items.forEach(item => {
+    const nameEl = item.querySelector('.name, .title, td:nth-child(2)');
+    const statusEl = item.querySelector('.status, [class*="status"], td:nth-child(1)');
+
+    const name = nameEl?.textContent?.trim();
+    const statusClass = statusEl?.className?.toLowerCase() || '';
+
+    let status = 'closed';
+    if (statusClass.includes('open') || statusClass.includes('green') || statusClass.includes('active')) {
+      status = 'open';
+    }
+
+    if (name) {
+      lifts.push({ name, status });
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Aletsch Arena pattern
+ */
+async function extractAletsch(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Look for lift status items
+  const items = doc.querySelectorAll('.lift-item, [class*="anlage"], table tbody tr, li');
+
+  items.forEach(item => {
+    const nameEl = item.querySelector('.name, .title, td:nth-child(1), strong');
+    const statusEl = item.querySelector('.status, [class*="status"], td:nth-child(2)');
+
+    const name = nameEl?.textContent?.trim();
+    const statusClass = statusEl?.className?.toLowerCase() || '';
+    const statusText = statusEl?.textContent?.toLowerCase() || item.textContent?.toLowerCase() || '';
+
+    let status = 'closed';
+    if (statusClass.includes('open') || statusClass.includes('green') ||
+        statusText.includes('open') || statusText.includes('offen') || statusText.includes('geöffnet')) {
+      status = 'open';
+    }
+
+    if (name && name.length > 2) {
+      lifts.push({ name, status });
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Vars/Risoul pattern
+ */
+async function extractVars(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Look for lift status in snow bulletin format
+  const items = doc.querySelectorAll('.lift-row, table tbody tr, li[class*="lift"]');
+
+  items.forEach(item => {
+    const nameEl = item.querySelector('.name, td:nth-child(1), strong');
+    const statusEl = item.querySelector('.status, td:nth-child(2), [class*="status"]');
+
+    const name = nameEl?.textContent?.trim();
+    const statusText = statusEl?.textContent?.toLowerCase() || '';
+    const statusImg = statusEl?.querySelector('img')?.getAttribute('src') || '';
+
+    let status = 'closed';
+    if (statusText.includes('open') || statusText.includes('ouvert') ||
+        statusImg.includes('green') || statusImg.includes('open')) {
+      status = 'open';
+    }
+
+    if (name) {
+      lifts.push({ name, status });
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Silvretta Montafon pattern
+ */
+async function extractMontafon(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Look for lift status items
+  const items = doc.querySelectorAll('.lift-item, [class*="facility"], table tbody tr');
+
+  items.forEach(item => {
+    const nameEl = item.querySelector('.name, .title, td:nth-child(1)');
+    const statusEl = item.querySelector('.status, [class*="status"], td:nth-child(2)');
+
+    const name = nameEl?.textContent?.trim();
+    const statusClass = statusEl?.className?.toLowerCase() || '';
+    const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+    let status = 'closed';
+    if (statusClass.includes('open') || statusClass.includes('green') ||
+        statusText.includes('open') || statusText.includes('geöffnet')) {
+      status = 'open';
+    }
+
+    if (name) {
+      lifts.push({ name, status });
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
+ * Extract using Arosa Lenzerheide pattern
+ */
+async function extractArosa(config) {
+  return await extractDavos(config);  // Similar Vue.js pattern
+}
+
+/**
+ * Extract using Zillertal Arena pattern
+ */
+async function extractZillertal(config) {
+  return await extractMayrhofen(config);  // Similar Austrian pattern
+}
+
+/**
+ * Extract using Wendelstein pattern
+ */
+async function extractWendelstein(config) {
+  return await extractZugspitze(config);  // Similar German pattern
+}
+
+/**
+ * Extract using Folgaria/Alpe Cimbra pattern
+ */
+async function extractFolgaria(config) {
+  const html = await fetch(config.url);
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+
+  const lifts = [];
+
+  // Italian resort - look for impianti (lifts)
+  const items = doc.querySelectorAll('[class*="impianto"], [class*="lift"], table tbody tr');
+
+  items.forEach(item => {
+    const nameEl = item.querySelector('.name, .title, td:nth-child(1)');
+    const statusEl = item.querySelector('.status, [class*="stato"], td:nth-child(2)');
+
+    const name = nameEl?.textContent?.trim();
+    const statusClass = statusEl?.className?.toLowerCase() || '';
+    const statusText = statusEl?.textContent?.toLowerCase() || '';
+
+    let status = 'closed';
+    if (statusClass.includes('open') || statusClass.includes('aperto') ||
+        statusText.includes('open') || statusText.includes('aperto')) {
+      status = 'open';
+    }
+
+    if (name) {
+      lifts.push({ name, status });
+    }
+  });
+
+  return { lifts, runs: [] };
+}
+
+/**
  * Generic extraction - tries multiple strategies
  */
 async function extractGeneric(config) {
@@ -1284,6 +1786,34 @@ async function extractResort(resortId) {
         return await extractDeervalley(resort);
       case 'seelift':
         return await extractSeelift(resort);
+      case 'saalbach':
+        return await extractSaalbach(resort);
+      case 'davos':
+        return await extractDavos(resort);
+      case 'grandvalira':
+        return await extractGrandvalira(resort);
+      case 'mayrhofen':
+        return await extractMayrhofen(resort);
+      case 'skiresortcz':
+        return await extractSkiresortcz(resort);
+      case 'zugspitze':
+        return await extractZugspitze(resort);
+      case 'snowspace':
+        return await extractSnowspace(resort);
+      case 'aletsch':
+        return await extractAletsch(resort);
+      case 'vars':
+        return await extractVars(resort);
+      case 'montafon':
+        return await extractMontafon(resort);
+      case 'arosa':
+        return await extractArosa(resort);
+      case 'zillertal':
+        return await extractZillertal(resort);
+      case 'wendelstein':
+        return await extractWendelstein(resort);
+      case 'folgaria':
+        return await extractFolgaria(resort);
       case 'custom':
         // Try generic extraction for custom resorts
         return await extractGeneric(resort);

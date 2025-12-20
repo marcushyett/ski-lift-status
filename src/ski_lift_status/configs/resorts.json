@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "updated": "2025-12-19",
-  "total_resorts": 442,
+  "updated": "2025-12-20",
+  "total_resorts": 444,
   "platforms": {},
   "resorts": [
     {
@@ -42,26 +42,28 @@
       "id": "aletsch-arena",
       "name": "Aletsch Arena",
       "openskimap_id": "d264be37a4fd40a4de858be7fee0a5c077cb1068",
-      "platform": "custom",
-      "url": "https://www.aletscharena.ch/en/live-info",
-      "website": "https://www.aletscharena.ch/"
+      "platform": "aletsch",
+      "url": "https://www.aletscharena.ch/en/here-now/live/status-report/status-report-winter",
+      "website": "https://www.aletscharena.ch/",
+      "notes": "Swiss resort with structured list"
     },
     {
       "id": "alpe-cimbra",
       "name": "Alpe Cimbra",
       "openskimap_id": "ef817c42b82422721b05028c6d58ce10f8a2190c",
-      "platform": "custom",
-      "url": "http://www.lavaroneski.it/",
-      "website": "http://www.lavaroneski.it/ https://www.alpecimbra.it/de/skigebiet-alpe-cimbra/lavarone-folgaria-skigebiet/46-0.html"
+      "platform": "folgaria",
+      "url": "https://www.alpecimbra.it/en/alpe-cimbra-ski-area/alpe-cimbra-ski-area/",
+      "website": "http://www.lavaroneski.it/ https://www.alpecimbra.it/de/skigebiet-alpe-cimbra/lavarone-folgaria-skigebiet/46-0.html",
+      "notes": "Italian resort - uses Mowi Snow app for data"
     },
     {
       "id": "alpe-dhuez",
       "name": "Alpe d'Huez Grand Domaine",
       "openskimap_id": "721dd142d0af653027c7569e1bd0799586bdefa1",
-      "platform": "custom",
+      "platform": "seelift",
       "url": "https://www.seealpedhuez.com/lifts/status",
       "liftieId": null,
-      "notes": "See* network site - requires browser rendering"
+      "notes": "See* network site - uses Lumiplan status images"
     },
     {
       "id": "alpine-valley-resort",
@@ -121,6 +123,14 @@
       "website": "https://www.formigal-panticosa.com/"
     },
     {
+      "id": "åre",
+      "name": "Åre",
+      "openskimap_id": "4968c991f3910142689f5f0d2fabee02df54e214",
+      "platform": "skistar",
+      "url": "https://www.skistar.com/en/ski-destinations/are/winter-in-are/weather-and-slopes/",
+      "website": "https://www.skistar.com/en/ski-destinations/are/"
+    },
+    {
       "id": "area-sciistica-abetone",
       "name": "Area Sciistica Abetone",
       "openskimap_id": "ffc04590f75f3e275d90108cc0984829ee429dda",
@@ -129,13 +139,21 @@
       "website": "https://multipassabetone.it/"
     },
     {
+      "id": "arêches-beaufort",
+      "name": "Arêches Beaufort",
+      "openskimap_id": "d19b617dc3a4c9a07b0f8b3360f7f5a20d384a48",
+      "platform": "custom",
+      "url": "https://www.areches-beaufort.com/en/lift-status",
+      "website": "https://www.areches-beaufort.com"
+    },
+    {
       "id": "arosa-lenzerheide",
       "name": "Arosa Lenzerheide",
       "openskimap_id": "4ae9b0cba5454d6f0921bf413c33a267f1d63cca",
-      "platform": "custom",
-      "url": "https://arosalenzerheide.swiss/en/Ski-Area/Lift-Company/Operating-hours-winter",
+      "platform": "arosa",
+      "url": "https://arosalenzerheide.swiss/en/Arosa/Up-to-date/Winter-sports-report",
       "liftieId": null,
-      "notes": "Custom extraction needed"
+      "notes": "Swiss resort with Vue.js SPA"
     },
     {
       "id": "artesina",
@@ -144,14 +162,6 @@
       "platform": "custom",
       "url": "https://www.frabosaski.it/en/lift-status",
       "website": "https://www.frabosaski.it/"
-    },
-    {
-      "id": "arêches-beaufort",
-      "name": "Arêches Beaufort",
-      "openskimap_id": "d19b617dc3a4c9a07b0f8b3360f7f5a20d384a48",
-      "platform": "custom",
-      "url": "https://www.areches-beaufort.com/en/lift-status",
-      "website": "https://www.areches-beaufort.com"
     },
     {
       "id": "aspen-snowmass",
@@ -283,6 +293,14 @@
       "website": "https://www.bigwhite.com/"
     },
     {
+      "id": "bláfjöll",
+      "name": "Bláfjöll",
+      "openskimap_id": "02afb35f5d4315ae5ff1abcef85259463632463c",
+      "platform": "custom",
+      "url": "https://skidasvaedi.is/en/lift-status",
+      "website": "https://skidasvaedi.is/"
+    },
+    {
       "id": "blue-mountain-resort",
       "name": "Blue Mountain Resort",
       "openskimap_id": "b80dd18fc32df44f83dad7576cdbb0316286ef66",
@@ -299,12 +317,12 @@
       "website": "https://www.bluemountain.ca"
     },
     {
-      "id": "bláfjöll",
-      "name": "Bláfjöll",
-      "openskimap_id": "02afb35f5d4315ae5ff1abcef85259463632463c",
+      "id": "bödele",
+      "name": "Bödele",
+      "openskimap_id": "ad2faceffa44fe6c1a3149d02c89759a7145af52",
       "platform": "custom",
-      "url": "https://skidasvaedi.is/en/lift-status",
-      "website": "https://skidasvaedi.is/"
+      "url": "https://www.boedele.info/en/lift-status",
+      "website": "https://www.boedele.info/"
     },
     {
       "id": "bogus-basin",
@@ -339,20 +357,20 @@
       "website": "https://www.borovets-bg.com/"
     },
     {
-      "id": "brandnertal-brandbürserberg",
-      "name": "Brandnertal – Brand/​Bürserberg",
-      "openskimap_id": "b006b322d1e68bc5d77d0758fb19d16d76e04a37",
-      "platform": "custom",
-      "url": "https://www.vorarlberg-alpenregion.at/en/brandnertal/holiday-in-winter-in-brandertal.html/en/lift-status",
-      "website": "https://www.vorarlberg-alpenregion.at/en/brandnertal/holiday-in-winter-in-brandertal.html"
-    },
-    {
       "id": "branäs",
       "name": "Branäs",
       "openskimap_id": "dc38c005346ecf95ae82d52334753ff6b594784b",
       "platform": "custom",
       "url": "https://www.branas.se/weather-and-slopes/",
       "website": "https://www.branas.se/?nr=1"
+    },
+    {
+      "id": "brandnertal-brandbürserberg",
+      "name": "Brandnertal – Brand/​Bürserberg",
+      "openskimap_id": "b006b322d1e68bc5d77d0758fb19d16d76e04a37",
+      "platform": "custom",
+      "url": "https://www.vorarlberg-alpenregion.at/en/brandnertal/holiday-in-winter-in-brandertal.html/en/lift-status",
+      "website": "https://www.vorarlberg-alpenregion.at/en/brandnertal/holiday-in-winter-in-brandertal.html"
     },
     {
       "id": "brauneck",
@@ -388,6 +406,16 @@
       "website": "https://www.brentonicoski.com"
     },
     {
+      "id": "chamonix",
+      "name": "Brévent/Flégère (Chamonix)",
+      "openskimap_id": "8432e3c536835ef8a690f63b62060a7993bfd964",
+      "platform": "lumiplan",
+      "url": "https://www.chamonix.com",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=chamonix&region=alpes&pays=france&lang=en",
+      "liftieId": "chamonix",
+      "notes": "Uses Lumiplan bulletin"
+    },
+    {
       "id": "brigels-waltensburg-andiast-brigels-waltenburg-and",
       "name": "Brigels-Waltensburg-Andiast, Brigels-Waltenburg-Andiast, Breil-Vuorz-Andiast",
       "openskimap_id": "2826e74d5f33a0bd943b7353dcda7e1419c36ace",
@@ -404,16 +432,6 @@
       "website": "https://www.bromontmontagne.com/"
     },
     {
-      "id": "chamonix",
-      "name": "Brévent/Flégère (Chamonix)",
-      "openskimap_id": "8432e3c536835ef8a690f63b62060a7993bfd964",
-      "platform": "lumiplan",
-      "url": "https://www.chamonix.com",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=chamonix&region=alpes&pays=france&lang=en",
-      "liftieId": "chamonix",
-      "notes": "Uses Lumiplan bulletin"
-    },
-    {
       "id": "buck-hill",
       "name": "Buck Hill",
       "openskimap_id": "5b1ffa98c849d075c0581f57b5a4bab21b94e468",
@@ -428,14 +446,6 @@
       "platform": "custom",
       "url": "https://www.fassa.com/",
       "website": "https://www.fassa.com/ https://www.fassa.it/"
-    },
-    {
-      "id": "bödele",
-      "name": "Bödele",
-      "openskimap_id": "ad2faceffa44fe6c1a3149d02c89759a7145af52",
-      "platform": "custom",
-      "url": "https://www.boedele.info/en/lift-status",
-      "website": "https://www.boedele.info/"
     },
     {
       "id": "cairngorm-aviemore",
@@ -550,6 +560,14 @@
       "website": "http://www.laspendientes.com/ https://www.cerrochapelco.com.ar/"
     },
     {
+      "id": "chäserrug-alt-st-johann",
+      "name": "Chäserrug-Alt St. Johann",
+      "openskimap_id": "2b04168ef9b209ad4cd6b13f80f42eb7e9a652d5",
+      "platform": "custom",
+      "url": "https://www.chaeserrugg.ch/en/lift-status",
+      "website": "https://www.chaeserrugg.ch/"
+    },
+    {
       "id": "china-peak-mountain-resort",
       "name": "China Peak Mountain Resort",
       "openskimap_id": "9e118f4eb36fb34e987c7a3ddd7f2d976b6a7443",
@@ -564,14 +582,6 @@
       "platform": "custom",
       "url": "https://www.jasna.sk/en/lift-status",
       "website": "https://www.jasna.sk/"
-    },
-    {
-      "id": "chäserrug-alt-st-johann",
-      "name": "Chäserrug-Alt St. Johann",
-      "openskimap_id": "2b04168ef9b209ad4cd6b13f80f42eb7e9a652d5",
-      "platform": "custom",
-      "url": "https://www.chaeserrugg.ch/en/lift-status",
-      "website": "https://www.chaeserrugg.ch/"
     },
     {
       "id": "cimetta",
@@ -590,14 +600,6 @@
       "website": "https://www.coppercolorado.com/"
     },
     {
-      "id": "cortina-tofane",
-      "name": "Cortina Tofane",
-      "openskimap_id": "9838fb2aa78f10391ff5a3bf3e85105c0f8b73e6",
-      "platform": "custom",
-      "url": "https://www.impianticortina.it/en/lift-status",
-      "website": "https://www.impianticortina.it/"
-    },
-    {
       "id": "cortina",
       "name": "Cortina d'Ampezzo",
       "openskimap_id": "9a8be208c4f1832db8bf13c7102e2dcc3eef0a84",
@@ -605,6 +607,14 @@
       "url": "https://www.dolomitisuperski.com/en/live-info/lifts/cortina-d-ampezzo",
       "liftieId": "cortina-d-ampezzo",
       "notes": "Dolomiti Superski"
+    },
+    {
+      "id": "cortina-tofane",
+      "name": "Cortina Tofane",
+      "openskimap_id": "9838fb2aa78f10391ff5a3bf3e85105c0f8b73e6",
+      "platform": "custom",
+      "url": "https://www.impianticortina.it/en/lift-status",
+      "website": "https://www.impianticortina.it/"
     },
     {
       "id": "corvatsch-furtschellas",
@@ -673,6 +683,14 @@
       "website": "https://www.deervalley.com/"
     },
     {
+      "id": "dévoluy",
+      "name": "Dévoluy",
+      "openskimap_id": "8e5dbdde0808be45e5e47253e905635c9f867c3b",
+      "platform": "custom",
+      "url": "https://www.ledevoluy.com/en/lift-status",
+      "website": "https://www.ledevoluy.com/"
+    },
+    {
       "id": "dodge-ridge-ski-area",
       "name": "Dodge Ridge Ski Area",
       "openskimap_id": "162525ff9a2a65810a602b74f338303d1bb9ea38",
@@ -711,14 +729,6 @@
       "platform": "custom",
       "url": "https://www.parksnow.sk/zima/en/lift-status",
       "website": "https://www.parksnow.sk/zima/"
-    },
-    {
-      "id": "dévoluy",
-      "name": "Dévoluy",
-      "openskimap_id": "8e5dbdde0808be45e5e47253e905635c9f867c3b",
-      "platform": "custom",
-      "url": "https://www.ledevoluy.com/en/lift-status",
-      "website": "https://www.ledevoluy.com/"
     },
     {
       "id": "el-colorado",
@@ -768,9 +778,10 @@
       "id": "espace-lumière",
       "name": "Espace Lumière",
       "openskimap_id": "e7c4c03bd7f9a3d907ff566775cfba1823bcf2ae",
-      "platform": "custom",
-      "url": "https://www.praloup.com/en/live-info",
-      "website": "https://www.praloup.com/"
+      "platform": "skiplan",
+      "url": "https://en.valdallos.com/ouverture-des-pistes.html",
+      "website": "https://www.praloup.com/",
+      "notes": "Val d'Allos uses SkiPlan by Ingenie"
     },
     {
       "id": "estació-desquí-baqueira-beret",
@@ -789,20 +800,20 @@
       "website": "https://www.portdelcomte.net/"
     },
     {
-      "id": "estación-de-esquí-y-montaña-de-sierra-nevada",
-      "name": "Estación de Esquí y Montaña de Sierra Nevada",
-      "openskimap_id": "dc3f198b305b2f8ec1db8b15a47548900646d93d",
-      "platform": "custom",
-      "url": "https://sierranevada.es/en/lift-status",
-      "website": "https://sierranevada.es"
-    },
-    {
       "id": "estación-de-esquí-de-valdesquí",
       "name": "Estación de esquí de Valdesquí",
       "openskimap_id": "a6792c241300dee70b989ffcf6a12b8225bbd7d9",
       "platform": "custom",
       "url": "https://www.valdesqui.es/en/lift-status",
       "website": "https://www.valdesqui.es/"
+    },
+    {
+      "id": "estación-de-esquí-y-montaña-de-sierra-nevada",
+      "name": "Estación de Esquí y Montaña de Sierra Nevada",
+      "openskimap_id": "dc3f198b305b2f8ec1db8b15a47548900646d93d",
+      "platform": "custom",
+      "url": "https://sierranevada.es/en/lift-status",
+      "website": "https://sierranevada.es"
     },
     {
       "id": "falls-creek",
@@ -869,6 +880,15 @@
       "website": "https://font-romeu.fr/"
     },
     {
+      "id": "forêt-blanche-varsrisoul",
+      "name": "Forêt Blanche : Vars/Risoul",
+      "openskimap_id": "9d0b2c5e0fcac9deba9c727a834cac4b43a5d2c9",
+      "platform": "vars",
+      "url": "https://www.vars.com/winter/on-site-activities/skiing-and-snowboarding/the-ski-area/snow-bulletin/",
+      "website": "https://www.vars.com/hiver/",
+      "notes": "Vars/Risoul snow bulletin"
+    },
+    {
       "id": "formigal",
       "name": "Formigal",
       "openskimap_id": "0f46917975b8dab5e541edf6469105c3c091ec22",
@@ -877,20 +897,20 @@
       "website": "https://www.formigal-panticosa.com/"
     },
     {
-      "id": "forêt-blanche-varsrisoul",
-      "name": "Forêt Blanche : Vars/Risoul",
-      "openskimap_id": "9d0b2c5e0fcac9deba9c727a834cac4b43a5d2c9",
-      "platform": "custom",
-      "url": "https://www.vars.com/en/live-info",
-      "website": "https://www.vars.com/hiver/"
-    },
-    {
       "id": "gausta-skisenter",
       "name": "Gausta skisenter",
       "openskimap_id": "4d69a850bfa3eeaf928e5d154bb6768fcfbe240e",
       "platform": "custom",
       "url": "https://www.gausta.com/en-US/gausta-skisenter/en/lift-status",
       "website": "https://www.gausta.com/en-US/gausta-skisenter/"
+    },
+    {
+      "id": "gérardmer",
+      "name": "Gérardmer",
+      "openskimap_id": "7ccf68e28c0dfb0a0d21e0ad24260a5775c63263",
+      "platform": "custom",
+      "url": "https://www.gerardmer-ski.com/en/lift-status",
+      "website": "https://www.gerardmer-ski.com/"
     },
     {
       "id": "gitschberg-jochtal-rio-pusteria",
@@ -920,9 +940,10 @@
       "id": "gletscher-skigebiet-zugspitze-ski-resort-zugspitze",
       "name": "Gletscher-Skigebiet Zugspitze, Ski resort Zugspitze",
       "openskimap_id": "9e8a091097aeb5af7c87b5f53922e3db043a9849",
-      "platform": "custom",
-      "url": "https://zugspitze.de/de/winter/skigebiet/zugspitze/en/lift-status",
-      "website": "https://zugspitze.de/de/winter/skigebiet/zugspitze"
+      "platform": "zugspitze",
+      "url": "https://zugspitze.de/en/Service-information/Facilities",
+      "website": "https://zugspitze.de/de/winter/skigebiet/zugspitze",
+      "notes": "German resort with React-based structured list"
     },
     {
       "id": "gourette",
@@ -931,6 +952,14 @@
       "platform": "custom",
       "url": "https://www.gourette.com/en/lift-status",
       "website": "https://www.gourette.com/"
+    },
+    {
+      "id": "grächen",
+      "name": "Grächen",
+      "openskimap_id": "9ea685d2404d5268c6cb02acbda87feb44cb0db4",
+      "platform": "custom",
+      "url": "https://www.graechen.ch/en/lift-status",
+      "website": "https://www.graechen.ch/"
     },
     {
       "id": "grand-tourmalet",
@@ -944,10 +973,10 @@
       "id": "grandvalira",
       "name": "GrandValira",
       "openskimap_id": "de4f884c40976fe9d18c23d0bab174c1d6b79218",
-      "platform": "custom",
-      "url": "https://www.grandvalira.com/en/ski-resort/pistes-and-facilities",
+      "platform": "grandvalira",
+      "url": "https://www.grandvalira.com/en/resort/open-slopes",
       "liftieId": null,
-      "notes": "Andorra - custom extraction needed"
+      "notes": "Drupal CMS with embedded JSON state"
     },
     {
       "id": "grindelwald-wengen-kleine-scheidegg-männlichen",
@@ -982,28 +1011,12 @@
       "website": "https://www.grosseck-speiereck.at/"
     },
     {
-      "id": "grächen",
-      "name": "Grächen",
-      "openskimap_id": "9ea685d2404d5268c6cb02acbda87feb44cb0db4",
-      "platform": "custom",
-      "url": "https://www.graechen.ch/en/lift-status",
-      "website": "https://www.graechen.ch/"
-    },
-    {
       "id": "guzet-neige",
       "name": "Guzet-Neige",
       "openskimap_id": "c8f66e784133d6becb1aba654e27b446daa7af7b",
       "platform": "custom",
       "url": "https://www.guzet.ski/en/lift-status",
       "website": "https://www.guzet.ski/"
-    },
-    {
-      "id": "gérardmer",
-      "name": "Gérardmer",
-      "openskimap_id": "7ccf68e28c0dfb0a0d21e0ad24260a5775c63263",
-      "platform": "custom",
-      "url": "https://www.gerardmer-ski.com/en/lift-status",
-      "website": "https://www.gerardmer-ski.com/"
     },
     {
       "id": "hafjell",
@@ -1142,6 +1155,14 @@
       "website": "https://skiresort.cz/"
     },
     {
+      "id": "järvsöbacken",
+      "name": "JärvsöBacken",
+      "openskimap_id": "0d8095d2249278e20f76c6919b2003b51c7d71b2",
+      "platform": "custom",
+      "url": "https://www.jarvsobacken.se/english-information/en/lift-status",
+      "website": "https://www.jarvsobacken.se/english-information/"
+    },
+    {
       "id": "jasna-low-tatras",
       "name": "Jasna Low Tatras",
       "openskimap_id": "143a22b6dca9119510a125afff37672952de837e",
@@ -1156,14 +1177,6 @@
       "platform": "custom",
       "url": "https://www.jaworzynakrynicka.pl/en/lift-status",
       "website": "https://www.jaworzynakrynicka.pl/"
-    },
-    {
-      "id": "järvsöbacken",
-      "name": "JärvsöBacken",
-      "openskimap_id": "0d8095d2249278e20f76c6919b2003b51c7d71b2",
-      "platform": "custom",
-      "url": "https://www.jarvsobacken.se/english-information/en/lift-status",
-      "website": "https://www.jarvsobacken.se/english-information/"
     },
     {
       "id": "kals-matrei",
@@ -1247,6 +1260,14 @@
       "notes": "Kitzbühel (liftie pattern)"
     },
     {
+      "id": "kläppen",
+      "name": "Kläppen",
+      "openskimap_id": "41ab128ddaa817aee0126dd981df00095dc57e60",
+      "platform": "custom",
+      "url": "https://www.klappen.se/en/lift-status",
+      "website": "https://www.klappen.se/"
+    },
+    {
       "id": "klausberg-skiarena",
       "name": "Klausberg Skiarena",
       "openskimap_id": "8ed98940b7c222930ed16efefbb13b42e5840a02",
@@ -1261,14 +1282,6 @@
       "platform": "custom",
       "url": "https://www.klewenalp.ch/en/lift-status",
       "website": "https://www.klewenalp.ch/"
-    },
-    {
-      "id": "kläppen",
-      "name": "Kläppen",
-      "openskimap_id": "41ab128ddaa817aee0126dd981df00095dc57e60",
-      "platform": "custom",
-      "url": "https://www.klappen.se/en/lift-status",
-      "website": "https://www.klappen.se/"
     },
     {
       "id": "kompleks-pilsko-jontek",
@@ -1327,20 +1340,20 @@
       "website": "https://www.rtc-krvavec.si/"
     },
     {
-      "id": "kungsberget",
-      "name": "Kungsberget",
-      "openskimap_id": "1bc8063b148904e54cdd1357ba34f2211ceef2b8",
-      "platform": "custom",
-      "url": "https://www.kungsberget.se/en/?nr=1/en/lift-status",
-      "website": "https://www.kungsberget.se/en/?nr=1"
-    },
-    {
       "id": "kühtai",
       "name": "Kühtai",
       "openskimap_id": "204bd8a606de9419155c825f8ba5ecd46345e23a",
       "platform": "custom",
       "url": "https://www.kuehtai.info/en/winter/ski-area.html/en/lift-status",
       "website": "https://www.kuehtai.info/en/winter/ski-area.html"
+    },
+    {
+      "id": "kungsberget",
+      "name": "Kungsberget",
+      "openskimap_id": "1bc8063b148904e54cdd1357ba34f2211ceef2b8",
+      "platform": "custom",
+      "url": "https://www.kungsberget.se/en/?nr=1/en/lift-status",
+      "website": "https://www.kungsberget.se/en/?nr=1"
     },
     {
       "id": "lalpe-du-grand-serre",
@@ -1470,9 +1483,11 @@
       "id": "le-grand-domaine",
       "name": "Le Grand Domaine",
       "openskimap_id": "f5fcc0e543cfb0e4d50280c286081c27d975697f",
-      "platform": "custom",
-      "url": "https://www.snowplaza.co.uk/france/le-grand-domaine/snow-report/",
-      "website": "https://www.legranddomaine.fr/"
+      "platform": "lumiplan",
+      "url": "https://skipass.valmorel.com/en/",
+      "website": "https://www.legranddomaine.fr/",
+      "lumiplanMapId": "valmorel",
+      "notes": "Le Grand Domaine - try Lumiplan integration"
     },
     {
       "id": "le-grand-massif",
@@ -1546,9 +1561,10 @@
       "id": "les-deux-alpes",
       "name": "Les Deux Alpes",
       "openskimap_id": "5bd589496339e89cf9be3d93c86e7e6c41f72208",
-      "platform": "custom",
+      "platform": "seelift",
       "url": "https://www.see2alpes.com/lifts/status",
-      "website": "https://www.les2alpes.com"
+      "website": "https://www.les2alpes.com",
+      "notes": "See* network - Les 2 Alpes"
     },
     {
       "id": "les-gets-morzine",
@@ -1706,10 +1722,10 @@
       "id": "mayrhofen",
       "name": "Mayrhofen Hippach",
       "openskimap_id": "f967615083aaed557fa47068b9d894e66d763f0a",
-      "platform": "custom",
+      "platform": "mayrhofen",
       "url": "https://www.mayrhofen.at/en/stories/open-cable-cars-mayrhofner-bergbahnen-winter",
       "liftieId": null,
-      "notes": "Austria - custom extraction needed"
+      "notes": "Austrian resort - may need custom extractor"
     },
     {
       "id": "megeve",
@@ -1736,6 +1752,16 @@
       "platform": "custom",
       "url": "https://www.meran2000.com/en/lift-status",
       "website": "https://www.meran2000.com/"
+    },
+    {
+      "id": "meribel",
+      "name": "Méribel - 3 Vallées",
+      "openskimap_id": "68b126bc3175516c9263aed7635d14e37ff360dc",
+      "platform": "lumiplan",
+      "url": "https://meribel.net",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=meribel&region=alpes&pays=france&lang=en",
+      "liftieId": "meribel",
+      "notes": "Uses Lumiplan bulletin"
     },
     {
       "id": "mont-tremblant-resort-station-mont-tremblant",
@@ -1840,16 +1866,6 @@
       "platform": "custom",
       "url": "https://www.mdysresort.com/en/lift-status",
       "website": "https://www.mdysresort.com/"
-    },
-    {
-      "id": "meribel",
-      "name": "Méribel - 3 Vallées",
-      "openskimap_id": "68b126bc3175516c9263aed7635d14e37ff360dc",
-      "platform": "lumiplan",
-      "url": "https://meribel.net",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=meribel&region=alpes&pays=france&lang=en",
-      "liftieId": "meribel",
-      "notes": "Uses Lumiplan bulletin"
     },
     {
       "id": "mürrenschilthorn",
@@ -1980,20 +1996,20 @@
       "website": "https://www.orsagronklitt.se"
     },
     {
-      "id": "ovindoli",
-      "name": "Ovindoli",
-      "openskimap_id": "99fc72000e2914274efb60d579cb7cacb1043bc3",
-      "platform": "custom",
-      "url": "https://www.ovindolimagnola.it/en/lift-status",
-      "website": "https://www.ovindolimagnola.it/"
-    },
-    {
       "id": "ośrodek-narciarski-kotelnica-białczańska-kotelnica",
       "name": "Ośrodek Narciarski Kotelnica Białczańska, Kotelnica Białczańska Ski Resort",
       "openskimap_id": "305ec2278ecc0503c3d92c9d101c61695c66d1b4",
       "platform": "custom",
       "url": "https://bialkatatrzanska.pl/en/lift-status",
       "website": "https://bialkatatrzanska.pl"
+    },
+    {
+      "id": "ovindoli",
+      "name": "Ovindoli",
+      "openskimap_id": "99fc72000e2914274efb60d579cb7cacb1043bc3",
+      "platform": "custom",
+      "url": "https://www.ovindolimagnola.it/en/lift-status",
+      "website": "https://www.ovindolimagnola.it/"
     },
     {
       "id": "paganella-area-sciistica-andalo-fai-della-paganell",
@@ -2042,6 +2058,15 @@
       "platform": "vail",
       "url": "https://www.parkcitymountain.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
       "website": "https://parkcitymountain.com"
+    },
+    {
+      "id": "parsenn-davos-klosters",
+      "name": "Parsenn (Davos Klosters)",
+      "openskimap_id": "403c8d67ddd348bfa3f7d02c6c21163479964926",
+      "platform": "davos",
+      "url": "https://www.davos.ch/en/discover/mountains/winter-sports-report/lifts-and-piste-report",
+      "website": "https://www.davosklostersmountains.ch/",
+      "notes": "Vue.js SPA - fetches data via API"
     },
     {
       "id": "perfect-north-slopes",
@@ -2460,9 +2485,10 @@
       "id": "silvretta-montafon",
       "name": "Silvretta Montafon",
       "openskimap_id": "f654467c75bb645ac3a8e664b656d00b2e90ef2e",
-      "platform": "custom",
-      "url": "https://www.silvretta-montafon.at/en/live",
-      "website": "https://www.silvretta-montafon.at"
+      "platform": "montafon",
+      "url": "https://www.silvretta-montafon.at/en/info-service/lift-info",
+      "website": "https://www.silvretta-montafon.at",
+      "notes": "Silvretta Montafon with live info page"
     },
     {
       "id": "sirdal-skisenter",
@@ -2537,21 +2563,20 @@
       "website": "https://skijuwel.com"
     },
     {
-      "id": "skiwelt",
-      "name": "SkiWelt Wilder Kaiser - Brixental",
-      "openskimap_id": "37ee9c6ba5b44864ba844f804938a8b815f8b717",
-      "platform": "skiwelt",
-      "url": "https://www.skiwelt.at/en/lift-status-winter.html",
-      "liftieId": "skiwelt",
-      "notes": "Austria (liftie pattern)"
-    },
-    {
       "id": "skiarea-valchiavenna-madesimocampodolcino",
       "name": "Skiarea Valchiavenna Madesimo/Campodolcino",
       "openskimap_id": "3fe9a6b2c3b2fddc054259af7b561d7d91f7b9f0",
       "platform": "custom",
       "url": "https://www.skiareavalchiavenna.it/en/lift-status",
       "website": "https://www.skiareavalchiavenna.it/"
+    },
+    {
+      "id": "skiareál-klínovec",
+      "name": "Skiareál Klínovec",
+      "openskimap_id": "3d64e85db09d580e3ac612574f3c4bf4298e54ba",
+      "platform": "custom",
+      "url": "http://skiarealbozidar.cz/en/homepage-en/",
+      "website": "http://skiarealbozidar.cz/en/homepage-en/ https://klinovec.cz/"
     },
     {
       "id": "skiarena",
@@ -2570,21 +2595,13 @@
       "website": "http://www.imbergbahn.de/"
     },
     {
-      "id": "skiareál-klínovec",
-      "name": "Skiareál Klínovec",
-      "openskimap_id": "3d64e85db09d580e3ac612574f3c4bf4298e54ba",
-      "platform": "custom",
-      "url": "http://skiarealbozidar.cz/en/homepage-en/",
-      "website": "http://skiarealbozidar.cz/en/homepage-en/ https://klinovec.cz/"
-    },
-    {
       "id": "saalbach",
       "name": "Skicircus Saalbach-Hinterglemm Leogang Fieberbrunn",
       "openskimap_id": "5b78e5652d097c7679cef7128ee1b57ff09fb86e",
-      "platform": "custom",
-      "url": "https://www.saalbach.com/en/live-info/lifts-and-pistes",
+      "platform": "saalbach",
+      "url": "https://www.fieberbrunn.com/liftoperation",
       "liftieId": null,
-      "notes": "Austria - custom extraction"
+      "notes": "Skicircus uses Bootstrap table with lift categories"
     },
     {
       "id": "skigebiet-almenwelt-lofer",
@@ -2718,18 +2735,28 @@
       "id": "cerna-hora-pec",
       "name": "Skiresort Černá Hora-Pec",
       "openskimap_id": "583dbc4651db7ebcc7875a11180b634ec108ba8a",
-      "platform": "custom",
-      "url": "https://www.skiresort.cz/en/skiarealy/cerna-hora/ch-lanovky-a-vleky/",
+      "platform": "skiresortcz",
+      "url": "https://www.skiresort.cz/en/skiarealy/pec-pod-snezkou/pec-lanovky-a-vleky/",
       "liftieId": null,
-      "notes": "Czech Republic - custom extraction"
+      "notes": "Czech resort with table-based HTML"
+    },
+    {
+      "id": "skiwelt",
+      "name": "SkiWelt Wilder Kaiser - Brixental",
+      "openskimap_id": "37ee9c6ba5b44864ba844f804938a8b815f8b717",
+      "platform": "skiwelt",
+      "url": "https://www.skiwelt.at/en/lift-status-winter.html",
+      "liftieId": "skiwelt",
+      "notes": "Austria (liftie pattern)"
     },
     {
       "id": "snow-space-salzburg",
       "name": "Snow Space Salzburg",
       "openskimap_id": "b57f20e0c7ea594ef8ec8289fd87022b36417629",
-      "platform": "custom",
-      "url": "https://www.snow-space.com/en/lift-status",
-      "website": "https://www.snow-space.com/"
+      "platform": "snowspace",
+      "url": "https://www.snow-space.com/openlifts",
+      "website": "https://www.snow-space.com/",
+      "notes": "Snow Space Salzburg - Bootstrap with dynamic loading"
     },
     {
       "id": "snow-summit",
@@ -2764,6 +2791,14 @@
       "website": "https://www.snowbird.com/"
     },
     {
+      "id": "sölden",
+      "name": "Sölden",
+      "openskimap_id": "78e5f98d8527df7216b08962f372659abcd4f711",
+      "platform": "soelden",
+      "url": "https://www.soelden.com/en/live-information/status",
+      "website": "https://www.soelden.com/"
+    },
+    {
       "id": "sommet-saint-sauveur",
       "name": "Sommet Saint-Sauveur",
       "openskimap_id": "78ac27731bb078db310933e9828665ca59858de2",
@@ -2780,6 +2815,14 @@
       "website": "https://www.sonnenkopf.com/"
     },
     {
+      "id": "sörenberg",
+      "name": "Sörenberg",
+      "openskimap_id": "6fc2b7bd9404c7cf68e49ca9fd83600e3de149d4",
+      "platform": "custom",
+      "url": "https://www.soerenberg.ch/en/lift-status",
+      "website": "https://www.soerenberg.ch"
+    },
+    {
       "id": "spieljoch-fügen",
       "name": "Spieljoch - Fügen",
       "openskimap_id": "f5332cdc7d54f27d5cfeb3d3d1bb0d1f8b4b660e",
@@ -2794,6 +2837,15 @@
       "platform": "custom",
       "url": "https://www.bergbahnen-stjohann.at/en/lift-status",
       "website": "https://www.bergbahnen-stjohann.at/"
+    },
+    {
+      "id": "st-anton-st-christoph-stuben",
+      "name": "St. Anton / St. Christoph / Stuben",
+      "openskimap_id": "66e672470add74c3e6a2bd8d4c1bb07cc4721728",
+      "platform": "skiarlberg",
+      "url": "https://www.skiarlberg.at/en/st-anton/live-info/cable-cars-lifts",
+      "website": "https://www.stantonamarlberg.com/",
+      "notes": "Uses Ski Arlberg table format with aria-label status"
     },
     {
       "id": "station-de-ski-de-prat-peyrot",
@@ -2836,6 +2888,14 @@
       "website": "http://www.morschach-stoos.ch"
     },
     {
+      "id": "stöten-i-sälen",
+      "name": "Stöten i Sälen",
+      "openskimap_id": "31297131594299a446bc94ebea4e1b9d48f1be2a",
+      "platform": "custom",
+      "url": "https://www.stoten.se/en/lift-status",
+      "website": "https://www.stoten.se/"
+    },
+    {
       "id": "stowe-mountain-resort",
       "name": "Stowe Mountain Resort",
       "openskimap_id": "f511535c529ee4710b2165d57a2370731c890ca7",
@@ -2866,14 +2926,6 @@
       "platform": "custom",
       "url": "https://www.stubaier-gletscher.com/en/lift-status",
       "website": "https://www.stubaier-gletscher.com/"
-    },
-    {
-      "id": "stöten-i-sälen",
-      "name": "Stöten i Sälen",
-      "openskimap_id": "31297131594299a446bc94ebea4e1b9d48f1be2a",
-      "platform": "custom",
-      "url": "https://www.stoten.se/en/lift-status",
-      "website": "https://www.stoten.se/"
     },
     {
       "id": "sudelfeld-bayrischzell",
@@ -2980,22 +3032,6 @@
       "website": "http://www.luchon-superbagneres.com/"
     },
     {
-      "id": "sölden",
-      "name": "Sölden",
-      "openskimap_id": "78e5f98d8527df7216b08962f372659abcd4f711",
-      "platform": "soelden",
-      "url": "https://www.soelden.com/en/live-information/status",
-      "website": "https://www.soelden.com/"
-    },
-    {
-      "id": "sörenberg",
-      "name": "Sörenberg",
-      "openskimap_id": "6fc2b7bd9404c7cf68e49ca9fd83600e3de149d4",
-      "platform": "custom",
-      "url": "https://www.soerenberg.ch/en/lift-status",
-      "website": "https://www.soerenberg.ch"
-    },
-    {
       "id": "tahko",
       "name": "Tahko",
       "openskimap_id": "6d3a6779aeccfa475be6c0a5f9b52f427d64c037",
@@ -3010,6 +3046,14 @@
       "platform": "custom",
       "url": "https://www.skistar.com/en/ski-destinations/salen/en/lift-status",
       "website": "https://www.skistar.com/en/ski-destinations/salen"
+    },
+    {
+      "id": "tänndalen",
+      "name": "Tänndalen",
+      "openskimap_id": "27892035f6676422fecf162968cf2f39486245eb",
+      "platform": "custom",
+      "url": "https://www.tanndalen.com/en/lift-status",
+      "website": "https://www.tanndalen.com/"
     },
     {
       "id": "taos-ski-valley",
@@ -3086,14 +3130,6 @@
       "website": "https://www.turracherhoehe.at/"
     },
     {
-      "id": "tänndalen",
-      "name": "Tänndalen",
-      "openskimap_id": "27892035f6676422fecf162968cf2f39486245eb",
-      "platform": "custom",
-      "url": "https://www.tanndalen.com/en/lift-status",
-      "website": "https://www.tanndalen.com/"
-    },
-    {
       "id": "vail",
       "name": "Vail",
       "openskimap_id": "ce9e507474fc78e61f5eb00985c79c4ab5148599",
@@ -3108,6 +3144,24 @@
       "platform": "custom",
       "url": "https://www.valcenis.com/en/live-info",
       "website": "https://www.valcenis.com"
+    },
+    {
+      "id": "val-dallos-la-foux",
+      "name": "Val d'Allos - La Foux",
+      "openskimap_id": "05ec7627488328fb30e0d502b021045a348af622",
+      "platform": "custom",
+      "url": "https://www.valdallos.com/en/lift-status",
+      "website": "https://www.valdallos.com/"
+    },
+    {
+      "id": "val-disere",
+      "name": "Val d'Isère",
+      "openskimap_id": "6ed5f25f0eb3e366ee2e0e667d998c0bf551225f",
+      "platform": "lumiplan",
+      "url": "https://valdisere.com",
+      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=valdisere&region=alpes&pays=france&lang=en",
+      "liftieId": "valdisere",
+      "notes": "Uses Lumiplan bulletin (same domain as Tignes)"
     },
     {
       "id": "val-gardena",
@@ -3135,24 +3189,6 @@
       "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=valthorens&region=alpes&pays=france&lang=en",
       "liftieId": null,
       "notes": "Uses Lumiplan bulletin"
-    },
-    {
-      "id": "val-dallos-la-foux",
-      "name": "Val d'Allos - La Foux",
-      "openskimap_id": "05ec7627488328fb30e0d502b021045a348af622",
-      "platform": "custom",
-      "url": "https://www.valdallos.com/en/lift-status",
-      "website": "https://www.valdallos.com/"
-    },
-    {
-      "id": "val-disere",
-      "name": "Val d'Isère",
-      "openskimap_id": "6ed5f25f0eb3e366ee2e0e667d998c0bf551225f",
-      "platform": "lumiplan",
-      "url": "https://valdisere.com",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=valdisere&region=alpes&pays=france&lang=en",
-      "liftieId": "valdisere",
-      "notes": "Uses Lumiplan bulletin (same domain as Tignes)"
     },
     {
       "id": "valle-nevado",
@@ -3230,9 +3266,10 @@
       "id": "wendelstein",
       "name": "Wendelstein",
       "openskimap_id": "d7f0152ded3f23d4e4cf3ad4571f131ec267ab40",
-      "platform": "custom",
-      "url": "https://www.wendelsteinbahn.de/en/weather",
-      "website": "https://www.wendelsteinbahn.de/"
+      "platform": "wendelstein",
+      "url": "https://www.wendelsteinbahn.de/skigebiet-wendelstein-2",
+      "website": "https://www.wendelsteinbahn.de/",
+      "notes": "German resort with daily status updates"
     },
     {
       "id": "whakapapa",
@@ -3371,10 +3408,10 @@
       "id": "zillertal-arena",
       "name": "Zillertal Arena",
       "openskimap_id": "4a041686ec032469cd3d58aaaf73ed9864e4a173",
-      "platform": "custom",
-      "url": "https://www.zillertalarena.com/en/information-services/live-cams-weather/snow-report/",
+      "platform": "zillertal",
+      "url": "https://www.zillertalarena.com/en/winter/ski-area/lifts-slopes/",
       "liftieId": null,
-      "notes": "Austria - custom extraction"
+      "notes": "Austrian resort - table or API based"
     },
     {
       "id": "zinal-grimentz",
@@ -3391,14 +3428,6 @@
       "platform": "custom",
       "url": "https://www.turismofvg.it/en/mountain365/ski-area-ravascletto-zoncolan/en/lift-status",
       "website": "https://www.turismofvg.it/en/mountain365/ski-area-ravascletto-zoncolan"
-    },
-    {
-      "id": "åre",
-      "name": "Åre",
-      "openskimap_id": "4968c991f3910142689f5f0d2fabee02df54e214",
-      "platform": "skistar",
-      "url": "https://www.skistar.com/en/ski-destinations/are/winter-in-are/weather-and-slopes/",
-      "website": "https://www.skistar.com/en/ski-destinations/are/"
     },
     {
       "id": "χιονοδρομικό-κέντρο-παρνασσού-parnassos-ski-resort",
@@ -3489,14 +3518,6 @@
       "website": "https://www.sheregesh.su/"
     },
     {
-      "id": "پیست-اسکی-دیزین-dizin-ski-resort",
-      "name": "پیست اسکی دیزین, Dizin Ski Resort",
-      "openskimap_id": "0bcc31494b9b87b9cc66f9b5655dacc021c1d7b8",
-      "platform": "custom",
-      "url": "https://dizinskiresort.ir/en/lift-status",
-      "website": "https://dizinskiresort.ir/"
-    },
-    {
       "id": "გუდაური-gudauri-гудаури",
       "name": "გუდაური, Gudauri, Гудаури",
       "openskimap_id": "611c5f306d193965d569b1d45fd531b4b4a6e14b",
@@ -3505,12 +3526,12 @@
       "website": "https://mta.ski"
     },
     {
-      "id": "だいせんホワイトリゾート-daisen-white-resort",
-      "name": "だいせんホワイトリゾート, Daisen White Resort",
-      "openskimap_id": "18c3fba8fc39523a87ef5ae73ba37e372171062b",
+      "id": "پیست-اسکی-دیزین-dizin-ski-resort",
+      "name": "پیست اسکی دیزین, Dizin Ski Resort",
+      "openskimap_id": "0bcc31494b9b87b9cc66f9b5655dacc021c1d7b8",
       "platform": "custom",
-      "url": "https://www.daisen-resort.jp/en/lift-status",
-      "website": "https://www.daisen-resort.jp/"
+      "url": "https://dizinskiresort.ir/en/lift-status",
+      "website": "https://dizinskiresort.ir/"
     },
     {
       "id": "サッポロテイネ-sapporo-teine",
@@ -3519,6 +3540,14 @@
       "platform": "custom",
       "url": "https://sapporo-teine.com/snow/en/lift-status",
       "website": "https://sapporo-teine.com/snow/"
+    },
+    {
+      "id": "だいせんホワイトリゾート-daisen-white-resort",
+      "name": "だいせんホワイトリゾート, Daisen White Resort",
+      "openskimap_id": "18c3fba8fc39523a87ef5ae73ba37e372171062b",
+      "platform": "custom",
+      "url": "https://www.daisen-resort.jp/en/lift-status",
+      "website": "https://www.daisen-resort.jp/"
     },
     {
       "id": "ニセコユナイテッド-niseko-united",
