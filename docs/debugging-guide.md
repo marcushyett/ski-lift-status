@@ -264,3 +264,71 @@ During off-season:
 - Resorts may return empty arrays
 - Check if there's a "winter" vs "summer" mode
 - Look for `season=winter` parameters
+
+## Known Difficult Resorts
+
+These resorts require special handling due to their technical implementations:
+
+### Swiss Resorts (Vue.js SPAs)
+
+The following Swiss resorts use Vue.js single-page applications that require JavaScript rendering:
+
+| Resort | URL | Challenge |
+|--------|-----|-----------|
+| Arosa Lenzerheide | arosalenzerheide.swiss | Vue.js SPA, data loaded via AJAX |
+| Parsenn (Davos) | davosklostersmountains.ch | Vue.js SPA, custom API undocumented |
+| Corviglia (St. Moritz) | mountains.ch | TYPO3 CMS with JavaScript loading |
+| Aletsch Arena | aletscharena.ch | TYPO3 CMS, JavaScript-rendered tables |
+
+**Approach:** Use XHR Fetcher `/analyze` endpoint to discover their internal APIs. These sites typically have Vue/Axios-based data fetching that can be intercepted.
+
+### French Resorts with Empty Lumiplan Bulletins
+
+Some French resorts are configured for Lumiplan but the bulletin data is empty:
+
+| Resort | Station Name | Issue |
+|--------|--------------|-------|
+| Espace Lumière | espacelumiere | Empty `pistes_remontees` div |
+| Le Grand Domaine | legranddomaine | No lift data in bulletin |
+| Serre-Chevalier | serrechevalier | Uses ingenie.fr instead of Lumiplan |
+
+**Approach:**
+1. Check if the resort has a `lumiplanMapId` for the JSON API
+2. Look for alternative data providers (ingenie.fr, Skiplan, etc.)
+3. Some resorts may use their own mobile app API
+
+### Andorran/Spanish Resorts
+
+| Resort | Platform | Challenge |
+|--------|----------|-----------|
+| GrandValira | Drupal | Embedded JSON in page state, complex extraction |
+
+**Approach:** Look for `drupalSettings` or `ajaxPageState` in page source containing facilities data.
+
+### North American Resorts
+
+| Resort | Platform | Challenge |
+|--------|----------|-----------|
+| Park City | Vail/Epic | WAF blocks automated requests |
+| Big Sky | Custom | JavaScript SPA with custom API |
+
+**Approach:**
+- Vail resorts: Try using the My Epic app API if accessible
+- Custom SPAs: Use XHR Fetcher to discover API endpoints
+
+### Alternative Data Sources
+
+When direct resort APIs fail, consider:
+
+1. **Third-party aggregators:**
+   - skiresort.info - Comprehensive but may require scraping
+   - bergfex.com - European focus
+   - snow-forecast.com - Global coverage
+
+2. **Regional tourism APIs:**
+   - myswitzerland.com - Swiss resorts
+   - france-montagnes.com - French resorts
+
+3. **Mobile app traffic analysis:**
+   - Many resorts have mobile apps with cleaner APIs
+   - Use network proxy to discover endpoints
