@@ -187,10 +187,88 @@ function getNestedValue(obj, path) {
 }
 
 /**
- * Extract using Lumiplan bulletin
- * Supports both old format (prl_group) and new format (POI_info)
+ * Extract using Lumiplan JSON API (preferred) or HTML bulletin (fallback)
+ * JSON API provides both lifts AND runs with accurate status
+ * HTML bulletin may only have lifts for older format pages
  */
 async function extractLumiplan(config) {
+  // If we have a lumiplanMapId, use the JSON API (preferred)
+  if (config.lumiplanMapId) {
+    return await extractLumiplanJson(config);
+  }
+
+  // Otherwise fall back to HTML parsing
+  return await extractLumiplanHtml(config);
+}
+
+/**
+ * Extract using Lumiplan JSON API
+ * Endpoints: /staticPoiData (names, types) and /dynamicPoiData (status)
+ */
+async function extractLumiplanJson(config) {
+  const baseUrl = 'https://lumiplay.link/interactive-map-services/public/map';
+  const mapId = config.lumiplanMapId;
+
+  // Fetch static and dynamic data in parallel
+  const [staticJson, dynamicJson] = await Promise.all([
+    fetch(`${baseUrl}/${mapId}/staticPoiData?lang=en`),
+    fetch(`${baseUrl}/${mapId}/dynamicPoiData?lang=en`)
+  ]);
+
+  let staticData, dynamicData;
+  try {
+    staticData = JSON.parse(staticJson);
+    dynamicData = JSON.parse(dynamicJson);
+  } catch (e) {
+    return { error: 'Failed to parse Lumiplan JSON API response' };
+  }
+
+  // Build status map from dynamic data (id -> openingStatus)
+  const statusMap = {};
+  for (const item of dynamicData.items || []) {
+    statusMap[item.id] = item.openingStatus;
+  }
+
+  // Normalize Lumiplan status to our format
+  function normalizeApiStatus(apiStatus) {
+    switch (apiStatus) {
+      case 'OPEN': return 'open';
+      case 'FORECAST': return 'scheduled';
+      case 'DELAYED': return 'scheduled';
+      default: return 'closed'; // CLOSED, OUT_OF_PERIOD, etc.
+    }
+  }
+
+  const lifts = [];
+  const runs = [];
+
+  // Process static items
+  for (const item of staticData.items || []) {
+    const data = item.data || {};
+    const name = data.name;
+    const type = data.type;
+    const id = data.id;
+
+    if (!name || !type) continue;
+
+    const apiStatus = statusMap[id] || 'UNKNOWN';
+    const status = normalizeApiStatus(apiStatus);
+
+    if (type === 'LIFT') {
+      lifts.push({ name, status, liftType: data.liftType });
+    } else if (type === 'TRAIL') {
+      runs.push({ name, status, trailType: data.trailType, level: data.trailLevel });
+    }
+  }
+
+  return { lifts, runs };
+}
+
+/**
+ * Extract using Lumiplan HTML bulletin (fallback for resorts without JSON API)
+ * Supports both old format (prl_group) and new format (POI_info)
+ */
+async function extractLumiplanHtml(config) {
   const dataUrl = config.dataUrl;
   if (!dataUrl) return { error: 'No dataUrl specified' };
 
@@ -274,7 +352,7 @@ async function extractLumiplan(config) {
     });
   }
 
-  // Try OLD format: prl_group (Trois Vallées, etc.)
+  // Try OLD format: prl_group (Trois Vallées bulletin - lifts only)
   if (lifts.length === 0 && runs.length === 0) {
     const groups = doc.querySelectorAll('.prl_group[title]');
     groups.forEach(group => {
