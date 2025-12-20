@@ -58,10 +58,14 @@ function getProxyAgent(targetUrl) {
   return new HttpsProxyAgent(proxyUrl);
 }
 
+// Concurrency settings for parallel execution
+const CONCURRENCY_LIMIT = 20;  // Number of parallel requests
+const REQUEST_TIMEOUT_MS = 15000;  // 15 second timeout per request
+
 /**
- * Fetch URL content
+ * Fetch URL content with timeout
  */
-async function fetch(url) {
+async function fetch(url, timeoutMs = REQUEST_TIMEOUT_MS) {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith('https') ? https : http;
     const agent = getProxyAgent(url);
@@ -70,23 +74,30 @@ async function fetch(url) {
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; SkiLiftStatus/1.0)',
         'Accept': 'text/html,application/json'
-      }
+      },
+      timeout: timeoutMs
     };
 
     if (agent) {
       options.agent = agent;
     }
 
-    protocol.get(url, options, (res) => {
+    const req = protocol.get(url, options, (res) => {
       // Handle redirects
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        return fetch(res.headers.location).then(resolve).catch(reject);
+        return fetch(res.headers.location, timeoutMs).then(resolve).catch(reject);
       }
 
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => resolve(data));
-    }).on('error', reject);
+    });
+
+    req.on('error', reject);
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error(`Request timed out after ${timeoutMs}ms`));
+    });
   });
 }
 
@@ -1164,29 +1175,69 @@ async function extractResort(resortId) {
 }
 
 /**
- * Run all resorts and generate report
+ * Run a batch of resorts in parallel
+ */
+async function runBatch(batch, startIndex, total) {
+  const results = await Promise.all(
+    batch.map(async (resort, i) => {
+      const index = startIndex + i + 1;
+      const startTime = Date.now();
+      const result = await extractResort(resort.id);
+      const duration = Date.now() - startTime;
+
+      return {
+        resort,
+        result,
+        index,
+        duration
+      };
+    })
+  );
+
+  return results;
+}
+
+/**
+ * Run all resorts and generate report with parallel execution
  */
 async function runAll() {
   const results = {};
+  const total = resorts.length;
+  const startTime = Date.now();
 
-  for (const resort of resorts) {
-    console.log(`\n[${resorts.indexOf(resort) + 1}/${resorts.length}] ${resort.name}...`);
-    const result = await extractResort(resort.id);
-    results[resort.id] = {
-      name: resort.name,
-      platform: resort.platform,
-      openskimap_id: resort.openskimap_id,
-      ...result
-    };
+  console.log(`Starting parallel extraction of ${total} resorts (concurrency: ${CONCURRENCY_LIMIT})\n`);
 
-    if (result.error) {
-      console.log(`  ❌ Error: ${result.error}`);
-    } else if (result.note) {
-      console.log(`  ⚠️  ${result.note}`);
-    } else {
-      console.log(`  ✓ Lifts: ${result.lifts?.length || 0}, Runs: ${result.runs?.length || 0}`);
+  // Process in batches for controlled concurrency
+  for (let i = 0; i < resorts.length; i += CONCURRENCY_LIMIT) {
+    const batch = resorts.slice(i, i + CONCURRENCY_LIMIT);
+    const batchNum = Math.floor(i / CONCURRENCY_LIMIT) + 1;
+    const totalBatches = Math.ceil(resorts.length / CONCURRENCY_LIMIT);
+
+    console.log(`\n--- Batch ${batchNum}/${totalBatches} (resorts ${i + 1}-${Math.min(i + CONCURRENCY_LIMIT, total)}) ---`);
+
+    const batchResults = await runBatch(batch, i, total);
+
+    // Process results and print grouped logs
+    for (const { resort, result, index, duration } of batchResults) {
+      results[resort.id] = {
+        name: resort.name,
+        platform: resort.platform,
+        openskimap_id: resort.openskimap_id,
+        ...result
+      };
+
+      const status = result.error
+        ? `❌ Error: ${result.error}`
+        : result.note
+          ? `⚠️  ${result.note}`
+          : `✓ Lifts: ${result.lifts?.length || 0}, Runs: ${result.runs?.length || 0}`;
+
+      console.log(`[${index}/${total}] ${resort.name} (${duration}ms) - ${status}`);
     }
   }
+
+  const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+  console.log(`\nCompleted in ${totalTime}s`);
 
   return results;
 }
