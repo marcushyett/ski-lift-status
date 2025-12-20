@@ -241,11 +241,11 @@
       "id": "les-gets-morzine",
       "name": "Les Gets-Morzine",
       "openskimap_id": "cafb6b6d5f25860a682a8b6d67efe689218618a5",
-      "platform": "lumiplan",
+      "platform": "intermaps",
       "url": "https://www.lesgets.com/en/discover-the-resort/ski-winter-sports/live-info-slopes/",
-      "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=morzine---avoriaz---les-gets&region=alpes&pays=france&lang=en",
+      "dataUrl": "https://winter.intermaps.com/portes_du_soleil/data?lang=en",
       "liftieId": "morzine",
-      "notes": "Uses Lumiplan bulletin (Portes du Soleil domain)"
+      "notes": "Uses Intermaps API (Portes du Soleil domain)"
     },
     {
       "id": "les-sybelles",

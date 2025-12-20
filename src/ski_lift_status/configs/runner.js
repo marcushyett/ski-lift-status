@@ -853,6 +853,56 @@ async function extractIschgl(config) {
 }
 
 /**
+ * Generic Intermaps JSON API extractor
+ * Used by Sölden, Saalbach, Portes du Soleil, and other Austrian/European resorts
+ * API endpoint format: https://winter.intermaps.com/{resort_id}/data?lang=en
+ */
+async function extractIntermaps(config) {
+  const dataUrl = config.dataUrl;
+  if (!dataUrl) return { error: 'No dataUrl specified for Intermaps' };
+
+  try {
+    const json = await fetch(dataUrl);
+    const data = JSON.parse(json);
+
+    const lifts = [];
+    const runs = [];
+
+    // Process lifts - handle "in_preparation" as scheduled
+    if (data.lifts && Array.isArray(data.lifts)) {
+      data.lifts.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       (statusText === 'in_preparation' || statusText === 'scheduled') ? 'scheduled' : 'closed';
+
+        if (name) {
+          lifts.push({ name, status });
+        }
+      });
+    }
+
+    // Process slopes/runs
+    if (data.slopes && Array.isArray(data.slopes)) {
+      data.slopes.forEach(item => {
+        const name = item.popup?.title || item.title || item.name;
+        const statusText = (item.status || '').toLowerCase();
+        const status = statusText === 'open' ? 'open' :
+                       (statusText === 'in_preparation' || statusText === 'scheduled') ? 'scheduled' : 'closed';
+
+        if (name) {
+          runs.push({ name, status });
+        }
+      });
+    }
+
+    return { lifts, runs };
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+/**
  * Extract using Sölden pattern - uses Intermaps JSON API
  */
 async function extractSoelden(config) {
@@ -1974,6 +2024,8 @@ async function extractResort(resortId) {
         return await extractIschgl(resort);
       case 'soelden':
         return await extractSoelden(resort);
+      case 'intermaps':
+        return await extractIntermaps(resort);
       case 'skistar':
         return await extractSkistar(resort);
       case 'laax':
