@@ -266,37 +266,50 @@ function listResorts(resortConfigs) {
 async function main() {
   const args = process.argv.slice(2);
 
-  if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
+  // Check for flags
+  const jsonOutput = args.includes('--json');
+  const filteredArgs = args.filter(a => a !== '--json');
+
+  if (filteredArgs.length === 0 || filteredArgs[0] === '--help' || filteredArgs[0] === '-h') {
     console.log(`
 Ski Lift Status CLI
 
 Usage:
-  npx ski-lift-status <openskimap-id>    Test a ski resort by OpenSkiMap ID
-  npx ski-lift-status <resort-id>        Test a configured resort by ID
-  npx ski-lift-status --list             List all configured resorts
-  npx ski-lift-status --search <name>    Search for ski areas by name
+  npx ski-lift-status <openskimap-id>           Test a ski resort by OpenSkiMap ID
+  npx ski-lift-status <resort-id>               Test a configured resort by ID
+  npx ski-lift-status <id> --json               Output raw JSON data
+  npx ski-lift-status --list                    List all configured resorts
+  npx ski-lift-status --search <name>           Search for ski areas by name
+
+Options:
+  --json    Output full extracted data as JSON (lifts, runs, statuses, etc.)
 
 Examples:
-  npx ski-lift-status 37ee9c6ba5b44864ba844f804938a8b815f8b717
   npx ski-lift-status skiwelt
+  npx ski-lift-status skiwelt --json
+  npx ski-lift-status 37ee9c6ba5b44864ba844f804938a8b815f8b717
   npx ski-lift-status --search "La Plagne"
+
+Note: Run 'npm install' first to install dependencies (jsdom, etc.)
 `);
     return;
   }
+
+  const args0 = filteredArgs[0];
 
   // Load data
   const osmData = loadOpenSkiMapData();
   const resortConfigs = loadResortConfigs();
 
   // Handle --list
-  if (args[0] === '--list') {
+  if (args0 === '--list') {
     listResorts(resortConfigs);
     return;
   }
 
   // Handle --search
-  if (args[0] === '--search') {
-    const query = args.slice(1).join(' ');
+  if (args0 === '--search') {
+    const query = filteredArgs.slice(1).join(' ');
     if (!query) {
       console.error('Error: Please provide a search query');
       process.exit(1);
@@ -322,7 +335,7 @@ Examples:
   }
 
   // Main lookup flow
-  const input = args[0];
+  const input = args0;
 
   // Check if it's a resort ID (existing config)
   let resortConfig = resortConfigs.find(r => r.id === input);
@@ -349,12 +362,47 @@ Examples:
   // Run extraction if we have a config
   let extractedData = null;
   if (resortConfig) {
-    console.log(`\nExtracting data for ${resortConfig.name}...`);
+    if (!jsonOutput) {
+      console.log(`\nExtracting data for ${resortConfig.name}...`);
+    }
     try {
       extractedData = await runExtraction(resortConfig.id);
     } catch (e) {
       extractedData = { error: e.message };
     }
+  }
+
+  // JSON output mode
+  if (jsonOutput) {
+    const output = {
+      openskimap_id: openskimapId,
+      ski_area_name: skiArea.areaName,
+      config: resortConfig ? {
+        id: resortConfig.id,
+        name: resortConfig.name,
+        platform: resortConfig.platform,
+        url: resortConfig.url,
+        dataUrl: resortConfig.dataUrl
+      } : null,
+      openskimap_reference: {
+        lifts_count: skiArea.lifts.length,
+        runs_count: skiArea.runs.length,
+        lifts: skiArea.lifts.map(l => ({
+          id: l.id,
+          name: l.name,
+          lift_type: l.lift_type,
+          status: l.status
+        })),
+        runs: skiArea.runs.map(r => ({
+          id: r.id,
+          name: r.name,
+          difficulty: r.difficulty
+        }))
+      },
+      extracted: extractedData
+    };
+    console.log(JSON.stringify(output, null, 2));
+    return;
   }
 
   // Display results
