@@ -124,13 +124,18 @@ jobs:
           }
           ANALYZE
 
-          # Set outputs using environment file (backup method)
-          # Use a unique delimiter that won't appear in JSON content
-          echo "has_failures=$(node -e "const f=require('./failing-resorts.json'); console.log(f.length > 0 ? 'true' : 'false')")" >> $GITHUB_OUTPUT
-          DELIMITER="FAILING_RESORTS_JSON_$(date +%s)"
-          echo "failing_resorts<<${DELIMITER}" >> $GITHUB_OUTPUT
-          cat failing-resorts.json >> $GITHUB_OUTPUT
-          echo "${DELIMITER}" >> $GITHUB_OUTPUT
+          # Set outputs using environment file
+          node << 'SET_OUTPUTS'
+          const fs = require('fs');
+          const failing = JSON.parse(fs.readFileSync('failing-resorts.json', 'utf8'));
+          const outputFile = process.env.GITHUB_OUTPUT;
+
+          // Write compact JSON on single line to avoid delimiter issues
+          const compactJson = JSON.stringify(failing);
+
+          fs.appendFileSync(outputFile, `has_failures=${failing.length > 0 ? 'true' : 'false'}\n`);
+          fs.appendFileSync(outputFile, `failing_resorts=${compactJson}\n`);
+          SET_OUTPUTS
 
       - name: Parse results and create summary
         run: |
