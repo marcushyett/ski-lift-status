@@ -20,6 +20,6 @@
   "license": "MIT",
   "dependencies": {
     "https-proxy-agent": "^7.0.6",
-    "jsdom": "^27.3.0"
+    "jsdom": "^22.1.0"
   }
 }
