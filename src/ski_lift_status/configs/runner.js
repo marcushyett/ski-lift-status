@@ -103,6 +103,51 @@ async function fetch(url, timeoutMs = REQUEST_TIMEOUT_MS) {
 }
 
 /**
+ * Fetch URL with POST method
+ */
+async function fetchPost(url, body, timeoutMs = REQUEST_TIMEOUT_MS) {
+  return new Promise((resolve, reject) => {
+    const parsedUrl = new URL(url);
+    const protocol = url.startsWith('https') ? https : http;
+    const agent = getProxyAgent(url);
+    const postData = typeof body === 'string' ? body : JSON.stringify(body);
+
+    const options = {
+      hostname: parsedUrl.hostname,
+      port: parsedUrl.port || (url.startsWith('https') ? 443 : 80),
+      path: parsedUrl.pathname + parsedUrl.search,
+      method: 'POST',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; SkiLiftStatus/1.0)',
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(postData),
+        'Accept': 'application/json'
+      },
+      timeout: timeoutMs
+    };
+
+    if (agent) {
+      options.agent = agent;
+    }
+
+    const req = protocol.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve(data));
+    });
+
+    req.on('error', reject);
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error(`Request timed out after ${timeoutMs}ms`));
+    });
+
+    req.write(postData);
+    req.end();
+  });
+}
+
+/**
  * Extract __NUXT__ data from HTML
  *
  * Handles multiple Nuxt.js data formats:
@@ -549,42 +594,76 @@ async function extractVail(config) {
 
   const statuses = ['closed', 'open', 'hold', 'scheduled'];
   const lifts = [];
+  const runs = [];
 
   // Find script containing TerrainStatusFeed
   const scripts = doc.querySelectorAll('script');
-  let feedData = null;
 
   scripts.forEach(script => {
     const text = script.textContent || '';
-    if (text.includes('TerrainStatusFeed = {')) {
+    if (text.includes('TerrainStatusFeed')) {
       try {
         const context = { FR: {} };
         vm.runInNewContext(text, context);
-        feedData = context.FR?.TerrainStatusFeed?.Lifts || [];
+        const feed = context.FR?.TerrainStatusFeed;
+
+        if (feed) {
+          // Handle GroomingAreas structure (newer format)
+          if (feed.GroomingAreas && Array.isArray(feed.GroomingAreas)) {
+            feed.GroomingAreas.forEach(area => {
+              // Extract lifts
+              if (area.Lifts && Array.isArray(area.Lifts)) {
+                area.Lifts.forEach(lift => {
+                  lifts.push({
+                    name: lift.Name?.trim(),
+                    status: statuses[lift.Status] || 'closed'
+                  });
+                });
+              }
+              // Extract trails/runs
+              if (area.Trails && Array.isArray(area.Trails)) {
+                area.Trails.forEach(trail => {
+                  runs.push({
+                    name: trail.Name?.trim(),
+                    status: trail.IsOpen ? 'open' : 'closed'
+                  });
+                });
+              }
+            });
+          }
+          // Handle flat Lifts array (older format)
+          else if (feed.Lifts && Array.isArray(feed.Lifts)) {
+            feed.Lifts.forEach(({ Name, Status }) => {
+              lifts.push({
+                name: Name?.trim(),
+                status: statuses[Status] || 'closed'
+              });
+            });
+          }
+        }
       } catch (e) {
-        // Try alternative extraction
-        const match = text.match(/TerrainStatusFeed\s*=\s*(\{[\s\S]*?\});/);
+        // Try regex extraction as fallback
+        const match = text.match(/FR\.TerrainStatusFeed\s*=\s*(\{[\s\S]*?\});/);
         if (match) {
           try {
-            const jsonStr = match[1].replace(/'/g, '"');
-            const parsed = JSON.parse(jsonStr);
-            feedData = parsed.Lifts || [];
+            const parsed = JSON.parse(match[1]);
+            if (parsed.GroomingAreas) {
+              parsed.GroomingAreas.forEach(area => {
+                (area.Lifts || []).forEach(lift => {
+                  lifts.push({
+                    name: lift.Name?.trim(),
+                    status: statuses[lift.Status] || 'closed'
+                  });
+                });
+              });
+            }
           } catch (e2) { /* ignore */ }
         }
       }
     }
   });
 
-  if (feedData) {
-    feedData.forEach(({ Name, Status }) => {
-      lifts.push({
-        name: Name?.trim(),
-        status: statuses[Status] || 'closed'
-      });
-    });
-  }
-
-  return { lifts, runs: [] };
+  return { lifts, runs };
 }
 
 /**
@@ -1461,6 +1540,75 @@ async function extractDavos(config) {
 }
 
 /**
+ * Extract using Websenso API (used by French resorts like Serre-Chevalier)
+ * API returns HTML snippets with embedded lift/slope data
+ */
+async function extractWebsenso(config) {
+  const websiteKey = config.websensoKey || config.id.replace(/-/g, '') + '.com';
+  const apiUrl = `https://api.websenso.com/api/snowreport/onecall/${websiteKey}`;
+
+  // Build request body to fetch lift clusters
+  const requestBody = {
+    data: {
+      clusters: {
+        lifts: {
+          clusterType: 'poi-type',
+          filterBy: JSON.stringify({ category: 'lifts' }),
+          sortBy: JSON.stringify({ name: 'ASC' })
+        },
+        slopes: {
+          clusterType: 'poi-difficulty',
+          filterBy: JSON.stringify({ category: 'slopes', type: 'alpine' }),
+          sortBy: JSON.stringify({ difficultyWeight: 'ASC', name: 'ASC' })
+        }
+      }
+    }
+  };
+
+  try {
+    const response = await fetchPost(apiUrl, requestBody);
+    const data = JSON.parse(response);
+    const lifts = [];
+    const runs = [];
+
+    // Parse lift clusters from HTML snippets
+    const content = data.content || {};
+    for (const [key, html] of Object.entries(content)) {
+      if (typeof html !== 'string') continue;
+
+      // Extract individual items from HTML
+      // Format: <dl class="ws-snowreport--name">...<dd class="value">NAME</dd></dl>
+      // Status is in: <dl class="ws-snowreport--status" data-status="open|closed">
+      const nameMatches = html.matchAll(/<dl class="ws-snowreport--name"[^>]*>.*?<dd class="value">([^<]+)<\/dd>/gs);
+      const statusMatches = html.matchAll(/data-status="([^"]+)"/g);
+      const typeMatches = html.matchAll(/data-poi-type="([^"]+)"/g);
+
+      const names = [...nameMatches].map(m => m[1].trim());
+      const statuses = [...statusMatches].map(m => m[1].toLowerCase());
+      const types = [...typeMatches].map(m => m[1]);
+
+      // Determine if this is lifts or slopes based on types
+      const isLift = types.some(t => ['TC', 'TSD', 'TSDB', 'TS', 'TK', 'TR', 'FUN', 'TPH', 'DMC', 'TM'].includes(t));
+
+      for (let i = 0; i < names.length; i++) {
+        const name = names[i];
+        const status = statuses[i] === 'open' ? 'open' : 'closed';
+
+        if (isLift) {
+          lifts.push({ name, status });
+        } else {
+          runs.push({ name, status });
+        }
+      }
+    }
+
+    return { lifts, runs };
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+/**
  * Extract using GrandValira pattern (Drupal with embedded JSON)
  */
 async function extractGrandvalira(config) {
@@ -2046,6 +2194,8 @@ async function extractResort(resortId) {
         return await extractDavos(resort);
       case 'grandvalira':
         return await extractGrandvalira(resort);
+      case 'websenso':
+        return await extractWebsenso(resort);
       case 'mayrhofen':
         return await extractMayrhofen(resort);
       case 'skiresortcz':

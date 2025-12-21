@@ -5,5 +5,5 @@
   "platform": "vail",
   "url": "https://www.parkcitymountain.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
   "website": "https://parkcitymountain.com",
-  "notes": "TODO: Vail/Epic WAF blocks direct requests - use XHR Fetcher /analyze to bypass. Look for TerrainStatusFeed JSON, Epic mobile API, or mtnpowder.com integration."
+  "notes": "Uses FR.TerrainStatusFeed embedded in page with GroomingAreas[].Lifts[] structure. Vail extractor updated to handle this format. May require direct network access (blocked by some networks/WAFs)."
 }
