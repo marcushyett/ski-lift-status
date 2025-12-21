@@ -1,0 +1,417 @@
+[
+  {
+    "id": "d4f28c26e3b4f9d6b6acb318157cb3bea7c7803c",
+    "name": "Le Villarais",
+    "type": "chair_lift"
+  },
+  {
+    "id": "20bc247107547d522598ef67f1caa73a7547963c",
+    "name": "Romains",
+    "type": "chair_lift"
+  },
+  {
+    "id": "3dfbaca5b7f76139e21efe73575ee9e47e5a98bd",
+    "name": "Marmottes 1",
+    "type": "mixed_lift"
+  },
+  {
+    "id": "f69c7c7679c0d66dcabc9fb1982ce32644ec8ec4",
+    "name": "Pic Blanc 2",
+    "type": "gondola"
+  },
+  {
+    "id": "240e7e4d44e20d9c251c9726002c15bcf23dfcf0",
+    "name": "Pic Blanc 3",
+    "type": "cable_car"
+  },
+  {
+    "id": "64f5c2e0133ce2c05288a987d722949115708c88",
+    "name": "TC Alpette",
+    "type": "gondola"
+  },
+  {
+    "id": "2362a4a756456fb28c55b958f49c0ebb19d151cb",
+    "name": "Poutran 1",
+    "type": "gondola"
+  },
+  {
+    "id": "311c96115d3639be8b1d1602268aa39dfea0cf50",
+    "name": "Marmottes 2",
+    "type": "gondola"
+  },
+  {
+    "id": "13d7bde831add84546e663e9aa20f2ecb70c53dc",
+    "name": "Marmottes 3",
+    "type": "cable_car"
+  },
+  {
+    "id": "08e4af9eca2111eb886352b428ef76ca62a5e64f",
+    "name": "Lièvre Blanc",
+    "type": "chair_lift"
+  },
+  {
+    "id": "29b5919a6d108c8d733acf033c5fde045fae6240",
+    "name": "Alpette-Rousses",
+    "type": "cable_car"
+  },
+  {
+    "id": "c4d44d1b25af44228967c72646edaa3560ea7e46",
+    "name": "TK Alpette",
+    "type": "platter"
+  },
+  {
+    "id": "309b323031916416c4203c90e9099df32cc7331a",
+    "name": "Olmet",
+    "type": "platter"
+  },
+  {
+    "id": "7150aa1ac6539ae6361249058c7c6c9585662cd3",
+    "name": "Champ Clotury",
+    "type": "platter"
+  },
+  {
+    "id": "48b7afd64d48c3420efc64733b31e0f7fe557e9f",
+    "name": "Herpie",
+    "type": "chair_lift"
+  },
+  {
+    "id": "2cb4f141c0682655857aca086db7a659bfd54b19",
+    "name": "Télécentre",
+    "type": "gondola"
+  },
+  {
+    "id": "2b255fe0277b5b25a65d19e040577e6ea0e39ffb",
+    "name": "Lac Blanc",
+    "type": "chair_lift"
+  },
+  {
+    "id": "c695f56ee5ef968a87b0b1f2ed94a3db35ce63ec",
+    "name": "Lama",
+    "type": "platter"
+  },
+  {
+    "id": "2b3a74ed8d586307a2421aff3f1ce75af6850ef7",
+    "name": "Petit Prince",
+    "type": "platter"
+  },
+  {
+    "id": "560e364ccd110ed37b50fa0e3087c11e0eaab10d",
+    "name": "Alpauris",
+    "type": "chair_lift"
+  },
+  {
+    "id": "664075557f8202804fda09e9213c2f5544b699f2",
+    "name": "Louvets",
+    "type": "chair_lift"
+  },
+  {
+    "id": "be9645292b5d594cb5c4c40ca2f378167d1e61b1",
+    "name": "Auris Express",
+    "type": "chair_lift"
+  },
+  {
+    "id": "9eff14dbd889e0ae9fe1d9708dfe542ce1b16920",
+    "name": "Fontfroide",
+    "type": "chair_lift"
+  },
+  {
+    "id": "03a7dbef58123c43729079661940b5ddd82550dd",
+    "name": "Enversin",
+    "type": "gondola"
+  },
+  {
+    "id": "82755fe98b70a754a586a9e1c5184a10caf07c42",
+    "name": "Vaujany-Villette",
+    "type": "gondola"
+  },
+  {
+    "id": "8dfb1909725e2637a38a5d139581e0b17c587b39",
+    "name": "Villette-Montfrais",
+    "type": "gondola"
+  },
+  {
+    "id": "9c2f06720b3ee15222531ecbf31eedbc3380a3ab",
+    "name": "Montfrais",
+    "type": "chair_lift"
+  },
+  {
+    "id": "e8a26cd437ece7cadf025ad6896041f0fbb44c6b",
+    "name": "Vallonet",
+    "type": "chair_lift"
+  },
+  {
+    "id": "02fe7fa5f0b5f8fa16ef0f4486bd773176fe199e",
+    "name": "Tapis Olmet",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "d48bee4b9af3ccada64980dfd231fec84e9189ed",
+    "name": "Clos du Pré",
+    "type": "platter"
+  },
+  {
+    "id": "52f37ad219892c144345aab4bd930f9d7dfe2f30",
+    "name": "Maronne",
+    "type": "chair_lift"
+  },
+  {
+    "id": "16496e3832d2df49456f9a4de57f7ed71aae0525",
+    "name": "Babars",
+    "type": "platter"
+  },
+  {
+    "id": "83314e487785a1b3dd12f9da2c4e8306dd88b20a",
+    "name": "Grande Sure",
+    "type": "chair_lift"
+  },
+  {
+    "id": "e01171aac79954856bfb3e3d62b38674bd2bc71b",
+    "name": "Lombards",
+    "type": "chair_lift"
+  },
+  {
+    "id": "4fbd93dae67e95d54980f7ae38d06d1b4a6af65d",
+    "name": "Vaujany-Alpette",
+    "type": "cable_car"
+  },
+  {
+    "id": "04b7dcea1c7d4e3e28b6fd615bef9b2785c25cff",
+    "name": "Pic Blanc 1",
+    "type": "gondola"
+  },
+  {
+    "id": "4c0a255d7e4108013adf6d90306a659849bc260d",
+    "name": "Cloudit",
+    "type": "platter"
+  },
+  {
+    "id": "55aebc9c4d1305ea1469d2a79573f833f2d7c5e7",
+    "name": "Langaret",
+    "type": "platter"
+  },
+  {
+    "id": "65b69a9afae90fbc889a965b0e7b4adbdc0203a9",
+    "name": "Rif Nel 1",
+    "type": "gondola"
+  },
+  {
+    "id": "2cf43e89411c5d3fccaa7163d6343908615a6c7f",
+    "name": "Tortue",
+    "type": "platter"
+  },
+  {
+    "id": "7ed109ffa4232b3839e5ad907fe27c47d6868833",
+    "name": "Huez Express",
+    "type": "gondola"
+  },
+  {
+    "id": "4c39cea89028e3cd3872f6321218ca8e97b8c816",
+    "name": "Stade",
+    "type": "platter"
+  },
+  {
+    "id": "337eef38d3ef159c714f8ca53f5f547f2da014aa",
+    "name": "Ascenseur Villard",
+    "type": "funicular"
+  },
+  {
+    "id": "78d92ffbbab21e721dd6f7d15bc7d19ce84b2056",
+    "name": "École 1",
+    "type": "platter"
+  },
+  {
+    "id": "bbef622fb65b5ec3d875ee50dc03d6802bf8c199",
+    "name": "École 2",
+    "type": "platter"
+  },
+  {
+    "id": "846709a093cbc2a16aefa96b8a6bd034c1a9db86",
+    "name": "Tapis Montfrais",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "91032816cad8f8723ec777e409ba323970c30d0e",
+    "name": "Clos Giraud",
+    "type": "mixed_lift"
+  },
+  {
+    "id": "8f029bee2fe09818ce85ddd686dfb07c7850fcb2",
+    "name": "Jeux",
+    "type": "mixed_lift"
+  },
+  {
+    "id": "5f1c3f73c6577a1d9969c7b224a8c85e948a5fd0",
+    "name": "Bauchets",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "a7f92fa729ddec6bf67209e08cb9917bd4e1dcc6",
+    "name": "Grenouilles",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "cb27ef0b5a679d0af5080f4832f354c433a91bff",
+    "name": "Sagnes",
+    "type": "platter"
+  },
+  {
+    "id": "4601b0c2b966009021406097fff3a4ea436f926e",
+    "name": "Poutran",
+    "type": "platter"
+  },
+  {
+    "id": "1a0ff3b65b3755b9d4af4dcdec9cb21aacae1bf6",
+    "name": "Tapis Bambin",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "2ee9d4c727d6543fa2cf6d36e95d89f47763c671",
+    "name": "Piégut",
+    "type": "platter"
+  },
+  {
+    "id": "dd282f0ac67df56d39ccb89f2912ae416d9c81be",
+    "name": "Forêt",
+    "type": "platter"
+  },
+  {
+    "id": "1c1256ee731ba42af22bad747d20a7a4fd249706",
+    "name": "Signal",
+    "type": "mixed_lift"
+  },
+  {
+    "id": "895a93679e42f618d4435a992df7435db9e11861",
+    "name": "Alpe Express",
+    "type": "gondola"
+  },
+  {
+    "id": "7c3fc119056985da4edd5a6f8b228cdda78631a9",
+    "name": "Tapis Escargot",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "f196a8eaabb9d9b1abae65265288ac084ac454c7",
+    "name": "Eau d'Olle Express",
+    "type": "gondola"
+  },
+  {
+    "id": "7ae26a018b9a9273fbe612544fa798d4a68e82be",
+    "name": "Rousses",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "2219f81846e4372c2ff75a90d7b22ff3a7ef8648",
+    "name": "Poutran 2",
+    "type": "gondola"
+  },
+  {
+    "id": "dfc0934b6f52ed5e22ba54c7166f545e8ca742be",
+    "name": "Montfrais 1",
+    "type": "drag_lift"
+  },
+  {
+    "id": "25fea42b8feb261399185e7b92b2b50a614e2695",
+    "name": "Chalvet",
+    "type": "chair_lift"
+  },
+  {
+    "id": "2068d1712bcc0a189b34ec18ad7d9eb8dc6437bc",
+    "name": "Tapis Bergers",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "57f2d15618ceacd171d9acf4d4bdf1eaa1bed8e2",
+    "name": "Tapis Moutons",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "3b5e95fcd8d5351426283a4237590c88e8178cee",
+    "name": "Fil Neige",
+    "type": "rope_tow"
+  },
+  {
+    "id": "c02e6c65924444bb91dd7618aa88dbfe5c688ce5",
+    "name": "Écureuils",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "4b343019a5d2b84b6178f16b26ad0501e2d646e7",
+    "name": "",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "0e278e952d30054b27d18128db3ac7b5853e39cd",
+    "name": "Sures",
+    "type": "mixed_lift"
+  },
+  {
+    "id": "46e9f815f60366b6a16fb9d10c446861d533fa10",
+    "name": "Tapis Rif Nel 1",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "350df9106545179176df8c3bc40051fe1c5686bc",
+    "name": "Tapis Rif Nel 2",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "85286c837783313a201fb8b17aaa3d92202c6e47",
+    "name": "",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "4cd4f30d0c7c712f3824919997b15f4a098b3ee4",
+    "name": "",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "1efba5ce2b3c05a50db4678b3bdf7a8773998a7b",
+    "name": "Rif Nel",
+    "type": "gondola"
+  },
+  {
+    "id": "d61cde77154ad834761bb339f13873a169295da7",
+    "name": "Rif Nel 2",
+    "type": "gondola"
+  },
+  {
+    "id": "a2507b7f20a0d9277067920c31d1ca0f9615e75d",
+    "name": "Pic Blanc",
+    "type": "gondola"
+  },
+  {
+    "id": "e3f4eda46d4828453da5f8fb71ebe91a712748d4",
+    "name": "Poutran",
+    "type": "gondola"
+  },
+  {
+    "id": "35e6e18e7c4e39c576db71855daf9e438719f026",
+    "name": "Huez Express",
+    "type": "gondola"
+  },
+  {
+    "id": "1c09d07e1c834f922d8d1585dcf949d3b3a1d8d9",
+    "name": "Huez Express",
+    "type": "gondola"
+  },
+  {
+    "id": "b62be2f4a94553f15fc7be2e4913e8df956837c6",
+    "name": "Alpauris",
+    "type": "chair_lift"
+  },
+  {
+    "id": "f3334c30c055c710584e571f5942deefc4e7d3d4",
+    "name": "Alpauris",
+    "type": "chair_lift"
+  },
+  {
+    "id": "695d7e94ee071b9e331b3ab91649d113b1004195",
+    "name": "Alpe Express",
+    "type": "gondola"
+  },
+  {
+    "id": "9f4d4fbb4da534fc0ced0e5ab897023f24cf2591",
+    "name": "Alpe Express",
+    "type": "gondola"
+  }
+]

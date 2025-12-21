@@ -1,0 +1,30 @@
+{
+  "name": "lumiplan-ski-data",
+  "version": "1.0.0",
+  "description": "Fetch ski resort lift and run data from Lumiplan interactive maps",
+  "main": "src/index.js",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "test": "node src/test.js",
+    "fetch": "node src/cli.js",
+    "generate-data": "node src/generate-osm-data.js"
+  },
+  "keywords": [
+    "ski",
+    "resort",
+    "lumiplan",
+    "lifts",
+    "runs",
+    "pistes"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "fuse.js": "^7.0.0"
+  }
+}
