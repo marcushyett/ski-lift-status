@@ -5,5 +5,5 @@
   "platform": "aletsch",
   "url": "https://www.aletscharena.ch/en/here-now/live/status-report/status-report-winter",
   "website": "https://www.aletscharena.ch/",
-  "notes": "TODO: Swiss resort - TYPO3 CMS. Need to discover API endpoint or implement HTML parser."
+  "notes": "TODO: TYPO3 CMS - use XHR Fetcher /analyze to find AJAX endpoints. Look for TYPO3 JSON API or check if Aletsch Bahnen has separate API."
 }

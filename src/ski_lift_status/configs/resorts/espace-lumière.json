@@ -6,5 +6,5 @@
   "url": "https://en.valdallos.com/ouverture-des-pistes.html",
   "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=espacelumiere&region=alpes&pays=france&lang=en",
   "website": "https://www.praloup.com/",
-  "notes": "TODO: Lumiplan bulletin returns empty data. Need to discover actual data source."
+  "notes": "TODO: Lumiplan bulletin empty - use XHR Fetcher /analyze on valdallos.com or praloup.com to find actual data source. May use lumiplanMapId for JSON API instead."
 }

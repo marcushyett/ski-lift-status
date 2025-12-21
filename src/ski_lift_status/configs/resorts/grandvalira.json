@@ -5,5 +5,5 @@
   "platform": "grandvalira",
   "url": "https://www.grandvalira.com/en/resort/open-slopes",
   "website": "https://www.grandvalira.com/",
-  "notes": "TODO: Andorran resort - Drupal CMS with embedded JSON. Need to discover API or parse embedded JSON."
+  "notes": "TODO: Drupal CMS - use XHR Fetcher /analyze. Look for Drupal JSON API (/api/, /jsonapi/), or embedded data in drupalSettings object. Check for AJAX calls during page load."
 }

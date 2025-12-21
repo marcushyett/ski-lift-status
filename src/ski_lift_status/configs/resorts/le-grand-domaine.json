@@ -6,5 +6,5 @@
   "url": "https://skipass.valmorel.com/en/",
   "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=legranddomaine&region=alpes&pays=france&lang=en",
   "website": "https://www.legranddomaine.fr/",
-  "notes": "TODO: Lumiplan bulletin returns empty data. Need to discover actual data source."
+  "notes": "TODO: Lumiplan bulletin empty - use XHR Fetcher /analyze on skipass.valmorel.com to find actual data source. May use lumiplanMapId for JSON API instead."
 }

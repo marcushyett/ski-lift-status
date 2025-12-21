@@ -5,5 +5,5 @@
   "platform": "arosa",
   "url": "https://arosalenzerheide.swiss/en/Arosa/Up-to-date/Winter-sports-report",
   "website": "https://arosalenzerheide.swiss/",
-  "notes": "TODO: Swiss resort - Vue.js SPA. Need to discover AJAX API endpoint."
+  "notes": "TODO: Vue.js SPA - use XHR Fetcher /analyze with extended timeout (90s+). Look for Nuxt.js __NUXT__ data or AJAX calls to /api/ endpoints. May share infrastructure with other Graubünden resorts."
 }

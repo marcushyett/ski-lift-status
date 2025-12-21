@@ -5,5 +5,5 @@
   "platform": "stmoritz",
   "url": "https://www.stmoritz.com/en/live/cable-cars-slopes",
   "website": "https://www.mountains.ch/",
-  "notes": "TODO: Swiss resort (St. Moritz) - TYPO3 CMS. Need to discover API endpoint."
+  "notes": "TODO: TYPO3 CMS - use XHR Fetcher /analyze. Look for TYPO3 JSON API (?type=json) or check mountains.ch backend. Engadin mountains share infrastructure."
 }
