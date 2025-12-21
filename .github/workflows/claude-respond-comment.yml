@@ -1,0 +1,417 @@
+name: Claude Code - Respond to Comment
+
+on:
+  issue_comment:
+    types: [created]
+
+# Only allow one Claude Code run per issue at a time
+concurrency:
+  group: claude-comment-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  check-authorization:
+    name: Check Authorization
+    # Only run for issue comments (not PR comments) on issues with config-fix-needed label
+    if: |
+      !github.event.issue.pull_request &&
+      contains(github.event.issue.labels.*.name, 'config-fix-needed')
+    runs-on: ubuntu-latest
+    outputs:
+      authorized: ${{ steps.check.outputs.authorized }}
+      should_respond: ${{ steps.check.outputs.should_respond }}
+
+    steps:
+      - name: Check if authorized and should respond
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = context.payload.comment;
+            const issue = context.payload.issue;
+            const commenter = comment.user.login;
+            const labels = issue.labels.map(l => l.name);
+
+            // Don't respond to bot comments
+            if (commenter.includes('[bot]') || commenter === 'github-actions[bot]') {
+              console.log('Comment is from a bot, skipping');
+              core.setOutput('authorized', 'false');
+              core.setOutput('should_respond', 'false');
+              return;
+            }
+
+            // Check if comment mentions claude or asks for help
+            const commentBody = comment.body.toLowerCase();
+            const mentionsClaude = commentBody.includes('@claude') ||
+                                   commentBody.includes('claude') ||
+                                   commentBody.includes('try again') ||
+                                   commentBody.includes('please fix') ||
+                                   commentBody.includes('can you') ||
+                                   commentBody.includes('please try');
+
+            if (!mentionsClaude) {
+              console.log('Comment does not request Claude action');
+              core.setOutput('authorized', 'false');
+              core.setOutput('should_respond', 'false');
+              return;
+            }
+
+            // Check if commenter is admin/owner
+            try {
+              const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                username: commenter
+              });
+
+              const isAdminOrOwner = ['admin', 'write'].includes(permission.permission);
+              console.log(`User ${commenter} has permission: ${permission.permission}`);
+
+              if (!isAdminOrOwner) {
+                console.log('Commenter is not admin/owner');
+                core.setOutput('authorized', 'false');
+                core.setOutput('should_respond', 'false');
+                return;
+              }
+
+              core.setOutput('authorized', 'true');
+              core.setOutput('should_respond', 'true');
+            } catch (e) {
+              console.log(`Could not check permissions for ${commenter}: ${e.message}`);
+              core.setOutput('authorized', 'false');
+              core.setOutput('should_respond', 'false');
+            }
+
+  respond-to-comment:
+    name: Respond to Feedback
+    needs: check-authorization
+    if: needs.check-authorization.outputs.authorized == 'true' && needs.check-authorization.outputs.should_respond == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    env:
+      XHR_FETCH_URL: ${{ secrets.XHR_FETCH_URL }}
+      XHR_FETCH_KEY: ${{ secrets.XHR_FETCH_KEY }}
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Add in-progress label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Remove cannot-fix label if present (we're trying again)
+            await github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              name: 'cannot-fix'
+            }).catch(() => {});
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              labels: ['claude-in-progress']
+            });
+
+      - name: Extract resort ID from issue title
+        id: extract
+        run: |
+          TITLE="${{ github.event.issue.title }}"
+          RESORT_ID=$(echo "$TITLE" | grep -oP '(?<=\[)[^\]]+(?=\])')
+          echo "resort_id=$RESORT_ID" >> $GITHUB_OUTPUT
+
+      - name: Check for existing branch or create new one
+        id: branch
+        run: |
+          BRANCH_NAME="claude/fix-${{ steps.extract.outputs.resort_id }}-issue-${{ github.event.issue.number }}"
+
+          # Check if branch exists remotely
+          if git ls-remote --heads origin "$BRANCH_NAME" | grep -q "$BRANCH_NAME"; then
+            echo "Branch exists, checking out"
+            git fetch origin "$BRANCH_NAME"
+            git checkout "$BRANCH_NAME"
+            git pull origin "$BRANCH_NAME"
+          else
+            echo "Creating new branch"
+            git checkout -b "$BRANCH_NAME"
+          fi
+
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
+      - name: Get conversation context
+        id: context
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              per_page: 20
+            });
+
+            // Build conversation history
+            let conversation = '';
+            for (const comment of comments) {
+              const author = comment.user.login;
+              const body = comment.body.substring(0, 1000); // Limit each comment
+              conversation += `\n\n---\n**${author}:**\n${body}`;
+            }
+
+            // Escape for use in prompt
+            const escaped = conversation.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+            core.setOutput('conversation', escaped);
+
+      - name: Run Claude Code with feedback
+        id: claude
+        uses: anthropics/claude-code-action@beta
+        with:
+          model: claude-sonnet-4-20250514
+          timeout_minutes: 20
+          allowed_tools: "Bash,Read,Edit,Write,Glob,Grep,WebFetch"
+          prompt: |
+            You are continuing to work on a resort configuration issue based on feedback.
+
+            ## Original Issue
+            ${{ github.event.issue.body }}
+
+            ## Latest Comment (Feedback from Admin)
+            ${{ github.event.comment.body }}
+
+            ## Previous Conversation
+            ${{ steps.context.outputs.conversation }}
+
+            ## Your Task
+            Based on the feedback provided, continue working on fixing the resort configuration.
+
+            1. Read the config: `src/ski_lift_status/configs/resorts/${{ steps.extract.outputs.resort_id }}.json`
+            2. Test the current state: `cd src/ski_lift_status/configs && node runner.js ${{ steps.extract.outputs.resort_id }}`
+            3. Apply the suggestions from the feedback
+            4. If XHR Fetcher is available (XHR_FETCH_URL env var), use it to discover new endpoints
+            5. Test your changes
+
+            ## Important
+            - Each resort has its own config file in `src/ski_lift_status/configs/resorts/<resort-id>.json`
+            - Prefer JSON API endpoints over HTML scraping
+
+            ## Success Criteria
+            - At least 2 lifts extracted
+            - At least 2 runs extracted
+            - No errors
+
+            Report your findings and results clearly.
+
+      - name: Test the fix
+        id: test
+        run: |
+          cd src/ski_lift_status/configs
+          OUTPUT=$(node runner.js ${{ steps.extract.outputs.resort_id }} 2>&1) || true
+          echo "$OUTPUT"
+
+          LIFTS_COUNT=$(echo "$OUTPUT" | node -e "
+            let data = '';
+            process.stdin.on('data', chunk => data += chunk);
+            process.stdin.on('end', () => {
+              try {
+                const parsed = JSON.parse(data);
+                console.log(parsed.lifts?.length || 0);
+              } catch(e) {
+                console.log(0);
+              }
+            });
+          " 2>/dev/null || echo "0")
+
+          RUNS_COUNT=$(echo "$OUTPUT" | node -e "
+            let data = '';
+            process.stdin.on('data', chunk => data += chunk);
+            process.stdin.on('end', () => {
+              try {
+                const parsed = JSON.parse(data);
+                console.log(parsed.runs?.length || 0);
+              } catch(e) {
+                console.log(0);
+              }
+            });
+          " 2>/dev/null || echo "0")
+
+          echo "lifts_count=$LIFTS_COUNT" >> $GITHUB_OUTPUT
+          echo "runs_count=$RUNS_COUNT" >> $GITHUB_OUTPUT
+
+          if [ "$LIFTS_COUNT" -ge 2 ] && [ "$RUNS_COUNT" -ge 2 ]; then
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "$(cat <<'EOF'
+          fix(${{ steps.extract.outputs.resort_id }}): Apply feedback and update config
+
+          Responding to feedback on #${{ github.event.issue.number }}
+
+          - Lifts: ${{ steps.test.outputs.lifts_count }}
+          - Runs: ${{ steps.test.outputs.runs_count }}
+          EOF
+          )"
+          git push -u origin ${{ steps.branch.outputs.branch_name }}
+
+      - name: Check for existing PR
+        id: pr_check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${{ steps.branch.outputs.branch_name }}`,
+              state: 'open'
+            });
+
+            if (prs.length > 0) {
+              core.setOutput('exists', 'true');
+              core.setOutput('pr_number', prs[0].number);
+            } else {
+              core.setOutput('exists', 'false');
+              core.setOutput('pr_number', '');
+            }
+
+      - name: Create or update PR
+        if: steps.changes.outputs.has_changes == 'true' && steps.test.outputs.success == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prExists = '${{ steps.pr_check.outputs.exists }}' === 'true';
+            const existingPrNumber = '${{ steps.pr_check.outputs.pr_number }}';
+
+            if (prExists) {
+              // Comment on issue about the update
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                body: `I've updated PR #${existingPrNumber} based on your feedback.\n\n**Test Results:**\n- Lifts: ${{ steps.test.outputs.lifts_count }}\n- Runs: ${{ steps.test.outputs.runs_count }}\n\nPlease review the changes.`
+              });
+            } else {
+              // Create new PR
+              const { data: pr } = await github.rest.pulls.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `fix(${{ steps.extract.outputs.resort_id }}): Fix resort configuration`,
+                body: `## Summary
+
+            Fixes #${{ github.event.issue.number }}
+
+            This PR fixes the resort configuration for \`${{ steps.extract.outputs.resort_id }}\`.
+
+            ### Test Results
+            - **Lifts extracted:** ${{ steps.test.outputs.lifts_count }}
+            - **Runs extracted:** ${{ steps.test.outputs.runs_count }}
+
+            ---
+            *This PR was automatically created by Claude Code based on feedback.*`,
+                head: '${{ steps.branch.outputs.branch_name }}',
+                base: 'main'
+              });
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                body: `I've created a pull request based on your feedback: #${pr.number}\n\n**Test Results:**\n- Lifts: ${{ steps.test.outputs.lifts_count }}\n- Runs: ${{ steps.test.outputs.runs_count }}`
+              });
+            }
+
+            // Remove in-progress label
+            await github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              name: 'claude-in-progress'
+            }).catch(() => {});
+
+      - name: Report progress if still failing
+        if: steps.test.outputs.success == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const hasChanges = '${{ steps.changes.outputs.has_changes }}' === 'true';
+            const liftsCount = '${{ steps.test.outputs.lifts_count }}';
+            const runsCount = '${{ steps.test.outputs.runs_count }}';
+
+            let message = `I've tried applying your feedback, but the tests are still not fully passing:\n\n`;
+            message += `**Current Results:**\n- Lifts: ${liftsCount} (need at least 2)\n- Runs: ${runsCount} (need at least 2)\n\n`;
+
+            if (hasChanges) {
+              message += `I've pushed my changes to the branch. You can review them and provide more guidance.\n`;
+            } else {
+              message += `I couldn't determine what changes to make based on the feedback.\n`;
+            }
+
+            message += `\nPlease provide more specific guidance or take over manually.`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: message
+            });
+
+            // Remove in-progress but don't add cannot-fix yet (allow more attempts)
+            await github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              name: 'claude-in-progress'
+            }).catch(() => {});
+
+      - name: Cleanup on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: `I encountered an error while processing your feedback. Please check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).`
+            });
+
+            await github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              name: 'claude-in-progress'
+            }).catch(() => {});

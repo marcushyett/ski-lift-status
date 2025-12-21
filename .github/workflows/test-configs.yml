@@ -7,6 +7,11 @@ on:
         description: 'Resort ID to test (leave empty for all)'
         required: false
         default: ''
+      create_issues:
+        description: 'Create issues for failing resorts'
+        required: false
+        default: 'false'
+        type: boolean
   schedule:
     # Run daily at 6 AM UTC
     - cron: '0 6 * * *'
@@ -15,9 +20,13 @@ jobs:
   test-configs:
     name: Test Resort Configurations
     runs-on: ubuntu-latest
-    timeout-minutes: 30  # Limit total job time
+    timeout-minutes: 30
     permissions:
       contents: write
+      issues: write
+    outputs:
+      failing_resorts: ${{ steps.analyze.outputs.failing_resorts }}
+      has_failures: ${{ steps.analyze.outputs.has_failures }}
 
     steps:
       - name: Checkout repository
@@ -35,8 +44,89 @@ jobs:
       - name: Run config tests (all resorts)
         run: |
           cd src/ski_lift_status/configs
-          node runner.js --all > ../../../test-output.txt 2>&1 || true
-          cat ../../../test-output.txt
+          node runner.js --all 2>&1 | tee ../../../test-output.txt || true
+
+      - name: Extract JSON results from each resort
+        id: analyze
+        run: |
+          cd src/ski_lift_status/configs
+
+          # Create a script to test each resort and capture JSON output
+          cat > test-all-json.js << 'EOF'
+          const { extractResort, resorts } = require('./runner.js');
+
+          async function main() {
+            const results = [];
+            for (const resort of resorts) {
+              try {
+                const result = await extractResort(resort.id);
+                results.push({
+                  id: resort.id,
+                  name: resort.name,
+                  platform: resort.platform,
+                  openskimap_id: resort.openskimap_id,
+                  url: resort.url,
+                  dataUrl: resort.dataUrl,
+                  lifts_count: result.lifts?.length || 0,
+                  runs_count: result.runs?.length || 0,
+                  error: result.error || null,
+                  note: result.note || null
+                });
+              } catch (e) {
+                results.push({
+                  id: resort.id,
+                  name: resort.name,
+                  platform: resort.platform,
+                  openskimap_id: resort.openskimap_id,
+                  url: resort.url,
+                  dataUrl: resort.dataUrl,
+                  lifts_count: 0,
+                  runs_count: 0,
+                  error: e.message,
+                  note: null
+                });
+              }
+            }
+            console.log(JSON.stringify(results, null, 2));
+          }
+          main();
+          EOF
+
+          node test-all-json.js > ../../../test-results.json 2>/dev/null || echo "[]" > ../../../test-results.json
+          rm test-all-json.js
+
+          cd ../../..
+
+          # Analyze results and identify failing resorts
+          node << 'ANALYZE'
+          const fs = require('fs');
+          const results = JSON.parse(fs.readFileSync('test-results.json', 'utf8'));
+
+          // A resort is "failing" if it has an error, or fewer than 2 lifts, or fewer than 2 runs
+          const failing = results.filter(r =>
+            r.error || r.lifts_count < 2 || r.runs_count < 2
+          );
+
+          console.log(`Total resorts: ${results.length}`);
+          console.log(`Failing resorts: ${failing.length}`);
+
+          // Output for GitHub Actions
+          const failingJson = JSON.stringify(failing);
+          fs.writeFileSync('failing-resorts.json', failingJson);
+
+          // Set outputs
+          const core = require('@actions/core');
+          if (typeof core !== 'undefined' && core.setOutput) {
+            core.setOutput('failing_resorts', failingJson);
+            core.setOutput('has_failures', failing.length > 0 ? 'true' : 'false');
+          }
+          ANALYZE
+
+          # Set outputs using environment file (backup method)
+          echo "has_failures=$(node -e "const f=require('./failing-resorts.json'); console.log(f.length > 0 ? 'true' : 'false')")" >> $GITHUB_OUTPUT
+          echo "failing_resorts<<EOF" >> $GITHUB_OUTPUT
+          cat failing-resorts.json >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Parse results and create summary
         run: |
@@ -53,6 +143,26 @@ jobs:
             echo "❌ No summary found in output" >> $GITHUB_STEP_SUMMARY
           fi
 
+          # Add failing resorts table
+          if [ -f failing-resorts.json ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Failing Resorts" >> $GITHUB_STEP_SUMMARY
+            node << 'SUMMARY'
+            const fs = require('fs');
+            const failing = JSON.parse(fs.readFileSync('failing-resorts.json', 'utf8'));
+            if (failing.length === 0) {
+              console.log('✅ All resorts passing!');
+            } else {
+              console.log('| Resort | Platform | Lifts | Runs | Error |');
+              console.log('|--------|----------|-------|------|-------|');
+              for (const r of failing) {
+                const error = r.error ? r.error.substring(0, 50) : (r.note || 'Low count');
+                console.log(`| ${r.name} | ${r.platform} | ${r.lifts_count} | ${r.runs_count} | ${error} |`);
+              }
+            }
+          SUMMARY
+          fi >> $GITHUB_STEP_SUMMARY
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
@@ -61,4 +171,134 @@ jobs:
           path: |
             test-output.txt
             test-results.json
+            failing-resorts.json
           if-no-files-found: ignore
+
+  create-issues:
+    name: Create Issues for Failing Resorts
+    needs: test-configs
+    if: |
+      (github.event_name == 'schedule' || github.event.inputs.create_issues == 'true') &&
+      needs.test-configs.outputs.has_failures == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create issues for failing resorts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const failingResorts = JSON.parse(`${{ needs.test-configs.outputs.failing_resorts }}`);
+
+            // Get existing open issues with config-fix-needed label
+            const { data: existingIssues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'config-fix-needed'
+            });
+
+            const existingResortIds = new Set(
+              existingIssues
+                .map(issue => {
+                  const match = issue.title.match(/\[([^\]]+)\]/);
+                  return match ? match[1] : null;
+                })
+                .filter(Boolean)
+            );
+
+            for (const resort of failingResorts) {
+              // Skip if issue already exists for this resort
+              if (existingResortIds.has(resort.id)) {
+                console.log(`Issue already exists for ${resort.name}, skipping`);
+                continue;
+              }
+
+              const errorDetails = resort.error
+                ? `**Error:** ${resort.error}`
+                : `**Issue:** Only ${resort.lifts_count} lifts and ${resort.runs_count} runs extracted (minimum 2 of each required)`;
+
+              const issueBody = `## Resort Configuration Fix Needed
+
+            **Resort:** ${resort.name}
+            **Resort ID:** \`${resort.id}\`
+            **Platform:** \`${resort.platform}\`
+            **OpenSkiMap ID:** \`${resort.openskimap_id || 'N/A'}\`
+
+            ### Current Status
+            - **Lifts extracted:** ${resort.lifts_count}
+            - **Runs extracted:** ${resort.runs_count}
+            ${errorDetails}
+
+            ### URLs
+            - **Status Page:** ${resort.url || 'Not configured'}
+            - **Data URL:** ${resort.dataUrl || 'Not configured'}
+
+            ---
+
+            ## Context for Claude Code
+
+            ### Goal
+            Fix the resort configuration so that tests pass with **at least 2 lifts and 2 runs** extracted.
+
+            ### Tools Available
+
+            #### 1. XHR Fetcher (for discovering API endpoints)
+            Use the XHR Fetcher service to discover JSON APIs on pages that load data dynamically:
+
+            \`\`\`bash
+            # Analyze a page to discover API endpoints
+            curl -s -X POST "$XHR_FETCH_URL/analyze" \\
+              -H "Authorization: Bearer $XHR_FETCH_KEY" \\
+              -H "Content-Type: application/json" \\
+              -d '{"url": "${resort.url}", "timeout": 60000}'
+            \`\`\`
+
+            The response includes:
+            - \`primaryDataSource\` - Type of data source (json-api, graphql, nextjs-embedded, etc.)
+            - \`detectedAPIs\` - Array of discovered API endpoints with URLs, schemas, and sample data
+
+            #### 2. Test the config
+            \`\`\`bash
+            cd src/ski_lift_status/configs
+            node runner.js ${resort.id}
+            \`\`\`
+
+            #### 3. Reference similar platforms
+            Look at how other resorts using the \`${resort.platform}\` platform are configured in \`src/ski_lift_status/configs/resorts/\`.
+
+            #### 4. Liftie.info reference
+            Check https://liftie.info for inspiration on lift status APIs.
+
+            #### 5. Known API endpoints (from CLAUDE.md)
+            - **SkiWelt:** \`https://www.skiwelt.at/webapi/micadoweb?api=Micado.Ski.Web/...\`
+            - **KitzSki:** \`https://www.kitzski.at/webapi/micadoweb?api=SkigebieteManager/...\`
+            - **Sölden:** \`https://winter.intermaps.com/soelden/data?lang=en\`
+
+            ### Files to Modify
+            - \`src/ski_lift_status/configs/resorts/${resort.id}.json\` - Resort configuration
+            - \`src/ski_lift_status/configs/runner.js\` - Extraction logic (if new platform needed)
+
+            ### Success Criteria
+            - [ ] \`node runner.js ${resort.id}\` returns at least 2 lifts
+            - [ ] \`node runner.js ${resort.id}\` returns at least 2 runs
+            - [ ] No errors in output
+
+            ---
+            *This issue was automatically created by the test-configs workflow.*`;
+
+              const { data: issue } = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `[${resort.id}] Fix config for ${resort.name}`,
+                body: issueBody,
+                labels: ['config-fix-needed', 'automated', resort.platform]
+              });
+
+              console.log(`Created issue #${issue.number} for ${resort.name}`);
+            }
