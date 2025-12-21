@@ -1,4 +1,23 @@
 {
+  "name": "ski-lift-status",
+  "version": "1.0.0",
+  "description": "CLI tool to test ski resort lift/run status extraction",
+  "main": "src/ski_lift_status/configs/runner.js",
+  "bin": {
+    "ski-lift-status": "./bin/ski-lift-status.js"
+  },
+  "scripts": {
+    "test": "node src/ski_lift_status/configs/runner.js --all",
+    "start": "node bin/ski-lift-status.js"
+  },
+  "keywords": [
+    "ski",
+    "lift",
+    "status",
+    "resort",
+    "openskimap"
+  ],
+  "license": "MIT",
   "dependencies": {
     "https-proxy-agent": "^7.0.6",
     "jsdom": "^27.3.0"
