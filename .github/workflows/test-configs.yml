@@ -114,11 +114,13 @@ jobs:
           const failingJson = JSON.stringify(failing);
           fs.writeFileSync('failing-resorts.json', failingJson);
 
-          // Set outputs
-          const core = require('@actions/core');
-          if (typeof core !== 'undefined' && core.setOutput) {
+          // Set outputs (try @actions/core, but it may not be installed in inline scripts)
+          try {
+            const core = require('@actions/core');
             core.setOutput('failing_resorts', failingJson);
             core.setOutput('has_failures', failing.length > 0 ? 'true' : 'false');
+          } catch (e) {
+            // @actions/core not available, will use backup method below
           }
           ANALYZE
 
