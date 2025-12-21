@@ -125,10 +125,12 @@ jobs:
           ANALYZE
 
           # Set outputs using environment file (backup method)
+          # Use a unique delimiter that won't appear in JSON content
           echo "has_failures=$(node -e "const f=require('./failing-resorts.json'); console.log(f.length > 0 ? 'true' : 'false')")" >> $GITHUB_OUTPUT
-          echo "failing_resorts<<EOF" >> $GITHUB_OUTPUT
+          DELIMITER="FAILING_RESORTS_JSON_$(date +%s)"
+          echo "failing_resorts<<${DELIMITER}" >> $GITHUB_OUTPUT
           cat failing-resorts.json >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "${DELIMITER}" >> $GITHUB_OUTPUT
 
       - name: Parse results and create summary
         run: |
