@@ -83,7 +83,7 @@ jobs:
     env:
       XHR_FETCH_URL: ${{ secrets.XHR_FETCH_URL }}
       XHR_FETCH_KEY: ${{ secrets.XHR_FETCH_KEY }}
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
     steps:
       - name: Checkout repository
@@ -131,7 +131,6 @@ jobs:
         id: claude
         uses: anthropics/claude-code-action@beta
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           model: claude-sonnet-4-20250514
           timeout_minutes: 20
           allowed_tools: "Bash,Read,Edit,Write,Glob,Grep,WebFetch"
@@ -142,7 +141,7 @@ jobs:
             ${{ github.event.issue.body }}
 
             ## Your Task
-            1. First, read the current configuration for the resort in `src/ski_lift_status/configs/resorts.json`
+            1. First, read the current configuration for the resort in `src/ski_lift_status/configs/resorts/${{ steps.extract.outputs.resort_id }}.json`
             2. Test the current configuration: `cd src/ski_lift_status/configs && node runner.js ${{ steps.extract.outputs.resort_id }}`
             3. If the XHR Fetcher is available (check if XHR_FETCH_URL env var exists), use it to discover API endpoints
             4. Look at how similar platforms are implemented in `runner.js`
@@ -154,6 +153,7 @@ jobs:
             - The runner.js file performs direct HTTP requests only - NO browser automation
             - Look at the CLAUDE.md file for architecture principles and known API endpoints
             - If you need to add a new platform extractor, follow the patterns in runner.js
+            - Each resort has its own config file in `src/ski_lift_status/configs/resorts/<resort-id>.json`
 
             ## Success Criteria
             Your fix is successful when `node runner.js ${{ steps.extract.outputs.resort_id }}` returns:

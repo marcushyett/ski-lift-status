@@ -143,7 +143,7 @@ Configure these secrets in your repository settings (Settings > Secrets and vari
 
 | Secret | Description | Required |
 |--------|-------------|----------|
-| `ANTHROPIC_API_KEY` | API key for Claude (claude.ai) | Yes |
+| `CLAUDE_CODE_OAUTH_TOKEN` | OAuth token for Claude Code (works with Claude Max subscription) | Yes |
 | `XHR_FETCH_URL` | Base URL for the XHR Fetcher service | Optional |
 | `XHR_FETCH_KEY` | API key for XHR Fetcher authentication | Optional |
 
@@ -152,6 +152,9 @@ Configure these secrets in your repository settings (Settings > Secrets and vari
 2. Navigate to **Settings** > **Secrets and variables** > **Actions**
 3. Click **New repository secret**
 4. Add each secret with its name and value
+
+#### Getting the Claude Code OAuth Token:
+The `CLAUDE_CODE_OAUTH_TOKEN` can be obtained from Claude Code CLI. This token works with your Claude Max subscription.
 
 ### Labels Used
 

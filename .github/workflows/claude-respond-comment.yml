@@ -96,7 +96,7 @@ jobs:
     env:
       XHR_FETCH_URL: ${{ secrets.XHR_FETCH_URL }}
       XHR_FETCH_KEY: ${{ secrets.XHR_FETCH_KEY }}
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
     steps:
       - name: Checkout repository
@@ -185,7 +185,6 @@ jobs:
         id: claude
         uses: anthropics/claude-code-action@beta
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           model: claude-sonnet-4-20250514
           timeout_minutes: 20
           allowed_tools: "Bash,Read,Edit,Write,Glob,Grep,WebFetch"
@@ -204,10 +203,15 @@ jobs:
             ## Your Task
             Based on the feedback provided, continue working on fixing the resort configuration.
 
-            1. First, test the current state: `cd src/ski_lift_status/configs && node runner.js ${{ steps.extract.outputs.resort_id }}`
-            2. Apply the suggestions from the feedback
-            3. If XHR Fetcher is available (XHR_FETCH_URL env var), use it to discover new endpoints
-            4. Test your changes
+            1. Read the config: `src/ski_lift_status/configs/resorts/${{ steps.extract.outputs.resort_id }}.json`
+            2. Test the current state: `cd src/ski_lift_status/configs && node runner.js ${{ steps.extract.outputs.resort_id }}`
+            3. Apply the suggestions from the feedback
+            4. If XHR Fetcher is available (XHR_FETCH_URL env var), use it to discover new endpoints
+            5. Test your changes
+
+            ## Important
+            - Each resort has its own config file in `src/ski_lift_status/configs/resorts/<resort-id>.json`
+            - Prefer JSON API endpoints over HTML scraping
 
             ## Success Criteria
             - At least 2 lifts extracted

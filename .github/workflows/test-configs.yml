@@ -270,7 +270,7 @@ jobs:
             \`\`\`
 
             #### 3. Reference similar platforms
-            Look at how other resorts using the \`${resort.platform}\` platform are configured in \`resorts.json\`.
+            Look at how other resorts using the \`${resort.platform}\` platform are configured in \`src/ski_lift_status/configs/resorts/\`.
 
             #### 4. Liftie.info reference
             Check https://liftie.info for inspiration on lift status APIs.
@@ -281,7 +281,7 @@ jobs:
             - **Sölden:** \`https://winter.intermaps.com/soelden/data?lang=en\`
 
             ### Files to Modify
-            - \`src/ski_lift_status/configs/resorts.json\` - Resort configuration
+            - \`src/ski_lift_status/configs/resorts/${resort.id}.json\` - Resort configuration
             - \`src/ski_lift_status/configs/runner.js\` - Extraction logic (if new platform needed)
 
             ### Success Criteria
