@@ -10,6 +10,14 @@ on:
   pull_request_review:
     types: [submitted]
 
+# Permissions at workflow level so OIDC token works
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+  actions: read
+
 jobs:
   # Authorization check - only allow admins, owners, or github-actions
   authorize:
@@ -80,12 +88,6 @@ jobs:
     needs: authorize
     if: needs.authorize.outputs.authorized == 'true'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write
-      id-token: write
-      actions: read
 
     env:
       XHR_FETCH_URL: ${{ secrets.XHR_FETCH_URL }}
