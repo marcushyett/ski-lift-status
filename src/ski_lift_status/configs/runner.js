@@ -614,19 +614,32 @@ async function extractVail(config) {
               // Extract lifts
               if (area.Lifts && Array.isArray(area.Lifts)) {
                 area.Lifts.forEach(lift => {
-                  lifts.push({
+                  const liftData = {
                     name: lift.Name?.trim(),
                     status: statuses[lift.Status] || 'closed'
-                  });
+                  };
+
+                  // Add optional fields if available
+                  if (lift.WaitTimeInMinutes != null) liftData.waitTime = lift.WaitTimeInMinutes;
+                  if (lift.Capacity) liftData.capacity = lift.Capacity;
+                  if (lift.OpenTime) liftData.openTime = lift.OpenTime;
+                  if (lift.CloseTime) liftData.closeTime = lift.CloseTime;
+
+                  lifts.push(liftData);
                 });
               }
               // Extract trails/runs
               if (area.Trails && Array.isArray(area.Trails)) {
                 area.Trails.forEach(trail => {
-                  runs.push({
+                  const runData = {
                     name: trail.Name?.trim(),
                     status: trail.IsOpen ? 'open' : 'closed'
-                  });
+                  };
+
+                  // Add grooming status if available
+                  if (trail.IsGroomed != null) runData.groomed = trail.IsGroomed;
+
+                  runs.push(runData);
                 });
               }
             });
@@ -886,50 +899,14 @@ async function extractSkiarlberg(config) {
 
 /**
  * Extract using Ischgl pattern - uses Intermaps JSON API
+ * Delegates to extractIntermaps with default dataUrl
  */
 async function extractIschgl(config) {
-  // Use Intermaps JSON API (similar to Sölden)
-  const dataUrl = config.dataUrl || 'https://winter.intermaps.com/silvretta_arena/data?lang=en';
-
-  try {
-    const json = await fetch(dataUrl);
-    const data = JSON.parse(json);
-
-    const lifts = [];
-    const runs = [];
-
-    // Process lifts
-    if (data.lifts && Array.isArray(data.lifts)) {
-      data.lifts.forEach(item => {
-        const name = item.popup?.title || item.title || item.name;
-        const statusText = (item.status || '').toLowerCase();
-        const status = statusText === 'open' ? 'open' :
-                       statusText === 'scheduled' ? 'scheduled' : 'closed';
-
-        if (name) {
-          lifts.push({ name, status });
-        }
-      });
-    }
-
-    // Process slopes/runs
-    if (data.slopes && Array.isArray(data.slopes)) {
-      data.slopes.forEach(item => {
-        const name = item.popup?.title || item.title || item.name;
-        const statusText = (item.status || '').toLowerCase();
-        const status = statusText === 'open' ? 'open' :
-                       statusText === 'scheduled' ? 'scheduled' : 'closed';
-
-        if (name) {
-          runs.push({ name, status });
-        }
-      });
-    }
-
-    return { lifts, runs };
-  } catch (e) {
-    return { error: e.message };
-  }
+  const configWithDefault = {
+    ...config,
+    dataUrl: config.dataUrl || 'https://winter.intermaps.com/silvretta_arena/data?lang=en'
+  };
+  return extractIntermaps(configWithDefault);
 }
 
 /**
@@ -957,7 +934,15 @@ async function extractIntermaps(config) {
                        (statusText === 'in_preparation' || statusText === 'scheduled') ? 'scheduled' : 'closed';
 
         if (name) {
-          lifts.push({ name, status });
+          const additionalInfo = item.popup?.['additional-info'] || {};
+          const lift = { name, status };
+
+          // Add optional fields if available
+          if (item.popup?.subtitle) lift.liftType = item.popup.subtitle;
+          if (additionalInfo.capacity) lift.capacity = additionalInfo.capacity;
+          if (additionalInfo.length) lift.length = additionalInfo.length;
+
+          lifts.push(lift);
         }
       });
     }
@@ -984,49 +969,23 @@ async function extractIntermaps(config) {
 
 /**
  * Extract using Sölden pattern - uses Intermaps JSON API
+ * Delegates to extractIntermaps with default dataUrl and HTML fallback
  */
 async function extractSoelden(config) {
-  // Use Intermaps JSON API (discovered via xhr-fetcher)
-  const dataUrl = config.dataUrl || 'https://winter.intermaps.com/soelden/data?lang=en';
+  const configWithDefault = {
+    ...config,
+    dataUrl: config.dataUrl || 'https://winter.intermaps.com/soelden/data?lang=en'
+  };
 
+  const result = await extractIntermaps(configWithDefault);
+
+  // If intermaps succeeded, return it
+  if (!result.error && result.lifts && result.lifts.length > 0) {
+    return result;
+  }
+
+  // Fallback to HTML parsing
   try {
-    const json = await fetch(dataUrl);
-    const data = JSON.parse(json);
-
-    const lifts = [];
-    const runs = [];
-
-    // Process lifts
-    if (data.lifts && Array.isArray(data.lifts)) {
-      data.lifts.forEach(item => {
-        const name = item.popup?.title || item.title || item.name;
-        const statusText = (item.status || '').toLowerCase();
-        const status = statusText === 'open' ? 'open' :
-                       statusText === 'scheduled' ? 'scheduled' : 'closed';
-
-        if (name) {
-          lifts.push({ name, status });
-        }
-      });
-    }
-
-    // Process slopes/runs
-    if (data.slopes && Array.isArray(data.slopes)) {
-      data.slopes.forEach(item => {
-        const name = item.popup?.title || item.title || item.name;
-        const statusText = (item.status || '').toLowerCase();
-        const status = statusText === 'open' ? 'open' :
-                       statusText === 'scheduled' ? 'scheduled' : 'closed';
-
-        if (name) {
-          runs.push({ name, status });
-        }
-      });
-    }
-
-    return { lifts, runs };
-  } catch (e) {
-    // Fallback to HTML parsing
     const html = await fetch(config.url);
     const dom = new JSDOM(html);
     const doc = dom.window.document;
@@ -1052,6 +1011,8 @@ async function extractSoelden(config) {
     });
 
     return { lifts, runs: [] };
+  } catch (e) {
+    return result; // Return original error if fallback also fails
   }
 }
 
