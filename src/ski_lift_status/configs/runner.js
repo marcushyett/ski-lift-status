@@ -1026,6 +1026,7 @@ async function extractSkistar(config) {
   const doc = dom.window.document;
 
   const lifts = [];
+  const runs = [];
 
   // Find SimpleView URLs for lift data
   const simpleViewUrls = [];
@@ -1062,18 +1063,56 @@ async function extractSkistar(config) {
           status = 'open';
         }
 
-        lifts.push({ name, status });
+        // Classify as lift or run based on name patterns
+        const nameLower = name.toLowerCase();
+        const isLift = (
+          nameLower.includes('lift') ||
+          nameLower.includes('express') ||
+          nameLower.includes('gondol') ||
+          nameLower.includes('kabinbana') ||
+          nameLower.includes('linbana') ||
+          nameLower.includes('bergbana') ||
+          nameLower.includes('rullband') ||
+          nameLower.endsWith('liften') ||
+          nameLower.endsWith('expressen') ||
+          nameLower.includes('tunnel')
+        );
+
+        const isRun = (
+          /^\d+$/.test(name.trim()) ||  // Pure numbers (ski runs)
+          nameLower.includes('backen') ||
+          nameLower.includes('leden') ||
+          nameLower.includes('svängen') ||
+          nameLower.includes('park') ||
+          nameLower.includes('stigen') ||
+          nameLower.includes('rappet') ||
+          nameLower.includes('brant') ||
+          nameLower.includes('område') ||
+          nameLower.includes('loppet') ||
+          nameLower.includes('linje') ||
+          nameLower.includes('bana') ||
+          nameLower.includes('område')
+        );
+
+        if (isLift && !isRun) {
+          lifts.push({ name, status });
+        } else if (isRun) {
+          runs.push({ name, status });
+        } else {
+          // Default: if unclear, classify as lift (safer for minimum requirements)
+          lifts.push({ name, status });
+        }
       });
     } catch (e) {
       // Continue with other views
     }
   }
 
-  if (lifts.length === 0) {
+  if (lifts.length === 0 && runs.length === 0) {
     return { lifts: [], runs: [], note: 'No lift data found in SimpleView' };
   }
 
-  return { lifts, runs: [] };
+  return { lifts, runs };
 }
 
 /**
