@@ -1,79 +1,217 @@
-# Ski Lift Status
+# Ski Resort Status
 
-![Resort Configs](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/marcushyett/ski-lift-status/main/.github/badges/config-status.json)
-[![CI](https://github.com/marcushyett/ski-lift-status/actions/workflows/ci.yml/badge.svg)](https://github.com/marcushyett/ski-lift-status/actions/workflows/ci.yml)
+**A real-time ski resort lift and run status library** that fetches live data from ski resorts and maps it to [OpenSkiMap](https://openskimap.org/) identifiers.
 
-**A real-time ski resort lift and run status API** that maps live status data to [OpenSkiMap](https://openskimap.org/) resort identifiers.
+Access ski resort live lift and run status through a simple API, with data automatically matched to OpenSkiMap IDs for seamless integration with ski mapping applications.
 
-Access any ski resort's live lift and run status through a unified API, with data mapped to OpenSkiMap IDs for seamless integration with ski mapping applications.
+## Features
 
-## How It Works
+- Fetch live lift and run status data from ski resorts
+- Automatic matching to OpenSkiMap IDs for standardized lift/run identification
+- Support for multiple ski resort data platforms
+- Comprehensive metadata: opening times, capacity, altitude, grooming status, snow quality
+- Handles duplicate lift/run names with intelligent type-based disambiguation
+- Zero dependencies - uses only Node.js built-in modules
 
-1. **Status Page Discovery** - Automatically finds official lift status pages for resorts using AI-powered search
-2. **Data Extraction** - Scrapes real-time lift/run status from resort websites (supports Lumiplan, Skiplan, and other platforms)
-3. **OpenSkiMap Mapping** - Maps extracted data to OpenSkiMap resort, lift, and run IDs
+## Installation
+
+```bash
+npm install ski-resort-status
+```
+
+Or using the local module:
+
+```bash
+npm install /path/to/ski-lift-status
+```
 
 ## Quick Start
 
+```javascript
+const { fetchResortStatus, getSupportedResorts } = require('ski-resort-status');
+
+// List all supported resorts
+const resorts = getSupportedResorts();
+console.log(resorts);
+// [
+//   { id: 'les-trois-vallees', name: 'Les Trois Vallées', openskimap_id: '68b...', platform: 'lumiplan' },
+//   ...
+// ]
+
+// Fetch live data for a resort
+const data = await fetchResortStatus('les-trois-vallees');
+console.log(`${data.resort.name}: ${data.lifts.length} lifts, ${data.runs.length} runs`);
+
+// Lifts array
+data.lifts.forEach(lift => {
+  console.log(`${lift.name}: ${lift.status}`);
+  console.log(`  Type: ${lift.liftType}`);
+  console.log(`  OpenSkiMap IDs: ${lift.openskimap_ids.join(', ')}`);
+  console.log(`  Capacity: ${lift.capacity} persons/hour`);
+});
+
+// Runs array
+data.runs.forEach(run => {
+  console.log(`${run.name}: ${run.status}`);
+  console.log(`  Level: ${run.level}`);
+  console.log(`  OpenSkiMap IDs: ${run.openskimap_ids.join(', ')}`);
+  console.log(`  Grooming: ${run.groomingStatus}`);
+});
+```
+
+## API Reference
+
+### `fetchResortStatus(resortIdOrOsmId)`
+
+Fetch live status data for a resort.
+
+**Parameters:**
+- `resortIdOrOsmId` (string): Resort ID (e.g., 'les-trois-vallees') or OpenSkiMap resort ID (40-char hex string)
+
+**Returns:** Promise resolving to:
+```javascript
+{
+  resort: {
+    id: string,           // Resort ID
+    name: string,         // Resort name
+    openskimap_id: string // OpenSkiMap resort ID
+  },
+  lifts: [
+    {
+      name: string,              // Lift name
+      status: string,            // 'open', 'closed', or 'scheduled'
+      liftType: string,          // Platform-specific type (e.g., 'GONDOLA', 'CHAIRLIFT')
+      openskimap_ids: string[],  // Matched OpenSkiMap lift IDs
+
+      // Static metadata
+      capacity: number,          // Persons per hour
+      duration: number,          // Ride duration in minutes
+      length: number,            // Length in meters
+      uphillCapacity: number,    // Uphill capacity
+      speed: number,             // Speed in m/s
+      arrivalAltitude: number,   // Top altitude in meters
+      departureAltitude: number, // Bottom altitude in meters
+
+      // Real-time data
+      openingTimesReal: string,  // Actual opening times
+      operating: boolean,        // Currently operating
+      openingStatus: string,     // Platform-specific status code
+      message: string            // Status message (if any)
+    }
+  ],
+  runs: [
+    {
+      name: string,              // Run name
+      status: string,            // 'open', 'closed', or 'scheduled'
+      trailType: string,         // Platform-specific type
+      level: string,             // Difficulty level (e.g., 'GREEN', 'BLUE', 'RED', 'BLACK')
+      openskimap_ids: string[],  // Matched OpenSkiMap run IDs
+
+      // Static metadata
+      length: number,            // Length in meters
+      surface: string,           // Surface type
+      arrivalAltitude: number,   // Bottom altitude in meters
+      departureAltitude: number, // Top altitude in meters
+      averageSlope: number,      // Average slope in degrees
+      exposure: string,          // Sun exposure
+      guaranteedSnow: boolean,   // Snow guarantee
+
+      // Real-time data
+      openingTimesReal: string,  // Actual opening times
+      operating: boolean,        // Currently operating
+      openingStatus: string,     // Platform-specific status code
+      groomingStatus: string,    // Grooming status
+      snowQuality: string,       // Snow quality
+      message: string            // Status message (if any)
+    }
+  ]
+}
+```
+
+### `getSupportedResorts()`
+
+Get list of all supported resorts.
+
+**Returns:** Array of resort objects:
+```javascript
+[
+  {
+    id: string,           // Resort ID
+    name: string,         // Resort name
+    openskimap_id: string, // OpenSkiMap resort ID
+    platform: string      // Data platform (e.g., 'lumiplan')
+  }
+]
+```
+
+### `getResort(resortIdOrOsmId)`
+
+Get configuration for a specific resort.
+
+**Parameters:**
+- `resortIdOrOsmId` (string): Resort ID or OpenSkiMap resort ID
+
+**Returns:** Resort configuration object or `null` if not found
+
+## Supported Resorts
+
+Currently supported resorts:
+
+| Resort | Location | OpenSkiMap ID |
+|--------|----------|---------------|
+| Les Trois Vallées | France | `68b126bc...` |
+| Espace Diamant | France | `0345d73f...` |
+| Le Grand Domaine | France | `97a14ced...` |
+| Les Sybelles | France | `9bba1f0b...` |
+
+More resorts are being added regularly. The module is designed to be easily extensible to support additional platforms and resorts.
+
+## OpenSkiMap Integration
+
+All lifts and runs include matched OpenSkiMap IDs for standardized identification:
+
+- **Fuzzy name matching**: Handles name variations using Levenshtein distance
+- **Intelligent disambiguation**: Uses lift type and run difficulty to distinguish between duplicates
+- **Multiple matches**: Returns arrays of all matching IDs when duplicates exist
+- **Type normalization**: Automatically converts platform-specific types to OpenSkiMap standards
+
+## Adding Support for More Resorts
+
+See [CLAUDE.md](./CLAUDE.md) for developer documentation on:
+- Adding new resorts to existing platforms
+- Implementing new platform fetchers
+- Using the XHR Fetcher tool for API discovery
+- Architecture and design principles
+
+## Testing
+
+Run the included test script:
+
 ```bash
-pip install -r requirements.txt
-
-# Test fetching live status for configured resorts
-python scripts/test_configs.py
+npm test
 ```
 
-## API Usage
-
-```python
-import asyncio
-from ski_lift_status import load_resorts, get_lifts_for_resort
-
-# Get OpenSkiMap data
-resorts = load_resorts()
-resort_lifts = get_lifts_for_resort("68b126bc3175516c9263aed7635d14e37ff360dc")
-
-# Fetch live status (example with configured resort)
-from ski_lift_status.scraping import run_pipeline_for_resort
-
-result = asyncio.run(run_pipeline_for_resort(
-    resort_id="68b126bc3175516c9263aed7635d14e37ff360dc",
-    status_page_url="https://www.les3vallees.com/fr/live/ouverture-des-pistes-et-remontees",
-    resort_name="Les Trois Vallées",
-))
-
-if result.success:
-    for lift in result.lifts_data:
-        print(f"{lift['name']}: {lift['status']}")
-```
-
-## GitHub Actions
-
-| Workflow | Description |
-|----------|-------------|
-| **Discover Status Pages** | Finds resort status pages using Serper.dev search |
-| **Test Resort Configs** | Validates live status extraction daily |
-| **Get Ski Resort Data** | Fetches latest OpenSkiMap data weekly |
+This fetches live data for Les Trois Vallées and displays summary statistics.
 
 ## Credits & Data Sources
 
-This project is built on top of amazing open-source work:
+This project builds on amazing open-source work:
 
 - **[OpenSkiMap](https://openskimap.org/)** - Open-source ski map providing comprehensive resort, lift, and run data. All resort/lift/run IDs and reference data come from OpenSkiMap.
 
-- **[Liftie](https://github.com/pirxpilot/liftie)** ([liftie.info](https://liftie.info/)) - An excellent open-source ski lift status aggregator with 190+ resorts. Our config system is inspired by liftie's approach of using platform-specific extractors (Skiplan, Lumiplan, Vail, etc.). If you need a production-ready lift status service, check out liftie!
-
-## Supported Platforms
-
-Our config system supports the following ski resort platforms:
-
-| Platform | Description | Example Resorts |
-|----------|-------------|-----------------|
-| **Lumiplan** | Bulletin system used by French resorts | Courchevel, Tignes, Val d'Isère, Méribel |
-| **Skiplan** | CMS used by Paradiski resorts | La Plagne, Les Arcs |
-| **Dolomiti Superski** | Italian Dolomites network | Alta Badia, Cortina, Val Gardena |
-| **Vail Resorts** | Epic Pass network | Breckenridge, Park City, Whistler |
-| **Nuxt.js** | Sites with embedded __NUXT__ data | Zermatt/Cervinia |
+- **[Liftie](https://github.com/pirxpilot/liftie)** ([liftie.info](https://liftie.info/)) - An excellent open-source ski lift status aggregator with 190+ resorts. This project's architecture is inspired by liftie's platform-based approach. If you need a production-ready lift status service with broader coverage, check out liftie!
 
 ## License
 
-MIT License - see LICENSE file for details.
+MIT License - see [LICENSE](./LICENSE) file for details.
+
+## Contributing
+
+Contributions are welcome! To add support for new resorts or platforms:
+
+1. Fork the repository
+2. Follow the architecture guidelines in [CLAUDE.md](./CLAUDE.md)
+3. Add tests for your changes
+4. Submit a pull request
+
+For bug reports or feature requests, please open an issue on GitHub.

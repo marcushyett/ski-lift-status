@@ -1,9 +1,0 @@
-{
-  "id": "grandvalira",
-  "name": "GrandValira",
-  "openskimap_id": "de4f884c40976fe9d18c23d0bab174c1d6b79218",
-  "platform": "grandvalira",
-  "url": "https://www.grandvalira.com/en/resort/open-slopes",
-  "website": "https://www.grandvalira.com/",
-  "notes": "TODO: Drupal CMS - use XHR Fetcher /analyze. Look for Drupal JSON API (/api/, /jsonapi/), or embedded data in drupalSettings object. Check for AJAX calls during page load."
-}

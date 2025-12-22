@@ -1,25 +1,31 @@
 {
-  "name": "ski-lift-status",
-  "version": "1.0.0",
-  "description": "CLI tool to test ski resort lift/run status extraction",
-  "main": "src/ski_lift_status/configs/runner.js",
-  "bin": {
-    "ski-lift-status": "./bin/ski-lift-status.js"
-  },
+  "name": "ski-resort-status",
+  "version": "2.0.0",
+  "description": "Fetch live ski resort lift and run status data with OpenSkiMap integration",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "node src/ski_lift_status/configs/runner.js --all",
-    "start": "node bin/ski-lift-status.js"
+    "test": "node test.js"
   },
   "keywords": [
     "ski",
     "lift",
+    "run",
     "status",
     "resort",
-    "openskimap"
+    "openskimap",
+    "lumiplan",
+    "live",
+    "real-time"
   ],
+  "author": "Marcus Hyett",
   "license": "MIT",
-  "dependencies": {
-    "https-proxy-agent": "^7.0.6",
-    "jsdom": "^22.1.0"
-  }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcushyett/ski-lift-status.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }

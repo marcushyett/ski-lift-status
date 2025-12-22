@@ -1,9 +1,0 @@
-{
-  "id": "avoriaz",
-  "name": "Avoriaz",
-  "openskimap_id": "7cac2b19d023f887e458c354be9caf833b6aed6d",
-  "platform": "skiplanxml",
-  "url": "https://www.avoriaz.com",
-  "dataUrl": "https://backoffice.avoriaz.com/wp-json/api/avoriaz/get_digisnow",
-  "notes": "Uses SKIPLAN XML API via digisnow (Portes du Soleil domain)"
-}

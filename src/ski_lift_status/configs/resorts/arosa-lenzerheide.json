@@ -1,9 +1,0 @@
-{
-  "id": "arosa-lenzerheide",
-  "name": "Arosa Lenzerheide",
-  "openskimap_id": "4ae9b0cba5454d6f0921bf413c33a267f1d63cca",
-  "platform": "arosa",
-  "url": "https://arosalenzerheide.swiss/en/Arosa/Up-to-date/Winter-sports-report",
-  "website": "https://arosalenzerheide.swiss/",
-  "notes": "TODO: Vue.js SPA - use XHR Fetcher /analyze with extended timeout (90s+). Look for Nuxt.js __NUXT__ data or AJAX calls to /api/ endpoints. May share infrastructure with other Graubünden resorts."
-}

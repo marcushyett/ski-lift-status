@@ -1,9 +1,0 @@
-{
-  "id": "aletsch-arena",
-  "name": "Aletsch Arena",
-  "openskimap_id": "d264be37a4fd40a4de858be7fee0a5c077cb1068",
-  "platform": "aletsch",
-  "url": "https://www.aletscharena.ch/en/here-now/live/status-report/status-report-winter",
-  "website": "https://www.aletscharena.ch/",
-  "notes": "TODO: TYPO3 CMS - use XHR Fetcher /analyze to find AJAX endpoints. Look for TYPO3 JSON API or check if Aletsch Bahnen has separate API."
-}

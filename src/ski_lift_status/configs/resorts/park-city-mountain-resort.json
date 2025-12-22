@@ -1,9 +1,0 @@
-{
-  "id": "park-city-mountain-resort",
-  "name": "Park City Mountain Resort",
-  "openskimap_id": "be21197d101373cf2bc532a9fcce6d6e1d1bd76e",
-  "platform": "vail",
-  "url": "https://www.parkcitymountain.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
-  "website": "https://parkcitymountain.com",
-  "notes": "Uses FR.TerrainStatusFeed embedded in page with GroomingAreas[].Lifts[] structure. Vail extractor updated to handle this format. May require direct network access (blocked by some networks/WAFs)."
-}

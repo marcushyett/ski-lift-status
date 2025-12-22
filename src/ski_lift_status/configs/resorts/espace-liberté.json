@@ -1,9 +1,0 @@
-{
-  "id": "espace-liberté",
-  "name": "Espace Liberté",
-  "openskimap_id": "baca23b1d6c08055f995fe20b50e3f6910b2ea2b",
-  "platform": "lumiplan",
-  "url": "https://www.chamonix.com",
-  "dataUrl": "https://bulletin.lumiplan.pro/bulletin.php?station=chamonix&region=alpes&pays=france&lang=en",
-  "notes": "Uses Lumiplan bulletin (Chamonix area)"
-}
