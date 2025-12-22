@@ -6,12 +6,14 @@ Access ski resort live lift and run status through a simple API, with data autom
 
 ## Features
 
+- **TypeScript-first**: Full type safety with TypeScript and Zod schema validation
 - Fetch live lift and run status data from ski resorts
 - Automatic matching to OpenSkiMap IDs for standardized lift/run identification
 - Support for multiple ski resort data platforms
 - Comprehensive metadata: opening times, capacity, altitude, grooming status, snow quality
 - Handles duplicate lift/run names with intelligent type-based disambiguation
-- Zero dependencies - uses only Node.js built-in modules
+- **Schema validation**: Runtime validation with Zod ensures data consistency across platforms
+- Minimal dependencies - only Zod for validation
 
 ## Installation
 
@@ -27,8 +29,16 @@ npm install /path/to/ski-lift-status
 
 ## Quick Start
 
+### JavaScript
+
 ```javascript
 const { fetchResortStatus, getSupportedResorts } = require('ski-resort-status');
+```
+
+### TypeScript
+
+```typescript
+import { fetchResortStatus, getSupportedResorts, type ResortStatus, type Lift, type Run } from 'ski-resort-status';
 
 // List all supported resorts
 const resorts = getSupportedResorts();

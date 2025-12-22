@@ -3,17 +3,44 @@
  * Matches Lumiplan lift/run names to OpenSkiMap IDs using fuzzy matching
  */
 
-const fs = require('fs');
-const path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Path to OpenSkiMap CSV data
 const DATA_DIR = path.resolve(__dirname, '../../../data');
 
 /**
+ * OpenSkiMap lift/run entity
+ */
+export interface OpenSkiMapEntity {
+  id: string;
+  name: string;
+  ski_area_ids?: string;
+  lift_type?: string;
+  difficulty?: string;
+}
+
+/**
+ * Reference data for a resort
+ */
+export interface ReferenceData {
+  lifts: OpenSkiMapEntity[];
+  runs: OpenSkiMapEntity[];
+}
+
+/**
+ * Matching hint for disambiguation
+ */
+export interface MatchingHint {
+  type?: string | null;
+  difficulty?: string | null;
+}
+
+/**
  * Parse CSV line handling quoted fields
  */
-function parseCSVLine(line) {
-  const result = [];
+function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
   let current = '';
   let inQuotes = false;
 
@@ -35,7 +62,7 @@ function parseCSVLine(line) {
 /**
  * Parse CSV file into array of objects
  */
-function parseCSV(filepath) {
+function parseCSV(filepath: string): OpenSkiMapEntity[] {
   if (!fs.existsSync(filepath)) {
     return [];
   }
@@ -44,16 +71,19 @@ function parseCSV(filepath) {
   const lines = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim().split('\n');
   if (lines.length < 2) return [];
 
-  const headers = parseCSVLine(lines[0]).map(h => h.trim());
-  const rows = [];
+  const headers = parseCSVLine(lines[0]!).map((h) => h.trim());
+  const rows: OpenSkiMapEntity[] = [];
 
   for (let i = 1; i < lines.length; i++) {
-    const values = parseCSVLine(lines[i]);
-    const obj = {};
+    const values = parseCSVLine(lines[i]!);
+    const obj: any = {};
     headers.forEach((header, idx) => {
       obj[header] = (values[idx] || '').trim();
     });
-    rows.push(obj);
+    // Ensure required fields exist
+    if (obj.id && obj.name) {
+      rows.push(obj as OpenSkiMapEntity);
+    }
   }
 
   return rows;
@@ -62,24 +92,25 @@ function parseCSV(filepath) {
 /**
  * Normalize name for matching
  */
-function normalizeName(name) {
+export function normalizeName(name: string | undefined | null): string {
   if (!name) return '';
   let s = name.trim().toLowerCase();
   s = s.replace(/^(le|la|les|l'|the|der|die|das)\s+/i, '');
   s = s.replace(/[-_\s]+/g, ' ');
-  s = s.replace(/[éèêë]/g, 'e')
-       .replace(/[àâä]/g, 'a')
-       .replace(/[üù]/g, 'u')
-       .replace(/[öô]/g, 'o')
-       .replace(/[ç]/g, 'c')
-       .replace(/[ñ]/g, 'n');
+  s = s
+    .replace(/[éèêë]/g, 'e')
+    .replace(/[àâä]/g, 'a')
+    .replace(/[üù]/g, 'u')
+    .replace(/[öô]/g, 'o')
+    .replace(/[ç]/g, 'c')
+    .replace(/[ñ]/g, 'n');
   return s.trim();
 }
 
 /**
  * Calculate fuzzy match score using Levenshtein distance
  */
-function fuzzyScore(str1, str2) {
+export function fuzzyScore(str1: string, str2: string): number {
   const s1 = normalizeName(str1);
   const s2 = normalizeName(str2);
 
@@ -92,25 +123,25 @@ function fuzzyScore(str1, str2) {
     return Math.round((shorter / longer) * 100);
   }
 
-  const matrix = [];
+  const matrix: number[][] = [];
   for (let i = 0; i <= s1.length; i++) {
     matrix[i] = [i];
   }
   for (let j = 0; j <= s2.length; j++) {
-    matrix[0][j] = j;
+    matrix[0]![j] = j;
   }
   for (let i = 1; i <= s1.length; i++) {
     for (let j = 1; j <= s2.length; j++) {
       const cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
-      matrix[i][j] = Math.min(
-        matrix[i - 1][j] + 1,
-        matrix[i][j - 1] + 1,
-        matrix[i - 1][j - 1] + cost
+      matrix[i]![j] = Math.min(
+        matrix[i - 1]![j]! + 1,
+        matrix[i]![j - 1]! + 1,
+        matrix[i - 1]![j - 1]! + cost
       );
     }
   }
 
-  const distance = matrix[s1.length][s2.length];
+  const distance = matrix[s1.length]![s2.length]!;
   const maxLen = Math.max(s1.length, s2.length);
   return Math.round((1 - distance / maxLen) * 100);
 }
@@ -118,20 +149,16 @@ function fuzzyScore(str1, str2) {
 /**
  * Load OpenSkiMap reference data for a resort
  */
-function loadReferenceData(openskimapId) {
+export function loadReferenceData(openskimapId: string): ReferenceData {
   const liftsPath = path.join(DATA_DIR, 'lifts.csv');
   const runsPath = path.join(DATA_DIR, 'runs.csv');
 
   const allLifts = parseCSV(liftsPath);
   const allRuns = parseCSV(runsPath);
 
-  const lifts = allLifts.filter(lift =>
-    lift.ski_area_ids && lift.ski_area_ids.includes(openskimapId)
-  );
+  const lifts = allLifts.filter((lift) => lift.ski_area_ids && lift.ski_area_ids.includes(openskimapId));
 
-  const runs = allRuns.filter(run =>
-    run.ski_area_ids && run.ski_area_ids.includes(openskimapId) && run.name
-  );
+  const runs = allRuns.filter((run) => run.ski_area_ids && run.ski_area_ids.includes(openskimapId) && run.name);
 
   return { lifts, runs };
 }
@@ -139,7 +166,7 @@ function loadReferenceData(openskimapId) {
 /**
  * Normalize lift type for matching
  */
-function normalizeLiftType(lumiplanType) {
+export function normalizeLiftType(lumiplanType: string | undefined | null): string | null {
   if (!lumiplanType) return null;
   const type = lumiplanType.toUpperCase();
   if (type.includes('GONDOLA') || type.includes('CABIN')) return 'gondola';
@@ -157,7 +184,7 @@ function normalizeLiftType(lumiplanType) {
 /**
  * Normalize difficulty for matching
  */
-function normalizeDifficulty(lumiplanLevel) {
+export function normalizeDifficulty(lumiplanLevel: string | undefined | null): string | null {
   if (!lumiplanLevel) return null;
   const level = lumiplanLevel.toUpperCase();
   if (level.includes('GREEN')) return 'novice';
@@ -169,31 +196,28 @@ function normalizeDifficulty(lumiplanLevel) {
 
 /**
  * Find matching OpenSkiMap IDs for a lift/run
- * @param {string} name - Lift/run name from Lumiplan
- * @param {Array} referenceData - OpenSkiMap reference entities
- * @param {Object} hint - Disambiguation hint (type or difficulty)
- * @returns {Array<string>} Array of matching OpenSkiMap IDs
  */
-function findMatches(name, referenceData, hint = {}) {
+export function findMatches(name: string, referenceData: OpenSkiMapEntity[], hint: MatchingHint = {}): string[] {
   if (!name) return [];
 
   // Build lookup maps
-  const byName = new Map();
-  const byNormalized = new Map();
+  const byName = new Map<string, OpenSkiMapEntity[]>();
+  const byNormalized = new Map<string, OpenSkiMapEntity[]>();
 
-  referenceData.forEach(entity => {
-    if (!entity.name) return;
-    const lower = entity.name.toLowerCase();
-    const normalized = normalizeName(entity.name);
+  referenceData.forEach((entity) => {
+    const entityName = entity.name;
+    if (!entityName) return;
+    const lower = entityName.toLowerCase();
+    const normalized = normalizeName(entityName);
 
     if (!byName.has(lower)) byName.set(lower, []);
-    byName.get(lower).push(entity);
+    byName.get(lower)!.push(entity);
 
     if (!byNormalized.has(normalized)) byNormalized.set(normalized, []);
-    byNormalized.get(normalized).push(entity);
+    byNormalized.get(normalized)!.push(entity);
   });
 
-  let candidates = [];
+  let candidates: OpenSkiMapEntity[] = [];
 
   // Try exact match
   candidates = byName.get(name.toLowerCase()) || [];
@@ -215,11 +239,11 @@ function findMatches(name, referenceData, hint = {}) {
   }
 
   if (candidates.length === 0) return [];
-  if (candidates.length === 1) return [candidates[0].id];
+  if (candidates.length === 1) return [candidates[0]!.id];
 
   // Disambiguate using hint
   if (hint.type || hint.difficulty) {
-    const filtered = candidates.filter(c => {
+    const filtered = candidates.filter((c) => {
       if (hint.type && c.lift_type) {
         return c.lift_type === hint.type;
       }
@@ -230,19 +254,10 @@ function findMatches(name, referenceData, hint = {}) {
     });
 
     if (filtered.length > 0) {
-      return filtered.map(c => c.id);
+      return filtered.map((c) => c.id);
     }
   }
 
   // Return all candidates
-  return candidates.map(c => c.id);
+  return candidates.map((c) => c.id);
 }
-
-module.exports = {
-  loadReferenceData,
-  normalizeLiftType,
-  normalizeDifficulty,
-  findMatches,
-  normalizeName,
-  fuzzyScore
-};

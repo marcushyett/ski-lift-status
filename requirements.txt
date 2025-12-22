@@ -1,9 +1,0 @@
-# Core dependencies for fetching OpenSkiMap data
-httpx>=0.27.0
-
-# For future status page discovery (if implemented)
-openai>=1.0.0
-
-# Testing
-pytest>=8.0.0
-pytest-asyncio>=0.23.0

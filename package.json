@@ -2,9 +2,24 @@
   "name": "ski-resort-status",
   "version": "2.0.0",
   "description": "Fetch live ski resort lift and run status data with OpenSkiMap integration",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "data",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "test": "node test.js"
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "dev": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "ski",
@@ -15,7 +30,8 @@
     "openskimap",
     "lumiplan",
     "live",
-    "real-time"
+    "real-time",
+    "typescript"
   ],
   "author": "Marcus Hyett",
   "license": "MIT",
@@ -24,8 +40,16 @@
     "url": "https://github.com/marcushyett/ski-lift-status.git"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "zod": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "@vitest/ui": "^4.0.16",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
+  }
 }
