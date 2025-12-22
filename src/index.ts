@@ -42,7 +42,7 @@ export async function fetchResortStatus(resortIdOrOsmId: string): Promise<Resort
 export interface ResortSummary {
   id: string;
   name: string;
-  openskimap_id: string;
+  openskimap_id: string | string[];
   platform: string;
 }
 

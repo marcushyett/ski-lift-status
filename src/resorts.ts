@@ -43,6 +43,16 @@ const RESORTS: LumiplanResortConfig[] = [
     platform: 'lumiplan',
     lumiplanMapId: 'ec83ba74-a7db-4fb1-9b5e-8c16b7c90a7f',
   },
+  {
+    id: 'paradiski',
+    name: 'Paradiski',
+    openskimap_id: [
+      'f47f7e05cc676b25b6a00f77f0b86a897f03018c', // La Plagne
+      'dec537b602584db89d89ab114a619f1ae356398e', // Les Arcs
+    ],
+    platform: 'lumiplan',
+    lumiplanMapId: 'e6302a83-ce5b-4717-bab8-4f282b1083d7',
+  },
 ];
 
 // Validate all resort configurations at module load time

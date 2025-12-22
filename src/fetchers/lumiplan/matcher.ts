@@ -148,17 +148,24 @@ export function fuzzyScore(str1: string, str2: string): number {
 
 /**
  * Load OpenSkiMap reference data for a resort
+ * Accepts either a single OpenSkiMap ID or an array of IDs (for multi-resort areas like Paradiski)
  */
-export function loadReferenceData(openskimapId: string): ReferenceData {
+export function loadReferenceData(openskimapId: string | string[]): ReferenceData {
   const liftsPath = path.join(DATA_DIR, 'lifts.csv');
   const runsPath = path.join(DATA_DIR, 'runs.csv');
 
   const allLifts = parseCSV(liftsPath);
   const allRuns = parseCSV(runsPath);
 
-  const lifts = allLifts.filter((lift) => lift.ski_area_ids && lift.ski_area_ids.includes(openskimapId));
+  const ids = Array.isArray(openskimapId) ? openskimapId : [openskimapId];
 
-  const runs = allRuns.filter((run) => run.ski_area_ids && run.ski_area_ids.includes(openskimapId) && run.name);
+  const lifts = allLifts.filter((lift) =>
+    lift.ski_area_ids && ids.some(id => lift.ski_area_ids!.includes(id))
+  );
+
+  const runs = allRuns.filter((run) =>
+    run.ski_area_ids && run.name && ids.some(id => run.ski_area_ids!.includes(id))
+  );
 
   return { lifts, runs };
 }

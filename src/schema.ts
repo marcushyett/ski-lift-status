@@ -17,7 +17,10 @@ export type Status = z.infer<typeof StatusSchema>;
 export const ResortSchema = z.object({
   id: z.string().min(1, 'Resort ID is required'),
   name: z.string().min(1, 'Resort name is required'),
-  openskimap_id: z.string().length(40, 'OpenSkiMap ID must be 40 characters'),
+  openskimap_id: z.union([
+    z.string().length(40, 'OpenSkiMap ID must be 40 characters'),
+    z.array(z.string().length(40, 'OpenSkiMap ID must be 40 characters')).min(1),
+  ]),
 });
 export type Resort = z.infer<typeof ResortSchema>;
 
@@ -96,7 +99,10 @@ export type ResortStatus = z.infer<typeof ResortStatusSchema>;
 export const ResortConfigSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
-  openskimap_id: z.string().length(40),
+  openskimap_id: z.union([
+    z.string().length(40),
+    z.array(z.string().length(40)).min(1),
+  ]),
   platform: z.string().min(1),
 }).passthrough(); // Allow platform-specific fields
 

@@ -1,6 +1,6 @@
 {
   "name": "ski-resort-status",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Fetch live ski resort lift and run status data with OpenSkiMap integration",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "postbuild": "chmod +x dist/cli.js",
     "build:watch": "tsc --watch",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",

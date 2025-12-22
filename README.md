@@ -173,6 +173,7 @@ Currently supported resorts:
 | Espace Diamant | France | `0345d73f...` |
 | Le Grand Domaine | France | `97a14ced...` |
 | Les Sybelles | France | `9bba1f0b...` |
+| Paradiski | France | `f47f7e05...`, `dec537b6...` |
 
 More resorts are being added regularly. The module is designed to be easily extensible to support additional platforms and resorts.
 
