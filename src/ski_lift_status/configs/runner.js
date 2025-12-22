@@ -2280,12 +2280,27 @@ async function extractGeneric(config) {
 }
 
 /**
+ * Find resort by ID or OpenSkiMap ID
+ */
+function findResort(identifier) {
+  // Try exact ID match first
+  let resort = resorts.find(r => r.id === identifier);
+
+  // If not found, try OpenSkiMap ID match
+  if (!resort) {
+    resort = resorts.find(r => r.openskimap_id === identifier);
+  }
+
+  return resort;
+}
+
+/**
  * Main extraction function
  */
-async function extractResort(resortId) {
-  const resort = resorts.find(r => r.id === resortId);
+async function extractResort(resortIdOrOsmId) {
+  const resort = findResort(resortIdOrOsmId);
   if (!resort) {
-    return { error: `Resort not found: ${resortId}` };
+    return { error: `Resort not found: ${resortIdOrOsmId}` };
   }
 
   // Check if resort requires browser rendering (not supported)
@@ -2301,91 +2316,155 @@ async function extractResort(resortId) {
   // Logging moved to runAll() for batched output
 
   try {
+    let result;
     switch (resort.platform) {
       case 'lumiplan':
-        return await extractLumiplan(resort);
+        result = await extractLumiplan(resort);
+        break;
       case 'skiplanxml':
-        return await extractSkiplanXml(resort);
+        result = await extractSkiplanXml(resort);
+        break;
       case 'nuxt':
-        return await extractNuxt(resort);
+        result = await extractNuxt(resort);
+        break;
       case 'dolomiti':
-        return await extractDolomiti(resort);
+        result = await extractDolomiti(resort);
+        break;
       case 'skiplan':
-        return await extractSkiplan(resort);
+        result = await extractSkiplan(resort);
+        break;
       case 'vail':
-        return await extractVail(resort);
+        result = await extractVail(resort);
+        break;
       case 'infosnow':
-        return await extractInfosnow(resort);
+        result = await extractInfosnow(resort);
+        break;
       case 'skiwelt':
-        return await extractSkiwelt(resort);
+        result = await extractSkiwelt(resort);
+        break;
       case 'kitzski':
-        return await extractKitzski(resort);
+        result = await extractKitzski(resort);
+        break;
       case 'serfaus':
-        return await extractSerfaus(resort);
+        result = await extractSerfaus(resort);
+        break;
       case 'skiarlberg':
-        return await extractSkiarlberg(resort);
+        result = await extractSkiarlberg(resort);
+        break;
       case 'ischgl':
-        return await extractIschgl(resort);
+        result = await extractIschgl(resort);
+        break;
       case 'soelden':
-        return await extractSoelden(resort);
+        result = await extractSoelden(resort);
+        break;
       case 'intermaps':
-        return await extractIntermaps(resort);
+        result = await extractIntermaps(resort);
+        break;
       case 'skistar':
-        return await extractSkistar(resort);
+        result = await extractSkistar(resort);
+        break;
       case 'laax':
-        return await extractLaax(resort);
+        result = await extractLaax(resort);
+        break;
       case 'livigno':
-        return await extractLivigno(resort);
+        result = await extractLivigno(resort);
+        break;
       case 'perisher':
-        return await extractPerisher(resort);
+        result = await extractPerisher(resort);
+        break;
       case 'baqueira':
-        return await extractBaqueira(resort);
+        result = await extractBaqueira(resort);
+        break;
       case 'bigsky':
-        return await extractBigsky(resort);
+        result = await extractBigsky(resort);
+        break;
       case 'stmoritz':
-        return await extractStmoritz(resort);
+        result = await extractStmoritz(resort);
+        break;
       case 'deervalley':
-        return await extractDeervalley(resort);
+        result = await extractDeervalley(resort);
+        break;
       case 'seelift':
-        return await extractSeelift(resort);
+        result = await extractSeelift(resort);
+        break;
       case 'saalbach':
-        return await extractSaalbach(resort);
+        result = await extractSaalbach(resort);
+        break;
       case 'davos':
-        return await extractDavos(resort);
+        result = await extractDavos(resort);
+        break;
       case 'grandvalira':
-        return await extractGrandvalira(resort);
+        result = await extractGrandvalira(resort);
+        break;
       case 'websenso':
-        return await extractWebsenso(resort);
+        result = await extractWebsenso(resort);
+        break;
       case 'mayrhofen':
-        return await extractMayrhofen(resort);
+        result = await extractMayrhofen(resort);
+        break;
       case 'skiresortcz':
-        return await extractSkiresortcz(resort);
+        result = await extractSkiresortcz(resort);
+        break;
       case 'zugspitze':
-        return await extractZugspitze(resort);
+        result = await extractZugspitze(resort);
+        break;
       case 'snowspace':
-        return await extractSnowspace(resort);
+        result = await extractSnowspace(resort);
+        break;
       case 'aletsch':
-        return await extractAletsch(resort);
+        result = await extractAletsch(resort);
+        break;
       case 'vars':
-        return await extractVars(resort);
+        result = await extractVars(resort);
+        break;
       case 'montafon':
-        return await extractMontafon(resort);
+        result = await extractMontafon(resort);
+        break;
       case 'arosa':
-        return await extractArosa(resort);
+        result = await extractArosa(resort);
+        break;
       case 'zillertal':
-        return await extractZillertal(resort);
+        result = await extractZillertal(resort);
+        break;
       case 'wendelstein':
-        return await extractWendelstein(resort);
+        result = await extractWendelstein(resort);
+        break;
       case 'folgaria':
-        return await extractFolgaria(resort);
+        result = await extractFolgaria(resort);
+        break;
       case 'custom':
         // Try generic extraction for custom resorts
-        return await extractGeneric(resort);
+        result = await extractGeneric(resort);
+        break;
       default:
-        return { error: `Unknown platform: ${resort.platform}` };
+        return {
+          error: `Unknown platform: ${resort.platform}`,
+          resort: {
+            id: resort.id,
+            name: resort.name,
+            openskimap_id: resort.openskimap_id
+          }
+        };
     }
+
+    // Add resort metadata to the result
+    return {
+      ...result,
+      resort: {
+        id: resort.id,
+        name: resort.name,
+        openskimap_id: resort.openskimap_id
+      }
+    };
   } catch (e) {
-    return { error: e.message };
+    return {
+      error: e.message,
+      resort: {
+        id: resort.id,
+        name: resort.name,
+        openskimap_id: resort.openskimap_id
+      }
+    };
   }
 }
 
@@ -2464,16 +2543,24 @@ try {
 /**
  * Extract and map resort data to OpenSkiMap
  */
-async function extractAndMap(resortId) {
-  const resort = resorts.find(r => r.id === resortId);
+async function extractAndMap(resortIdOrOsmId) {
+  const resort = findResort(resortIdOrOsmId);
   if (!resort) {
-    return { error: `Resort not found: ${resortId}` };
+    return { error: `Resort not found: ${resortIdOrOsmId}` };
   }
 
-  const extracted = await extractResort(resortId);
+  const extracted = await extractResort(resortIdOrOsmId);
 
   if (extracted.error || !nameMapper) {
-    return extracted;
+    // Include resort metadata even on error
+    return {
+      ...extracted,
+      resort: {
+        id: resort.id,
+        name: resort.name,
+        openskimap_id: resort.openskimap_id
+      }
+    };
   }
 
   // Map to OpenSkiMap
@@ -2481,6 +2568,11 @@ async function extractAndMap(resortId) {
 
   return {
     ...extracted,
+    resort: {
+      id: resort.id,
+      name: resort.name,
+      openskimap_id: resort.openskimap_id
+    },
     openskimap: mapped.summary,
     mappedLifts: mapped.lifts.mapped,
     mappedRuns: mapped.runs.mapped,
