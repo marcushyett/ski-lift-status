@@ -1,0 +1,257 @@
+[
+  {
+    "id": "fba6ed05d27501dceccf3e56db24fb5dba25ae91",
+    "name": "stade de compétition",
+    "type": ""
+  },
+  {
+    "id": "94b844354458e7723bbaa3f7fcaa32792be1f673",
+    "name": "Charrière",
+    "type": "novice"
+  },
+  {
+    "id": "850ec2944b059d09c14bfdc66642b89277aef02e",
+    "name": "Mulinières",
+    "type": "novice"
+  },
+  {
+    "id": "f34bae63cd5b601c2e8878ad04311cfc65c69d66",
+    "name": "Ortet",
+    "type": "easy"
+  },
+  {
+    "id": "b96bf936f46d69a264ddf66e8fdfa43bd0e91473",
+    "name": "ortet",
+    "type": "easy"
+  },
+  {
+    "id": "011390666e8650f9bd2f2be53eea01788d397f56",
+    "name": "Eterlou",
+    "type": "novice"
+  },
+  {
+    "id": "a02e8ea6ff88971770b9b26ad3007c85eb4a3ddf",
+    "name": "",
+    "type": "novice"
+  },
+  {
+    "id": "106afe0d9342c9060549330cb2ebde8859b07382",
+    "name": "Marmot Park",
+    "type": "novice"
+  },
+  {
+    "id": "10b34f6b2e6c7cb5e7001ac63603abc99c4359de",
+    "name": "Léon",
+    "type": "easy"
+  },
+  {
+    "id": "9502ec15781e7a29cb6c8d657d3f424d5bccd831",
+    "name": "La Fournache",
+    "type": "intermediate"
+  },
+  {
+    "id": "b61d892438b56b1f5baae3da3358a42b6649094a",
+    "name": "L'Armoise",
+    "type": "easy"
+  },
+  {
+    "id": "2cc0efe44d991ebdd0e155e4bc2797f4279b9b2c",
+    "name": "La Fournache",
+    "type": "intermediate"
+  },
+  {
+    "id": "fe9dcb124ba1906165912c71163fac5a317f4da8",
+    "name": "La Stella",
+    "type": "intermediate"
+  },
+  {
+    "id": "6e2cdabf66cde08b176e201a5fdd8ee1d7d90a38",
+    "name": "Les Côtes",
+    "type": "intermediate"
+  },
+  {
+    "id": "8507b20fb590968c854feda8c5ed93bfa1a8b734",
+    "name": "Les Roches",
+    "type": "advanced"
+  },
+  {
+    "id": "0aa51ff3d75bbf8eb041fa7a303b723910bcd7e2",
+    "name": "Plan sec",
+    "type": "intermediate"
+  },
+  {
+    "id": "9389d9be7da83aeb26cbf80be64c7239d784be13",
+    "name": "Les Côtes",
+    "type": "intermediate"
+  },
+  {
+    "id": "f5585d2e0006dc82493697ebc8a018d01f5c2dc1",
+    "name": "Les Côtes",
+    "type": "novice"
+  },
+  {
+    "id": "1dd64afc747ccdd5d7ef7e2039afde431d52fbb9",
+    "name": "Les Cotes",
+    "type": "novice"
+  },
+  {
+    "id": "46662aa91478afe970e2ac037267e3eb4805b878",
+    "name": "La Choulière",
+    "type": "intermediate"
+  },
+  {
+    "id": "c480a0c48600694754884c338232505d56a6036f",
+    "name": "Les Côtes",
+    "type": "novice"
+  },
+  {
+    "id": "f79ba7f516f1906ce343591d2f3ed28ae3c6698f",
+    "name": "Les Sétives",
+    "type": "intermediate"
+  },
+  {
+    "id": "3c697dffa850b5987c0ea640ac172a463c5b9b3f",
+    "name": "Les Sétives",
+    "type": "intermediate"
+  },
+  {
+    "id": "509fc60c57710626441ff24b16b93438a17e2881",
+    "name": "Paerot",
+    "type": "easy"
+  },
+  {
+    "id": "625f55ee8fde1f4b32f017a71e4a3b167e1364fb",
+    "name": "Les Balmes",
+    "type": "advanced"
+  },
+  {
+    "id": "bc82aa75f6fbda39ccafb4e9a1ad1e2cb4008c75",
+    "name": "Paerot",
+    "type": "intermediate"
+  },
+  {
+    "id": "9ac069dc3f3690a0cc363b821a79a74a22710bb0",
+    "name": "Liaison Plan sec",
+    "type": "intermediate"
+  },
+  {
+    "id": "a18a563e7fcebffe862ef13b53495f19460aa9db",
+    "name": "Les Côtes",
+    "type": "novice"
+  },
+  {
+    "id": "bb772ebf74bc83299908e0ee0bd77e38cd544cc8",
+    "name": "Toutoune",
+    "type": "easy"
+  },
+  {
+    "id": "cd6075d38e3196227d26eff67ff14d5dc73623de",
+    "name": "Toutoune",
+    "type": "easy"
+  },
+  {
+    "id": "a6c0da76c89868f278047d4431d729df3084489c",
+    "name": "Le Col",
+    "type": "advanced"
+  },
+  {
+    "id": "b38e5958cae975a17a17844fe9c9f618a25f8c3f",
+    "name": "La Choulière",
+    "type": "intermediate"
+  },
+  {
+    "id": "c98c0a5bc7fe014351b28a75f32e21b88b0c1569",
+    "name": "Le Chamois",
+    "type": "easy"
+  },
+  {
+    "id": "faa9d611096b644889ca04b879c8cd628a9601e9",
+    "name": "Le Chamois",
+    "type": "easy"
+  },
+  {
+    "id": "df50908cc36a88fd3295e13f72e2a73e6f7dd9d5",
+    "name": "",
+    "type": "easy"
+  },
+  {
+    "id": "4c3337e5830ba928c197ac94527dcbd7bd0cd377",
+    "name": "",
+    "type": ""
+  },
+  {
+    "id": "33722b6af66796d7f20c016502770595bfcdf57b",
+    "name": "Praz Carraz",
+    "type": "novice"
+  },
+  {
+    "id": "c63a2403963be5c307ba0e91a87c174006bc9c7e",
+    "name": "",
+    "type": "novice"
+  },
+  {
+    "id": "e42bf77b2eae94ac55083e3cc63d9f1e72d802d4",
+    "name": "",
+    "type": "novice"
+  },
+  {
+    "id": "11faaac3758f5c45af921c147e22fefac9edc278",
+    "name": "",
+    "type": ""
+  },
+  {
+    "id": "4dab364646a8591bf07995913a097f6a3569ce11",
+    "name": "",
+    "type": "novice"
+  },
+  {
+    "id": "2a3c2b92cdc0f5853ce5b1cca1adec8e679166a6",
+    "name": "Retour Côtes",
+    "type": "novice"
+  },
+  {
+    "id": "e900a725a576243def93bade7314cfb1bca882b3",
+    "name": "ortet",
+    "type": "easy"
+  },
+  {
+    "id": "4d6b4dffa3c4a8599c772d27751e4089018b8c74",
+    "name": "Les Côtes",
+    "type": "novice"
+  },
+  {
+    "id": "c4f9cfbfe33ea20c21a6018b02a2424595864fed",
+    "name": "Les Côtes",
+    "type": "novice"
+  },
+  {
+    "id": "b876def149cc0b91bcb77a07a2fc58c0e4e49584",
+    "name": "",
+    "type": "intermediate"
+  },
+  {
+    "id": "fc2497ce9cd1da9480a76c2efb99e9eaaafb0e70",
+    "name": "",
+    "type": "intermediate"
+  },
+  {
+    "id": "d9f176ae25aa55c1c9444aad1ffce0c35dfbef75",
+    "name": "",
+    "type": "novice"
+  },
+  {
+    "id": "61c422360dcf5003fd7518afe626221067f57f3b",
+    "name": "",
+    "type": "intermediate"
+  },
+  {
+    "id": "e6f71f3b17e39e839f6fe3a1cff83300e275d340",
+    "name": "Les Côtes",
+    "type": "intermediate"
+  },
+  {
+    "id": "1b32c6649c2e361c56655723af5d4f8e0ac46da4",
+    "name": "",
+    "type": ""
+  }
+]

@@ -1,0 +1,817 @@
+[
+  {
+    "id": "1e987dfa8498b170066b41da92dd7e0ca6c6b2e7",
+    "name": "Col de Forcle",
+    "type": "platter"
+  },
+  {
+    "id": "dfc38512d15484ab72bff4b9c1c08de8a41bfb51",
+    "name": "Funiplagne Grande Rochette",
+    "type": "gondola"
+  },
+  {
+    "id": "7120da0ea31f0327c9cea0dc2337727711882b7a",
+    "name": "Adrets",
+    "type": "chair_lift"
+  },
+  {
+    "id": "071dcefc883e46a5fe2a33268d0a5e3e979698ef",
+    "name": "Les Blanchets",
+    "type": "chair_lift"
+  },
+  {
+    "id": "dd3f9f4791af329854eddb14abe93fa1cc87f902",
+    "name": "Inversens",
+    "type": "chair_lift"
+  },
+  {
+    "id": "a7701bfef5c9c571519f5ad6dcfd16f60e5b4b91",
+    "name": "La Roche",
+    "type": "chair_lift"
+  },
+  {
+    "id": "8752b3682a621babb93e3201d8dce0ecf5e84c22",
+    "name": "Golf",
+    "type": "chair_lift"
+  },
+  {
+    "id": "e59e6813297a0d557352e65918643be573949a26",
+    "name": "Stade",
+    "type": "platter"
+  },
+  {
+    "id": "22d7c41cf3148125636c18c712c6793d6f9dd589",
+    "name": "Montalbert",
+    "type": "drag_lift"
+  },
+  {
+    "id": "2c74f0961a08972389438e80ee925a02213f7118",
+    "name": "Chalet de Bellecôte",
+    "type": "chair_lift"
+  },
+  {
+    "id": "e3d78f695538a679fe644358743965b1d7151db3",
+    "name": "Droset",
+    "type": "chair_lift"
+  },
+  {
+    "id": "2cf0ae941d7d9fad4aa0bda205a6289ac2a5700a",
+    "name": "Marmottes",
+    "type": "chair_lift"
+  },
+  {
+    "id": "345e535b98f7cd8b6ecb74d9dcea23b4665a5fd5",
+    "name": "Saint-Jacques",
+    "type": "chair_lift"
+  },
+  {
+    "id": "34436dd93a9429c4998e61a6aec4b08de9058d55",
+    "name": "Varet",
+    "type": "gondola"
+  },
+  {
+    "id": "2604ea02fdafbd79c0ff3a46019dd379d3a7d315",
+    "name": "Vagère",
+    "type": "chair_lift"
+  },
+  {
+    "id": "48a40bdb478d8c7f1593b7d4626113011ad4915a",
+    "name": "Derby",
+    "type": "chair_lift"
+  },
+  {
+    "id": "bd27990b769c99511d0efa0ef00d4ef78d0cb4c4",
+    "name": "Vallandry",
+    "type": "gondola"
+  },
+  {
+    "id": "0818b0e1826a3caa9145b5f56682d23189784d91",
+    "name": "Peisey",
+    "type": "chair_lift"
+  },
+  {
+    "id": "d3f066a7403457d41bb0736bdc1135289c171680",
+    "name": "Grand Col",
+    "type": "chair_lift"
+  },
+  {
+    "id": "69972871a1925a4bcfec5bd53e2ee28e47e28f7e",
+    "name": "Aiguille Rouge",
+    "type": "cable_car"
+  },
+  {
+    "id": "d3f848821b4b73ea58dea43c5a9ef4dfc63a3a1d",
+    "name": "Bois de l'Ours",
+    "type": "chair_lift"
+  },
+  {
+    "id": "ea1274f6ac4e3cfcc4c950896477f994b79e2308",
+    "name": "Arcabulle",
+    "type": "chair_lift"
+  },
+  {
+    "id": "a9e7973d1baafb93a14c5e951a15dd621e9cff11",
+    "name": "Funiculaire Les Arcs' Express",
+    "type": "funicular"
+  },
+  {
+    "id": "35971105ba31b4d4c6d0d7d283bb3a6a0f9e3548",
+    "name": "Mont-Blanc",
+    "type": "chair_lift"
+  },
+  {
+    "id": "cc3385c2936a995747c74eba8ce7c72f634ce4e4",
+    "name": "Cachette",
+    "type": "chair_lift"
+  },
+  {
+    "id": "49cb81577d70667ea804372fa914efc33cd77d2e",
+    "name": "Dos Rond",
+    "type": "chair_lift"
+  },
+  {
+    "id": "9478ddada2ef2af7bda3b441d64e73bf43dcdf9e",
+    "name": "Salla",
+    "type": "chair_lift"
+  },
+  {
+    "id": "e63d7d7838899583e5af9606af3923f388f6e093",
+    "name": "1800",
+    "type": "chair_lift"
+  },
+  {
+    "id": "613a10fb67ea42c968ba8126d90009bd4b71cfc0",
+    "name": "Crêtes",
+    "type": "drag_lift"
+  },
+  {
+    "id": "a6bef45b72923ffcb9decef507daebcf0ca5bea6",
+    "name": "Grenouilles",
+    "type": "drag_lift"
+  },
+  {
+    "id": "9d88855cb10ee87231d3d0148a981414c0e1ee71",
+    "name": "Replat",
+    "type": "rope_tow"
+  },
+  {
+    "id": "01cc5d65fbeef3d00fe17c57f4c52dd35b45b8c5",
+    "name": "Aollets",
+    "type": "platter"
+  },
+  {
+    "id": "665eafa22229c442bfbb9e437bc4a2993b4f0d42",
+    "name": "Chevrette",
+    "type": "drag_lift"
+  },
+  {
+    "id": "dd1a15158d6fd4c2a3f49c67d253b59866cfa218",
+    "name": "Verdons Sud",
+    "type": "chair_lift"
+  },
+  {
+    "id": "d54722dbdd5fd73fa94151ef9ef7c269c98dfb86",
+    "name": "Grizzly",
+    "type": "chair_lift"
+  },
+  {
+    "id": "54256956f20786cafa4ab1133702cd78bc44d02a",
+    "name": "Montchavin",
+    "type": "chair_lift"
+  },
+  {
+    "id": "cf542b93bb29cd7945afb2be47ff0eca9e23a7d0",
+    "name": "Pierres Blanches",
+    "type": "chair_lift"
+  },
+  {
+    "id": "6a3c2865c80f4fb6304a6ad31125b35428d25fdf",
+    "name": "Plan Bois",
+    "type": "chair_lift"
+  },
+  {
+    "id": "70ccebf1236867a70ca9d1dcf5e5208603e66e47",
+    "name": "Les Coches",
+    "type": "gondola"
+  },
+  {
+    "id": "231d060a12ad9d7417a741a7d153c13a134b19c6",
+    "name": "Patinoire",
+    "type": "rope_tow"
+  },
+  {
+    "id": "831d4ca1d3e05a204bbd5fa477c3bfca8d310ccb",
+    "name": "Vanoise Express 1",
+    "type": "cable_car"
+  },
+  {
+    "id": "a5d3240a696741294f85c46bcc6243410de66e71",
+    "name": "2300",
+    "type": "chair_lift"
+  },
+  {
+    "id": "f73a6a906d0c6af3a50c8183f3125a4b3311cd10",
+    "name": "Petit Sauget",
+    "type": "platter"
+  },
+  {
+    "id": "dee686ac93c3798ebf3b692f550241ac504f554a",
+    "name": "Plagnettes",
+    "type": "chair_lift"
+  },
+  {
+    "id": "bd2be119ebcfbea71f3af95977948f8e80c54086",
+    "name": "Arpette",
+    "type": "chair_lift"
+  },
+  {
+    "id": "87906369f5a60606d3203fead3ff7fe0bf7f8663",
+    "name": "Comborcière",
+    "type": "chair_lift"
+  },
+  {
+    "id": "bf7ee116217a43fee52d3a4e2705b91d7abed2a4",
+    "name": "Lanchettes",
+    "type": "chair_lift"
+  },
+  {
+    "id": "706bdfafa3ed14a3c7f5d587322e0142e3f93ea8",
+    "name": "Cabriolet",
+    "type": "cable_car"
+  },
+  {
+    "id": "264028d286a92f1140996c23daf0c554f36c1a2c",
+    "name": "Cabri",
+    "type": "platter"
+  },
+  {
+    "id": "0fe7b82915cb9a590a78d80d3d45f1da5bcf6c74",
+    "name": "Snow Park",
+    "type": "t-bar"
+  },
+  {
+    "id": "ab72b98b1b45ab96d8a336546e81d3d074de92ff",
+    "name": "Clocheret",
+    "type": "chair_lift"
+  },
+  {
+    "id": "3c8bb3f2af20caa71e353dc5ed5f66b8b4e27b01",
+    "name": "La Bergerie",
+    "type": "chair_lift"
+  },
+  {
+    "id": "9ef5273a35c84495924e31769f0f76559889c9d1",
+    "name": "Mélèzes",
+    "type": "chair_lift"
+  },
+  {
+    "id": "eada71f4e83050f46239d71e0b57957a33e9fe9f",
+    "name": "Plateau de Carella",
+    "type": "rope_tow"
+  },
+  {
+    "id": "8d7b41f93f9dbf50568130342463efeb3736d4dd",
+    "name": "Solu",
+    "type": "rope_tow"
+  },
+  {
+    "id": "ba9515debe0ce78ff78186970536641a591f0df5",
+    "name": "Boulevard",
+    "type": "chair_lift"
+  },
+  {
+    "id": "a1862071ea5de445efd57a69e4cd58c2733eb3b3",
+    "name": "Premiers Virages",
+    "type": "platter"
+  },
+  {
+    "id": "ae079978924c0748265c26665e2b9ccbabd93021",
+    "name": "Télémétro",
+    "type": "cable_car"
+  },
+  {
+    "id": "8d634dcecdefc2811ab17e19d59a14c9d8328c81",
+    "name": "TKE - Gentil",
+    "type": "drag_lift"
+  },
+  {
+    "id": "62711ea49441dc04c5f16ed4617770e17a23e60f",
+    "name": "Borseliers 3",
+    "type": "drag_lift"
+  },
+  {
+    "id": "069845759b0731dfd13c26e0b0d7118e29e44231",
+    "name": "TK Éterlou",
+    "type": "drag_lift"
+  },
+  {
+    "id": "6162a4a885fb9949e107114e735f39e33fd9dc86",
+    "name": "Télébus",
+    "type": "gondola"
+  },
+  {
+    "id": "c0a105a0de11e8369d41b9dbeefb55d29ccb0efc",
+    "name": "Rhodos",
+    "type": "drag_lift"
+  },
+  {
+    "id": "f35114b95b7be69dfeac44d7a5621b92d5a346c8",
+    "name": "Eldorador",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "3a928de1ace0b2457b6f09f7518baf834c941b75",
+    "name": "Éterlou",
+    "type": "rope_tow"
+  },
+  {
+    "id": "339c8ded6c1d8b375e90702a1efa6f98ff0be5b8",
+    "name": "Funiculaire 1",
+    "type": "funicular"
+  },
+  {
+    "id": "b874bb8e85a5cef1c6950beb31388fb03a9c21d6",
+    "name": "Parchey",
+    "type": "chair_lift"
+  },
+  {
+    "id": "8d8695b41b04eb86a0e2cbbda9e126a9a64b726e",
+    "name": "Praconduit",
+    "type": "drag_lift"
+  },
+  {
+    "id": "940696c7abf0425ff25898abc3bcac0478c5bd4d",
+    "name": "Lonzagne",
+    "type": "gondola"
+  },
+  {
+    "id": "f7921eb8631729a444cbd27985eccd7408b2c38c",
+    "name": "Sucette de Montchavin",
+    "type": "rope_tow"
+  },
+  {
+    "id": "f0a3760e297602763380f8cd71f7bffad2c4bf3d",
+    "name": "Tyrolien",
+    "type": "drag_lift"
+  },
+  {
+    "id": "8eeaeeb9b9f625d9b3a26c2bee37f8d85f689faf",
+    "name": "Bauches",
+    "type": "chair_lift"
+  },
+  {
+    "id": "baf2e7e4079ebde944ebdc06586c08d843f645ac",
+    "name": "Biquet",
+    "type": "platter"
+  },
+  {
+    "id": "cd7e1b8fce551671b60d8a0f963cbef2623d96df",
+    "name": "Combettes",
+    "type": "chair_lift"
+  },
+  {
+    "id": "4af3139db593d9b2bb2e86223598cb1ec1fa39cd",
+    "name": "Tommelet",
+    "type": "drag_lift"
+  },
+  {
+    "id": "6209770afe67c9aebed25d3dc291fdc3f2551a63",
+    "name": "Rhonaz",
+    "type": "platter"
+  },
+  {
+    "id": "0b78c525f3035ca5bda3f13e952701d6e75a1fa7",
+    "name": "Vezaille",
+    "type": "drag_lift"
+  },
+  {
+    "id": "118789b19c97eebac7e7b8a0e8598299a26a2b5b",
+    "name": "Millerette",
+    "type": "drag_lift"
+  },
+  {
+    "id": "6f8e97c5641e9edd86944b1683792ff6307b80fe",
+    "name": "Flamme Olympique",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "4c8fa686a871486156bc4397a9932562ccf6155e",
+    "name": "Raffort",
+    "type": "platter"
+  },
+  {
+    "id": "3f59f6373e8c8956d42bacfef36e9e2328316c04",
+    "name": "Aiglon",
+    "type": "drag_lift"
+  },
+  {
+    "id": "8a8928ed9b44c59d61817149d33476d97cedabac",
+    "name": "Ourson",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "fddcfbc94e07663ad0d8e267c45179411d4d774c",
+    "name": "Plan Leschaux",
+    "type": "platter"
+  },
+  {
+    "id": "1a18dc1b20f3c6a473c5d0d9001e00aa0abcf87f",
+    "name": "Écureuils",
+    "type": "platter"
+  },
+  {
+    "id": "bc9e1098c72004dfe7adab461a7f33f14add4ebb",
+    "name": "Quillis",
+    "type": "chair_lift"
+  },
+  {
+    "id": "18ee6c1765a04e05e42826f3361c5f095271a647",
+    "name": "Jardin Alpin",
+    "type": "chair_lift"
+  },
+  {
+    "id": "6908cae27771140a8d7503bf0093205876b7f16e",
+    "name": "Charmettoger",
+    "type": "chair_lift"
+  },
+  {
+    "id": "058513fb776e1d268159cf06f97a35b27675af65",
+    "name": "Manège Club Med",
+    "type": "platter"
+  },
+  {
+    "id": "83df946e7be037eb0b490bd0f676d7d9a24796bd",
+    "name": "Dromadaire",
+    "type": "platter"
+  },
+  {
+    "id": "db16ee663fe00a2c598701300c7a1c37fad6531e",
+    "name": "Le France",
+    "type": "platter"
+  },
+  {
+    "id": "ab93d94b186fe06965e869c36e5849977bedf158",
+    "name": "Jardin d'Enfants Plagne Villages",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "72bfcabae53bbe84714a0cf2df833a0e1b5d3769",
+    "name": "Oxygène",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "ddda58466cb21edef8da1fd11282ce9a0551d817",
+    "name": "Tétras",
+    "type": "rope_tow"
+  },
+  {
+    "id": "7ebbd2ddf85b41f43aae65782bc100d9a2ea73bf",
+    "name": "1ers virages 1800",
+    "type": "rope_tow"
+  },
+  {
+    "id": "13030847a8497a4d210b68fa74ec964390038118",
+    "name": "Dou du Praz",
+    "type": "platter"
+  },
+  {
+    "id": "3ed550a1d8a471887862881611f189095c9b867b",
+    "name": "Villards",
+    "type": "gondola"
+  },
+  {
+    "id": "ce3844826b138a1809b23295534aa86070600e21",
+    "name": "Montalbert",
+    "type": "gondola"
+  },
+  {
+    "id": "a809f634ad9e22f1f87e04fc6e0b50f478e78ae1",
+    "name": "Dahu",
+    "type": "cable_car"
+  },
+  {
+    "id": "19ade90b2bb9390070b52a649aeb5fa812450bd6",
+    "name": "Carreley",
+    "type": "chair_lift"
+  },
+  {
+    "id": "eb214c2f16de75746241849d0e9d7ffeda795baf",
+    "name": "Plan Vert",
+    "type": "rope_tow"
+  },
+  {
+    "id": "354ee76be19807c6633b9298de4e3caff733c32d",
+    "name": "Grangette",
+    "type": "platter"
+  },
+  {
+    "id": "b823f406101f91d116695435bee76ab8b037064b",
+    "name": "Aime-la-Plagne",
+    "type": "platter"
+  },
+  {
+    "id": "7c08cf358a3ec49b19fbacbb8083e9777575e36c",
+    "name": "Envers",
+    "type": "chair_lift"
+  },
+  {
+    "id": "bb94f2231c9087288aec0c162257e84336cb986f",
+    "name": "Blanchot",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "125c6bb7146541de2dfaa6ba17afdaed7f5fe168",
+    "name": "Pré-Saint-Esprit",
+    "type": "chair_lift"
+  },
+  {
+    "id": "def0a5a792423f29db7b3d131a2a83a5eb67869c",
+    "name": "Lac des Combes",
+    "type": "platter"
+  },
+  {
+    "id": "d09799613ad2b490d5884ef7dc729c494849854b",
+    "name": "Patinoire",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "e7741f884bac0089de8288c5bf70e32b2b076bc1",
+    "name": "Lac Noir",
+    "type": "gondola"
+  },
+  {
+    "id": "cb5f1f1383f14251feaa31597de66aa6de32abd3",
+    "name": "Télébuffette",
+    "type": "gondola"
+  },
+  {
+    "id": "fe7c627f26569770504d24bdfaca1d49687dc9d3",
+    "name": "Vallandry",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "5463b099472bbff3226286252b3eccdd852abf32",
+    "name": "École",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "1d749d109bf26d7f2aff8e1db7fb7f0acb239c25",
+    "name": "Ange 2",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "70af662c4f0d83aaf8604abea4c4d659ad2871ea",
+    "name": "Vanoise Express 2",
+    "type": "cable_car"
+  },
+  {
+    "id": "9625135bc60128ac66c6c891d62312fd1a9f8700",
+    "name": "Bécoin",
+    "type": "chair_lift"
+  },
+  {
+    "id": "8c7bed527cea2f1b537ad093b415fff9702a0774",
+    "name": "Colorado",
+    "type": "chair_lift"
+  },
+  {
+    "id": "77d3b57b5d570794b50b52ff51bdf742149a814e",
+    "name": "Belle Plagne",
+    "type": "gondola"
+  },
+  {
+    "id": "73ac6979ababef66b56b7cd4617c4568d2bbff49",
+    "name": "Colosses",
+    "type": "chair_lift"
+  },
+  {
+    "id": "1be0ab8b9d0cc6c450109d8fb50e324608a4302b",
+    "name": "Arpette",
+    "type": "chair_lift"
+  },
+  {
+    "id": "c38c317a156484148a00f103f5ca5ecc01f4a333",
+    "name": "Carella",
+    "type": "chair_lift"
+  },
+  {
+    "id": "513a692c9d6d3b26b130330e4b895015df47ce97",
+    "name": "Rossa",
+    "type": "chair_lift"
+  },
+  {
+    "id": "64c5d8f323f79c79fe6a7b81a7bb082daaa606ec",
+    "name": "Borseliers",
+    "type": "chair_lift"
+  },
+  {
+    "id": "b4f0ea0ac6b36c1bf8a956ff4fbe1d51929a1b6c",
+    "name": "Champagny",
+    "type": "gondola"
+  },
+  {
+    "id": "3ff4b948b72409ff312d3662aced4e6bfeaccf01",
+    "name": "Crozats",
+    "type": "chair_lift"
+  },
+  {
+    "id": "8318db91aad3fb8fdb0b8fa549adbd5659f1ca76",
+    "name": "Bijolin",
+    "type": "chair_lift"
+  },
+  {
+    "id": "fe5cb6519957aa522ea8f44278fae5a2de39186d",
+    "name": "Lovatière",
+    "type": "chair_lift"
+  },
+  {
+    "id": "15e8fe7a46eea5c2301c5b0cd90bb62f794d10d9",
+    "name": "Ourson",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "34d03deead2012c9d95814f7d07ff66c348c06d8",
+    "name": "Mélèzes",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "c670d0a9cae5dfe7e1212a5ae3e88ac77c1ee9ad",
+    "name": "Sifflote",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "9b80280be1910eaf3753439d99454b479b67b45f",
+    "name": "Mini Club",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "8888bbc5eb5f9c2b26e4ca864d7ccdd65679297e",
+    "name": "Pente École",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "7bd988fc0256141103a017bc466d3679886bb5db",
+    "name": "1ere glisse 1800",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "0109d858d552faf26c22f679e8e4a93d1e610861",
+    "name": "Jackson",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "89525ed8ffc8e425662673238a426108e4f0f4bc",
+    "name": "Bougnette",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "0b712eb5c6d1646b1aac40dc8bdaf5c519dff0e6",
+    "name": "Ange",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "7db917acf0a1fc964059d89b384724c6854ac47b",
+    "name": "Funiculaire 1",
+    "type": "funicular"
+  },
+  {
+    "id": "5fd1825a3bd2ddb7d5563b23931f388e8cb369ed",
+    "name": "Oursons Plagne Montalbert",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "7c2932550db84aeed27aac5125f7cd2d42bd60d7",
+    "name": "Piou Piou",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "3552bc1addb6795eb2f7d70601dac39b221ef6aa",
+    "name": "Cap Vacances",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "1dc2798563fe9db6b8a1d8fc6077a20c20d15e75",
+    "name": "Petits Loups",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "091186b6b992bb0f95a978806810146fcd5fd007",
+    "name": "Planchamps",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "445a7b33c426b7344401a4a82537074d5d271d7a",
+    "name": "Club Med",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "ec3749a48b195a72e1a2ab990b055e8e2943067b",
+    "name": "",
+    "type": "rope_tow"
+  },
+  {
+    "id": "c202f2d74f359997b54af092fabb8112b01cab76",
+    "name": "",
+    "type": "rope_tow"
+  },
+  {
+    "id": "bd30dd6a37a2c53550875bfdf7f5b3921b8bbf66",
+    "name": "",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "5054d58034b82dc2cc5766766fc05fb3669e4c0d",
+    "name": "Premières Glisses",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "c16e119fae16704b1edbf5a8017cd02e5375ff55",
+    "name": "",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "2eb3fae420193e2a8d83e84cb719b65112144390",
+    "name": "",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "f54fb9db6070141b07be204b458a2c2e81c68a04",
+    "name": "Glaciers 1",
+    "type": "gondola"
+  },
+  {
+    "id": "7d5710f34c10b08681afcf775585140865b6c31b",
+    "name": "Glaciers 2",
+    "type": "gondola"
+  },
+  {
+    "id": "560c90c6e4eadf04ed49670f53a6889a209f093a",
+    "name": "",
+    "type": "rope_tow"
+  },
+  {
+    "id": "6f6b570bb2b2bd04e436f4a1ec70426b79fd01ff",
+    "name": "",
+    "type": "rope_tow"
+  },
+  {
+    "id": "4bdcb508691a3633a5d6646144f31a07e603d369",
+    "name": "",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "d2ef58cd09839da6e3d01b1236ff25c6fae01578",
+    "name": "",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "c20ed2287fcd062a1e335cdf899ea9c13a60683c",
+    "name": "Glaciers",
+    "type": "gondola"
+  },
+  {
+    "id": "ec911939f1679e681590e635d7dd094cc1621f0b",
+    "name": "",
+    "type": "platter"
+  },
+  {
+    "id": "bb14a4e37e55db1184dd7038087e4af34ca0531d",
+    "name": "Transarc II",
+    "type": "gondola"
+  },
+  {
+    "id": "c693db65c8235481bfc67bb466354ef84e978142",
+    "name": "Transarc I",
+    "type": "gondola"
+  },
+  {
+    "id": "85d46b3f62750e140c59b056371ffcc969f61bd1",
+    "name": "",
+    "type": "magic_carpet"
+  },
+  {
+    "id": "f54c907a56b26b31712bb96d6febe41b01c27007",
+    "name": "Tétras",
+    "type": "rope_tow"
+  },
+  {
+    "id": "a8316555188f14133d92edc5e57fe3d8351f7077",
+    "name": "Villaroger",
+    "type": "gondola"
+  },
+  {
+    "id": "be7d3a88195b1daf9a89c417e333ebfbf80713f0",
+    "name": "Roche de Mio 1",
+    "type": "gondola"
+  },
+  {
+    "id": "5560546b2c2e47af875d6f95e773184f503f6e5d",
+    "name": "Roche de Mio",
+    "type": "gondola"
+  },
+  {
+    "id": "8f4d227d534c513721bc716cbdd0c72c87aca1df",
+    "name": "Roche de Mio 2",
+    "type": "gondola"
+  }
+]

@@ -1,0 +1,342 @@
+[
+  {
+    "id": "89be4142e12ee2f0392e56e0af2e873dd7a28d3c",
+    "name": "Montagnou",
+    "type": "easy"
+  },
+  {
+    "id": "0c575a61f565b2750c9ac02d4b27810826a7222a",
+    "name": "Les Pépés",
+    "type": "easy"
+  },
+  {
+    "id": "9d092e33cafd0d5bd7e07249e52e29909473692a",
+    "name": "Sirènes",
+    "type": "easy"
+  },
+  {
+    "id": "dc17259c73d347024cf32b59ff205ad342296085",
+    "name": "",
+    "type": "easy"
+  },
+  {
+    "id": "1735a3e76630ddb71e8af9272d876342423817ac",
+    "name": "Les Vallons",
+    "type": "easy"
+  },
+  {
+    "id": "83bee466db2c814c788bff4ac599444f3f36eda9",
+    "name": "Chardonnets",
+    "type": "easy"
+  },
+  {
+    "id": "59d860f245e205074618c63f774da3484b9e0784",
+    "name": "Le Méollion",
+    "type": "intermediate"
+  },
+  {
+    "id": "648330c2198177fd8d05a3d901ef3ed1eafee4c4",
+    "name": "",
+    "type": "novice"
+  },
+  {
+    "id": "df1c32a53b7b1e081f892337c3473ef5de0262b5",
+    "name": "Les Crêtes",
+    "type": "intermediate"
+  },
+  {
+    "id": "b5ade673bb42986933309b737d6815c61e2d88b4",
+    "name": "Le Goulet",
+    "type": "easy"
+  },
+  {
+    "id": "fccc2dbf3f8f8b1b09638d3bf19464af443c1581",
+    "name": "Les Bouquetins",
+    "type": "easy"
+  },
+  {
+    "id": "3dd15f531d5654789009f46f0ebeb303465b2d30",
+    "name": "Les Clots",
+    "type": "intermediate"
+  },
+  {
+    "id": "700e00d96b674793225352fe7c3baf9070485abc",
+    "name": "Mézelle",
+    "type": "easy"
+  },
+  {
+    "id": "6ac314038918058bb35afb91fd1d973fb5299b89",
+    "name": "Sirac",
+    "type": "advanced"
+  },
+  {
+    "id": "444e850fcaf88db62f713b772e910b09e09a01f5",
+    "name": "Les Portettes",
+    "type": "advanced"
+  },
+  {
+    "id": "34c58a6c782bcf34689acd51a6ef10c7fceacf28",
+    "name": "",
+    "type": "intermediate"
+  },
+  {
+    "id": "952617e37f895e66d27b42b88b3817a7a39e59e9",
+    "name": "",
+    "type": "easy"
+  },
+  {
+    "id": "029234b77c55c59b3f6dc66311b566df6f72f8d3",
+    "name": "Les Provençaux",
+    "type": "intermediate"
+  },
+  {
+    "id": "7899dc7a521a52ba901ae81a798e71aa8879df8b",
+    "name": "",
+    "type": "novice"
+  },
+  {
+    "id": "42151d13c5b97dd81069e3a16a7261eb14a66f41",
+    "name": "Les Gendarmes",
+    "type": "intermediate"
+  },
+  {
+    "id": "b8655818b9c4d9415db8feff927f2e15c938906f",
+    "name": "Rocher blanc",
+    "type": "advanced"
+  },
+  {
+    "id": "b38f64e36fb6e147be4081468f886f32d24efa4c",
+    "name": "Camille Ricou",
+    "type": "intermediate"
+  },
+  {
+    "id": "677b3beddeabf881546e4234aeb68549461edb18",
+    "name": "Les Lauzières",
+    "type": "intermediate"
+  },
+  {
+    "id": "dd169750102e74e91036d79b130f03c05d6b46d7",
+    "name": "Botte Croze",
+    "type": "easy"
+  },
+  {
+    "id": "8fcb2259c39574691ce86423720579cab667f099",
+    "name": "",
+    "type": "intermediate"
+  },
+  {
+    "id": "158ebf808e48a679e3be33319eeafe12acb07623",
+    "name": "Les Provençaux",
+    "type": "intermediate"
+  },
+  {
+    "id": "73be11c65b3db3157f18c09c1bb6aec140cdb613",
+    "name": "Manrouse",
+    "type": "intermediate"
+  },
+  {
+    "id": "88302268d8fef61165ea945eee0e99198de2030a",
+    "name": "Bêche",
+    "type": "advanced"
+  },
+  {
+    "id": "9ed3668bb9b00ea4c41989f66dfc604f31eb0dc6",
+    "name": "Les Hommes",
+    "type": "advanced"
+  },
+  {
+    "id": "a8563046ee765b0a86016b92c9468d9695b01783",
+    "name": "Les Vallons Jartoux",
+    "type": "intermediate"
+  },
+  {
+    "id": "efcb99d7e7be4c95bce9600a479c9e302a093b7b",
+    "name": "Chardonnets",
+    "type": "easy"
+  },
+  {
+    "id": "0a47cf9d52f38fa44cfecff0d02d57df97e1bf8d",
+    "name": "Freissinières",
+    "type": "easy"
+  },
+  {
+    "id": "1197b4ca51a5a06d7f3c30221f6855123cd15159",
+    "name": "Les Jalabres",
+    "type": "intermediate"
+  },
+  {
+    "id": "573043411c550d2386c06bc470f364533830ed4b",
+    "name": "Piste du Gnourou",
+    "type": "easy"
+  },
+  {
+    "id": "c8873219603207eca5b486b2ad9a02c933b6e7c3",
+    "name": "",
+    "type": "novice"
+  },
+  {
+    "id": "c3189281402c3d73acfca4cf8a6ff601626d8e87",
+    "name": "Piste de La Marmotte (Milka)",
+    "type": "novice"
+  },
+  {
+    "id": "2b6e1f7e1f0f79edb62e58c39551f1a3ee2794ba",
+    "name": "La Marmotte",
+    "type": "novice"
+  },
+  {
+    "id": "b1f66d4def9f27a07763cbe9effdba6baaff1994",
+    "name": "Lutins",
+    "type": "novice"
+  },
+  {
+    "id": "1d6fa4286da0bce855f52e28d51d3f329c888dff",
+    "name": "Rocher",
+    "type": "novice"
+  },
+  {
+    "id": "c8514e24954892b1d6a0ddfa6d80c74f89387ea4",
+    "name": "Torrent",
+    "type": "novice"
+  },
+  {
+    "id": "73ed43a03eae793830d49ba30a1258cb86bff5d0",
+    "name": "Charpenet",
+    "type": "easy"
+  },
+  {
+    "id": "317883e4340c5d607ac73518bc2e062400e8fd46",
+    "name": "Le Gourou",
+    "type": "intermediate"
+  },
+  {
+    "id": "d6c2458142fb2f6838e11955b4be7e6ee2377711",
+    "name": "Le Gourou",
+    "type": "intermediate"
+  },
+  {
+    "id": "39a4f7c511f9ba21113d0e4e583bfd1e3352cb16",
+    "name": "Le Gourou",
+    "type": "intermediate"
+  },
+  {
+    "id": "99026057614c3f6590c81ab809fa324d7a8f55a9",
+    "name": "Favue",
+    "type": "intermediate"
+  },
+  {
+    "id": "6af94533dc3f1a6b12e13a47a09164eb9c606864",
+    "name": "Rocher blanc",
+    "type": "advanced"
+  },
+  {
+    "id": "ea519d010162a39fb58908b40101be3638d995e4",
+    "name": "Le Gourou",
+    "type": "intermediate"
+  },
+  {
+    "id": "95f5c98e29231173cf6afa4f0c7644aea63c94ef",
+    "name": "Sirènes",
+    "type": "easy"
+  },
+  {
+    "id": "4d8c9e3737e98563bf5b93c4fd4d1dacc5d78b14",
+    "name": "Py-Marty",
+    "type": "easy"
+  },
+  {
+    "id": "aa26bc48b865cdb44e40bc08fe80bbd0a0718de3",
+    "name": "Les Marches",
+    "type": "intermediate"
+  },
+  {
+    "id": "2760dbd303a5509cebf6728be62af493d8dfe8e9",
+    "name": "Montagnou",
+    "type": "easy"
+  },
+  {
+    "id": "bdbe93a9e72debc12f5832e9bcac9a03947eb2da",
+    "name": "Les Vallons",
+    "type": "easy"
+  },
+  {
+    "id": "f784f616e9a16d7e95411e4911297890b586890b",
+    "name": "",
+    "type": "easy"
+  },
+  {
+    "id": "2a9a486cc25b2d4687144c108ffd714c5fa14fe6",
+    "name": "Le Méollion",
+    "type": "intermediate"
+  },
+  {
+    "id": "5280eb35ec239e5fad075e1ac36c355afda1e24e",
+    "name": "Rochasson",
+    "type": "intermediate"
+  },
+  {
+    "id": "ffa52028861fe135b00648700fa947b43c1c764d",
+    "name": "Le Gourou",
+    "type": "intermediate"
+  },
+  {
+    "id": "b4fe5d6f7a827a15b23836041e02c2f4a6d83c1e",
+    "name": "",
+    "type": "easy"
+  },
+  {
+    "id": "dd6e7c122f51c8caf5e349b20e933afac33b1fc2",
+    "name": "",
+    "type": "easy"
+  },
+  {
+    "id": "ea2d9b5facbee972548506ab317136e152c49aed",
+    "name": "Baniols",
+    "type": "easy"
+  },
+  {
+    "id": "d3d2204212348d777626b3a2bf1fc920bb5644b2",
+    "name": "Mézelle",
+    "type": "easy"
+  },
+  {
+    "id": "affd1c8e7fff1a2813946a1001086830c0840644",
+    "name": "Botte Croze",
+    "type": "easy"
+  },
+  {
+    "id": "f4796788a351bbbce363abdf6c2272fe2af4fe05",
+    "name": "Les Pépés",
+    "type": "easy"
+  },
+  {
+    "id": "51288077f4e3dc3d402d48430f5f4dbe1c44874c",
+    "name": "Manrouse",
+    "type": "intermediate"
+  },
+  {
+    "id": "c4c938e1b0706b3fea3ae82f05ad0fc185493713",
+    "name": "Chamois",
+    "type": "advanced"
+  },
+  {
+    "id": "da5634b0511a8cbdaebe179a9c6fc1ca780a8fae",
+    "name": "Bartavelle",
+    "type": "intermediate"
+  },
+  {
+    "id": "d06578a32285831f8721eeeabc33251722acbd77",
+    "name": "",
+    "type": "easy"
+  },
+  {
+    "id": "d3b4782eda97f05fe5a9284d72aed97f20fe222a",
+    "name": "",
+    "type": "intermediate"
+  },
+  {
+    "id": "a2d13d433a0e0c10a7e3d54cd7384b5c9072313f",
+    "name": "Les Hommes",
+    "type": "intermediate"
+  }
+]
