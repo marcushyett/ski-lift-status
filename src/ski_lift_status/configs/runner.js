@@ -249,7 +249,7 @@ async function extractLumiplan(config) {
 
 /**
  * Extract using Lumiplan JSON API
- * Endpoints: /staticPoiData (names, types) and /dynamicPoiData (status)
+ * Endpoints: /staticPoiData (names, types, metadata) and /dynamicPoiData (real-time status)
  */
 async function extractLumiplanJson(config) {
   const baseUrl = 'https://lumiplay.link/interactive-map-services/public/map';
@@ -269,10 +269,10 @@ async function extractLumiplanJson(config) {
     return { error: 'Failed to parse Lumiplan JSON API response' };
   }
 
-  // Build status map from dynamic data (id -> openingStatus)
+  // Build status map from dynamic data (id -> full dynamic object)
   const statusMap = {};
   for (const item of dynamicData.items || []) {
-    statusMap[item.id] = item.openingStatus;
+    statusMap[item.id] = item;
   }
 
   // Normalize Lumiplan status to our format
@@ -285,8 +285,141 @@ async function extractLumiplanJson(config) {
     }
   }
 
+  // Load OpenSkiMap reference data for matching
+  // Store ALL entities with each name (handle duplicates)
+  let liftsByName = new Map();      // name -> array of lift objects
+  let liftsByNormalized = new Map(); // normalized name -> array of lift objects
+  let runsByName = new Map();
+  let runsByNormalized = new Map();
+
+  if (nameMapper && config.openskimap_id) {
+    try {
+      const refData = nameMapper.loadReferenceData(config.openskimap_id);
+
+      // Build lookup maps storing ALL entities with each name
+      refData.lifts.forEach(lift => {
+        if (lift.name) {
+          const lower = lift.name.toLowerCase();
+          const normalized = nameMapper.normalizeName(lift.name);
+
+          if (!liftsByName.has(lower)) liftsByName.set(lower, []);
+          liftsByName.get(lower).push(lift);
+
+          if (!liftsByNormalized.has(normalized)) liftsByNormalized.set(normalized, []);
+          liftsByNormalized.get(normalized).push(lift);
+        }
+      });
+
+      refData.runs.forEach(run => {
+        if (run.name) {
+          const lower = run.name.toLowerCase();
+          const normalized = nameMapper.normalizeName(run.name);
+
+          if (!runsByName.has(lower)) runsByName.set(lower, []);
+          runsByName.get(lower).push(run);
+
+          if (!runsByNormalized.has(normalized)) runsByNormalized.set(normalized, []);
+          runsByNormalized.get(normalized).push(run);
+        }
+      });
+    } catch (e) {
+      console.warn('Failed to load OpenSkiMap reference data:', e.message);
+    }
+  }
+
+  // Normalize lift type for matching
+  function normalizeLiftType(lumiplanType) {
+    if (!lumiplanType) return null;
+    const type = lumiplanType.toUpperCase();
+    // Map Lumiplan types to OpenSkiMap types
+    if (type.includes('GONDOLA') || type.includes('CABIN')) return 'gondola';
+    if (type.includes('CHAIRLIFT') || type.includes('CHAIR')) return 'chair_lift';
+    if (type.includes('PLATTER') || type.includes('SURFACE')) return 'platter';
+    if (type.includes('T-BAR') || type.includes('TBAR')) return 't-bar';
+    if (type.includes('MAGIC_CARPET')) return 'magic_carpet';
+    if (type.includes('ROPE_TOW')) return 'rope_tow';
+    if (type.includes('CABLE_CAR')) return 'cable_car';
+    if (type.includes('FUNITEL')) return 'mixed_lift';
+    if (type.includes('TRAM')) return 'cable_car';
+    return null;
+  }
+
+  // Normalize difficulty for matching
+  function normalizeDifficulty(lumiplanLevel) {
+    if (!lumiplanLevel) return null;
+    const level = lumiplanLevel.toUpperCase();
+    if (level.includes('GREEN')) return 'novice';
+    if (level.includes('BLUE')) return 'easy';
+    if (level.includes('RED')) return 'intermediate';
+    if (level.includes('BLACK')) return 'advanced';
+    return null;
+  }
+
+  // Function to find best OpenSkiMap ID(s) with disambiguation
+  function findOpenSkiMapIds(name, byNameLookup, byNormalizedLookup, referenceData, disambiguationHint) {
+    if (!name || !nameMapper) return [];
+
+    let candidates = [];
+
+    // Try exact match (case insensitive)
+    candidates = byNameLookup.get(name.toLowerCase()) || [];
+
+    // Try normalized match if no exact match
+    if (candidates.length === 0) {
+      candidates = byNormalizedLookup.get(nameMapper.normalizeName(name)) || [];
+    }
+
+    // Try fuzzy match if still no candidates
+    if (candidates.length === 0) {
+      for (const refEntity of referenceData) {
+        if (!refEntity.name) continue;
+        const score = nameMapper.fuzzyScore(name, refEntity.name);
+        if (score >= 75) {
+          candidates.push(refEntity);
+        }
+      }
+    }
+
+    if (candidates.length === 0) return [];
+    if (candidates.length === 1) return [candidates[0].id];
+
+    // Multiple candidates - try to disambiguate
+    if (disambiguationHint) {
+      const filtered = candidates.filter(c => {
+        if (disambiguationHint.type && c.lift_type) {
+          return c.lift_type === disambiguationHint.type;
+        }
+        if (disambiguationHint.difficulty && c.difficulty) {
+          return c.difficulty === disambiguationHint.difficulty;
+        }
+        return true;
+      });
+
+      if (filtered.length > 0) {
+        // Return best disambiguated match(es)
+        return filtered.map(c => c.id);
+      }
+    }
+
+    // Return all candidate IDs
+    return candidates.map(c => c.id);
+  }
+
   const lifts = [];
   const runs = [];
+
+  // Get reference data arrays for fuzzy matching
+  let refLifts = [];
+  let refRuns = [];
+  if (nameMapper && config.openskimap_id) {
+    try {
+      const refData = nameMapper.loadReferenceData(config.openskimap_id);
+      refLifts = refData.lifts;
+      refRuns = refData.runs;
+    } catch (e) {
+      // Already warned above
+    }
+  }
 
   // Process static items
   for (const item of staticData.items || []) {
@@ -297,13 +430,79 @@ async function extractLumiplanJson(config) {
 
     if (!name || !type) continue;
 
-    const apiStatus = statusMap[id] || 'UNKNOWN';
+    const dynamicItem = statusMap[id] || {};
+    const apiStatus = dynamicItem.openingStatus || 'UNKNOWN';
     const status = normalizeApiStatus(apiStatus);
 
     if (type === 'LIFT') {
-      lifts.push({ name, status, liftType: data.liftType });
+      // Find OpenSkiMap IDs with lift type disambiguation
+      const normalizedType = normalizeLiftType(data.liftType);
+      const osmIds = findOpenSkiMapIds(
+        name,
+        liftsByName,
+        liftsByNormalized,
+        refLifts,
+        { type: normalizedType }
+      );
+
+      const lift = {
+        name,
+        status,
+        liftType: data.liftType,
+        // OpenSkiMap IDs (array to handle duplicates)
+        openskimap_ids: osmIds,
+        // Static metadata
+        capacity: data.capacity,
+        duration: data.duration,
+        length: data.length,
+        uphillCapacity: data.uphillCapacity,
+        speed: data.speed,
+        arrivalAltitude: data.arrivalAltitude,
+        departureAltitude: data.departureAltitude,
+        openingTimesTheoretic: data.openingTimesTheoretic,
+        // Dynamic real-time data
+        openingTimesReal: dynamicItem.openingTimesReal,
+        operating: dynamicItem.operating,
+        openingStatus: dynamicItem.openingStatus,
+        message: dynamicItem.message?.content
+      };
+      lifts.push(lift);
     } else if (type === 'TRAIL') {
-      runs.push({ name, status, trailType: data.trailType, level: data.trailLevel });
+      // Find OpenSkiMap IDs with difficulty disambiguation
+      const normalizedDifficulty = normalizeDifficulty(data.trailLevel);
+      const osmIds = findOpenSkiMapIds(
+        name,
+        runsByName,
+        runsByNormalized,
+        refRuns,
+        { difficulty: normalizedDifficulty }
+      );
+
+      const run = {
+        name,
+        status,
+        trailType: data.trailType,
+        level: data.trailLevel,
+        // OpenSkiMap IDs (array to handle duplicates)
+        openskimap_ids: osmIds,
+        // Static metadata
+        length: data.length,
+        surface: data.surface,
+        arrivalAltitude: data.arrivalAltitude,
+        departureAltitude: data.departureAltitude,
+        averageSlope: data.averageSlope,
+        exposure: data.exposure,
+        guaranteedSnow: data.guaranteedSnow,
+        openingTimesTheoretic: data.openingTimesTheoretic,
+        // Dynamic real-time data
+        openingTimesReal: dynamicItem.openingTimesReal,
+        operating: dynamicItem.operating,
+        openingStatus: dynamicItem.openingStatus,
+        groomingStatus: dynamicItem.groomingStatus,
+        snowQuality: dynamicItem.snowQuality,
+        message: dynamicItem.message?.content
+      };
+      runs.push(run);
     }
   }
 
