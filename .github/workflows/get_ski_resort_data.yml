@@ -19,19 +19,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: "3.11"
-          cache: "pip"
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+        run: npm ci
 
       - name: Fetch ski resort data
-        run: python scripts/fetch_data.py
+        run: npx tsx scripts/fetch-openskimap-data.ts
 
       - name: Upload data artifacts
         uses: actions/upload-artifact@v4
@@ -52,4 +50,3 @@ jobs:
           else
             echo "ℹ️  No changes to commit"
           fi
-

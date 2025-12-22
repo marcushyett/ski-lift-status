@@ -1,143 +1,42 @@
-name: Discover Status Pages
+# Disabled pending TypeScript migration
+# This workflow discovers status pages for ski resorts using AI
+# Requires: Serper API, OpenAI API
+# TODO: Reimplement in TypeScript
+
+name: Discover Status Pages (Disabled)
 
 on:
   workflow_dispatch:
     inputs:
-      mode:
-        description: 'Discovery mode'
+      enabled:
+        description: 'Enable this workflow (set to true)'
         required: true
-        default: 'top30'
+        default: 'false'
         type: choice
         options:
-          - top30
-          - all
-          - specific
-      resort_id:
-        description: 'Resort ID (only for "specific" mode)'
-        required: false
-        default: ''
-      override:
-        description: 'Override existing entries in status_pages.csv'
-        required: false
-        default: false
-        type: boolean
+          - 'false'
+          - 'true'
 
 jobs:
   discover:
     name: Discover Resort Status Pages
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.enabled == 'true' }}
     permissions:
       contents: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install dependencies
+      - name: Workflow Disabled
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -e .
-
-      - name: Run discovery (top 30)
-        if: ${{ github.event.inputs.mode == 'top30' }}
-        env:
-          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          python scripts/discover_status_pages.py \
-            --top 30 \
-            ${{ github.event.inputs.override == 'true' && '--override' || '' }} \
-            --output discovery-results.json
-
-      - name: Run discovery (all resorts)
-        if: ${{ github.event.inputs.mode == 'all' }}
-        env:
-          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          python scripts/discover_status_pages.py \
-            --all \
-            ${{ github.event.inputs.override == 'true' && '--override' || '' }} \
-            --output discovery-results.json
-
-      - name: Run discovery (specific resort)
-        if: ${{ github.event.inputs.mode == 'specific' && github.event.inputs.resort_id != '' }}
-        env:
-          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          python scripts/discover_status_pages.py \
-            --resort-id "${{ github.event.inputs.resort_id }}" \
-            ${{ github.event.inputs.override == 'true' && '--override' || '' }} \
-            --output discovery-results.json
-
-      - name: Generate summary
-        if: always()
-        run: |
-          if [ -f discovery-results.json ]; then
-            echo "## Status Page Discovery Results" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-
-            python3 << 'EOF'
-          import json
-          import os
-
-          with open('discovery-results.json') as f:
-              data = json.load(f)
-
-          summary = []
-          summary.append(f"**Total processed:** {data['total']}")
-          summary.append(f"**Successful:** {data['successful']}")
-          summary.append(f"**Failed:** {data['failed']}")
-          summary.append("")
-          summary.append("### Results")
-          summary.append("")
-          summary.append("| Resort | Status | URL | Confidence |")
-          summary.append("|--------|--------|-----|------------|")
-
-          for result in data['results']:
-              status = ":white_check_mark:" if result['success'] else ":x:"
-              url = result['status_page_url'] or "N/A"
-              if result['status_page_url']:
-                  url = f"[Link]({result['status_page_url']})"
-              confidence = f"{result['confidence']:.0%}" if result['success'] else "N/A"
-              summary.append(f"| {result['resort_name']} | {status} | {url} | {confidence} |")
-
-          # Write summary
-          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
-              f.write('\n'.join(summary))
-          EOF
-          else
-            echo ":x: No discovery results file found" >> $GITHUB_STEP_SUMMARY
-          fi
-
-      - name: Upload results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: discovery-results
-          path: |
-            discovery-results.json
-            data/status_pages.csv
-          if-no-files-found: ignore
-
-      - name: Commit updated status_pages.csv
-        if: success()
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-
-          git add data/status_pages.csv
-          if ! git diff --staged --quiet; then
-            git commit -m "Update status_pages.csv with discovered pages"
-            git push
-          else
-            echo "No changes to commit"
-          fi
+          echo "⚠️  This workflow is disabled pending TypeScript migration"
+          echo ""
+          echo "This workflow previously used Python scripts to discover resort status pages."
+          echo "It needs to be reimplemented in TypeScript with:"
+          echo "  - Serper API integration for web search"
+          echo "  - OpenAI API integration for page analysis"
+          echo ""
+          echo "To enable this workflow:"
+          echo "  1. Implement scripts/discover-status-pages.ts"
+          echo "  2. Update this workflow file"
+          echo "  3. Add required secrets: SERPER_API_KEY, OPENAI_API_KEY"
+          exit 1

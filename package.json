@@ -19,7 +19,8 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "dev": "tsx src/index.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "fetch-data": "tsx scripts/fetch-openskimap-data.ts"
   },
   "keywords": [
     "ski",
