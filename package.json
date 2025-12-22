@@ -4,6 +4,9 @@
   "description": "Fetch live ski resort lift and run status data with OpenSkiMap integration",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "ski-resort-status": "dist/cli.js"
+  },
   "files": [
     "dist",
     "data",
@@ -15,12 +18,14 @@
     "build:watch": "tsc --watch",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
+    "prepublishOnly": "npm run build && npm test",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "dev": "tsx src/index.ts",
     "typecheck": "tsc --noEmit",
-    "fetch-data": "tsx scripts/fetch-openskimap-data.ts"
+    "fetch-data": "tsx scripts/fetch-openskimap-data.ts",
+    "discover": "tsx scripts/discover-status-pages.ts"
   },
   "keywords": [
     "ski",

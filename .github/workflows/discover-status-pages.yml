@@ -1,42 +1,133 @@
-# Disabled pending TypeScript migration
-# This workflow discovers status pages for ski resorts using AI
-# Requires: Serper API, OpenAI API
-# TODO: Reimplement in TypeScript
-
-name: Discover Status Pages (Disabled)
+name: Discover Status Pages
 
 on:
   workflow_dispatch:
     inputs:
-      enabled:
-        description: 'Enable this workflow (set to true)'
+      mode:
+        description: 'Discovery mode'
         required: true
-        default: 'false'
+        default: 'top30'
         type: choice
         options:
-          - 'false'
-          - 'true'
+          - top30
+          - all
+          - specific
+      resort_id:
+        description: 'Resort ID (only for "specific" mode)'
+        required: false
+        default: ''
+      override:
+        description: 'Override existing entries in status_pages.csv'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   discover:
     name: Discover Resort Status Pages
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.enabled == 'true' }}
     permissions:
       contents: write
 
     steps:
-      - name: Workflow Disabled
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run discovery (top 30)
+        if: ${{ github.event.inputs.mode == 'top30' }}
+        env:
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          echo "⚠️  This workflow is disabled pending TypeScript migration"
-          echo ""
-          echo "This workflow previously used Python scripts to discover resort status pages."
-          echo "It needs to be reimplemented in TypeScript with:"
-          echo "  - Serper API integration for web search"
-          echo "  - OpenAI API integration for page analysis"
-          echo ""
-          echo "To enable this workflow:"
-          echo "  1. Implement scripts/discover-status-pages.ts"
-          echo "  2. Update this workflow file"
-          echo "  3. Add required secrets: SERPER_API_KEY, OPENAI_API_KEY"
-          exit 1
+          npx tsx scripts/discover-status-pages.ts \
+            --top 30 \
+            ${{ github.event.inputs.override == 'true' && '--override' || '' }} \
+
+      - name: Run discovery (all resorts)
+        if: ${{ github.event.inputs.mode == 'all' }}
+        env:
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          npx tsx scripts/discover-status-pages.ts \
+            --all \
+            ${{ github.event.inputs.override == 'true' && '--override' || '' }}
+
+      - name: Run discovery (specific resort)
+        if: ${{ github.event.inputs.mode == 'specific' && github.event.inputs.resort_id != '' }}
+        env:
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          npx tsx scripts/discover-status-pages.ts \
+            --resort-id "${{ github.event.inputs.resort_id }}" \
+            ${{ github.event.inputs.override == 'true' && '--override' || '' }}
+
+      - name: Generate summary
+        if: always()
+        run: |
+          if [ -f discovery-results.json ]; then
+            echo "## Status Page Discovery Results" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            npx tsx << 'EOF'
+          import * as fs from 'fs';
+
+          const data = JSON.parse(fs.readFileSync('discovery-results.json', 'utf-8'));
+
+          const summary: string[] = [];
+          summary.push(`**Total processed:** ${data.total}`);
+          summary.push(`**Successful:** ${data.successful}`);
+          summary.push(`**Failed:** ${data.failed}`);
+          summary.push('');
+          summary.push('### Results');
+          summary.push('');
+          summary.push('| Resort | Status | URL | Confidence |');
+          summary.push('|--------|--------|-----|------------|');
+
+          for (const result of data.results) {
+            const status = result.success ? ':white_check_mark:' : ':x:';
+            const url = result.status_page_url || 'N/A';
+            const urlLink = result.status_page_url ? `[Link](${result.status_page_url})` : 'N/A';
+            const confidence = result.success ? `${(result.confidence * 100).toFixed(0)}%` : 'N/A';
+            summary.push(`| ${result.resort_name} | ${status} | ${urlLink} | ${confidence} |`);
+          }
+
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY!, summary.join('\n'));
+          EOF
+          else
+            echo ":x: No discovery results file found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: discovery-results
+          path: |
+            discovery-results.json
+            data/status_pages.csv
+          if-no-files-found: ignore
+
+      - name: Commit updated status_pages.csv
+        if: success()
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          git add data/status_pages.csv discovery-results.json
+          if ! git diff --staged --quiet; then
+            git commit -m "Update status_pages.csv with discovered pages [skip ci]"
+            git push
+          else
+            echo "No changes to commit"
+          fi
