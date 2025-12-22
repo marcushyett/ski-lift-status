@@ -95,7 +95,10 @@ function parseCSV(filepath: string): OpenSkiMapEntity[] {
 export function normalizeName(name: string | undefined | null): string {
   if (!name) return '';
   let s = name.trim().toLowerCase();
+  // Remove common articles
   s = s.replace(/^(le|la|les|l'|the|der|die|das)\s+/i, '');
+  // Remove common lift type prefixes (French abbreviations)
+  s = s.replace(/^(tkd|tsf|tsd|tke|tph|tc|tgv|tvm)\s+/i, '');
   s = s.replace(/[-_\s]+/g, ' ');
   s = s
     .replace(/[éèêë]/g, 'e')
@@ -239,7 +242,7 @@ export function findMatches(name: string, referenceData: OpenSkiMapEntity[], hin
     for (const entity of referenceData) {
       if (!entity.name) continue;
       const score = fuzzyScore(name, entity.name);
-      if (score >= 75) {
+      if (score >= 70) {
         candidates.push(entity);
       }
     }
