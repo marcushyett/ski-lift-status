@@ -1,6 +1,6 @@
 {
   "name": "ski-resort-status",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Fetch live ski resort lift and run status data with OpenSkiMap integration",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
