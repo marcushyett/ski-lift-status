@@ -82,6 +82,7 @@ export class LumiplanFetcher extends BaseFetcher {
           openingTimesReal: dynamicItem?.openingTimesReal,
           operating: dynamicItem?.operating,
           openingStatus: dynamicItem?.openingStatus,
+          waitingTime: dynamicItem?.waiting,
           message: dynamicItem?.message?.content,
         });
       } else if (type === 'TRAIL') {

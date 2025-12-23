@@ -57,6 +57,13 @@ export interface LumiplanDynamicItem {
   operating?: boolean;
   groomingStatus?: string;
   snowQuality?: string;
+  /**
+   * Queue/waiting time in minutes. Only present for lifts at some resorts.
+   */
+  waiting?: number;
+  /**
+   * Status message object containing free-text content.
+   */
   message?: {
     content?: string;
   };

@@ -48,6 +48,18 @@ export const LiftSchema = z.object({
   openingTimesReal: z.any().optional(),
   operating: z.boolean().optional(),
   openingStatus: z.string().optional(),
+  /**
+   * Current queue/waiting time at the lift in minutes.
+   * Only available for some resorts. Value of 0 means no wait.
+   * @example 5 // 5 minute wait
+   */
+  waitingTime: z.number().nonnegative().optional(),
+  /**
+   * Free-text message about the lift status or conditions.
+   * Content varies by resort - may include operational notes, restrictions,
+   * or safety information. Examples: "Reserved for good skiers",
+   * "CLOSED FOR THE (END OF) DAY", "Snowshoes recommended"
+   */
   message: z.string().optional(),
 });
 export type Lift = z.infer<typeof LiftSchema>;
@@ -79,6 +91,12 @@ export const RunSchema = z.object({
   openingStatus: z.string().optional(),
   groomingStatus: z.string().optional(),
   snowQuality: z.string().optional(),
+  /**
+   * Free-text message about the run status or conditions.
+   * Content varies by resort - may include partial openings, grooming info,
+   * or safety warnings. Examples: "Upper part only", "PARTIE BASSE UNIQUEMENT",
+   * "Moguls - expert skiers only"
+   */
   message: z.string().optional(),
 });
 export type Run = z.infer<typeof RunSchema>;
